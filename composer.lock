@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "840c1fb06a2839e5594ae4aaf511faa4",
+    "content-hash": "eb7feca02500dbc0bd11cddbc5e272c7",
     "packages": [
         {
             "name": "arrilot/laravel-widgets",
@@ -66,6 +66,70 @@
                 "widgets"
             ],
             "time": "2017-11-23T21:18:07+00:00"
+        },
+        {
+            "name": "bread-templates",
+            "version": "1.0.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/launcher-host/bread-templates.git",
+                "reference": "1.0.13"
+            },
+            "require-dev": {
+                "orchestra/testbench": "~3.0",
+                "phpunit/phpunit": "^6.2|^5.6"
+            },
+            "type": "library",
+            "extra": {
+                "hook": {
+                    "providers": [
+                        "Launcher\\BreadTemplates\\BreadTemplatesServiceProvider"
+                    ],
+                    "aliases": {
+                        "Launcher\\BreadTemplates": "Launcher\\BreadTemplates\\BreadTemplatesFacade"
+                    },
+                    "migrations": [
+                        "publishable/database/migrations"
+                    ],
+                    "seeders": [
+                        "publishable/database/seeds/BreadTemplatesDatabaseSeeder.php"
+                    ],
+                    "unseeders": [
+                        "publishable/database/unseeds/BreadTemplatesDatabaseUnseeder.php"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Launcher\\BreadTemplates\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Launcher\\BreadTemplates\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://larapack.io/downloads",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bruno Torrinha",
+                    "email": "bruno@torrinha.com"
+                }
+            ],
+            "description": "Templating BREAD Views",
+            "keywords": [
+                "blade",
+                "hooks",
+                "laravel",
+                "launcher",
+                "templates",
+                "views",
+                "voyager"
+            ],
+            "time": "2018-03-03T13:03:18+00:00"
         },
         {
             "name": "composer/ca-bundle",
