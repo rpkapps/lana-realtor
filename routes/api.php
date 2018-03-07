@@ -19,3 +19,4 @@ Route::group(['prefix' => 'v1', 'as' => 'api.'], function () {
     Route::get('property', ['as' => 'property.index', 'uses' => 'PropertyController@index']);
     Route::get('property/{property}', ['as' => 'property.show', 'uses' => 'PropertyController@show']);
 });
+
