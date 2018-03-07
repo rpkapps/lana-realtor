@@ -15,7 +15,7 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        return PropertyResource::collection(Property::query()->paginate(10));
+        return PropertyResource::collection(Property::query()->paginate(500));
     }
 
     /**
