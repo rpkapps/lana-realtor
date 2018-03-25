@@ -8,6 +8,7 @@
 </head>
 <body class="bg-light">
 
+<div class="pt-4"></div>
 @include('includes.main-nav')
 
 <div class="container">

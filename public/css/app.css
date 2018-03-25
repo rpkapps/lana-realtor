@@ -10664,7 +10664,6 @@ button:focus {
   -webkit-box-align: start;
       -ms-flex-align: start;
           align-items: flex-start;
-  margin-top: 1.5rem;
   background-color: #fff;
 }
 
