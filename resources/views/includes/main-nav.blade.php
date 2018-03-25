@@ -1,4 +1,4 @@
-<nav id="mainNav" class="navbar navbar-expand-md navbar-main">
+<nav id="mainNav" class="navbar navbar-expand-md px-0 navbar-main">
     <button class="hamburger hamburger-emphatic collapsed d-md-none" type="button" data-toggle="collapse" data-target="#mainNavToggle"
             aria-label="Toggle navigation" aria-expanded="false" aria-controls="mainNavToggle">
               <span class="hamburger-box">
