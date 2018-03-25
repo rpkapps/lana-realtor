@@ -1,0 +1,42 @@
+.navbar-secondary {
+    background-color: theme-color('primary');
+    color: color-yiq(theme-color('primary'));
+    margin-top: 4.375rem;
+    padding-bottom: 1.25rem;
+    padding-top: 1.25rem;
+
+    .search-form {
+        display: block;
+        margin: 0;
+        max-width: 81.25rem;
+        padding: 0;
+        width: 100%;
+
+        .custom-checkbox {
+            display: inline-block;
+            margin-right: 1rem;
+            margin-top: 1rem;
+            min-height: 0;
+        }
+
+        @media(min-width: 1110px) {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .custom-checkbox {
+                margin: 0;
+            }
+        }
+    }
+}
+
+.secondary-search {
+    margin: 0;
+    max-width: 100%;
+    width: 33.5rem;
+
+    .btn {
+        width: 7.625rem;
+    }
+}

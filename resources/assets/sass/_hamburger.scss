@@ -1,0 +1,139 @@
+// Code taken from https://jonsuh.com/hamburgers
+
+/* SETTINGS
+   ================================================== */
+
+$hamburger-padding-x: 12px !default;
+$hamburger-padding-y: 12px !default;
+$hamburger-layer-width: 24px !default;
+$hamburger-layer-height: 2px !default;
+$hamburger-layer-spacing: 3px !default;
+$hamburger-layer-color: gray('600') !default;
+$hamburger-layer-border-radius: 2px !default;
+$hamburger-hover-opacity: 0.7 !default;
+$hamburger-hover-transition-duration: 0.15s !default;
+$hamburger-hover-transition-timing-function: linear !default;
+
+
+/* HAMBURGER BASE
+   ================================================== */
+
+.hamburger {
+    background-color: transparent;
+    border: 0;
+    color: $hamburger-layer-color;
+
+    cursor: pointer;
+    display: inline-block;
+    font: inherit;
+
+    // Normalize (<button>)
+    margin: 0;
+    overflow: visible;
+    padding: $hamburger-padding-y $hamburger-padding-x;
+    text-transform: none;
+    transition-duration: $hamburger-hover-transition-duration;
+    transition-property: opacity, filter;
+    transition-timing-function: $hamburger-hover-transition-timing-function;
+
+    &:hover {
+        color: color('black');
+    }
+
+    &:focus {
+        color: color('black');
+        outline: none;
+    }
+}
+
+.hamburger-box {
+    display: inline-block;
+    height: $hamburger-layer-height * 3 + $hamburger-layer-spacing * 2;
+    position: relative;
+    width: $hamburger-layer-width;
+}
+
+.hamburger-inner {
+    display: block;
+    margin-top: $hamburger-layer-height / -2;
+    top: 50%;
+
+    &,
+    &::before,
+    &::after {
+        background-color: currentColor;
+        border-radius: $hamburger-layer-border-radius;
+        height: $hamburger-layer-height;
+        position: absolute;
+        transition-duration: 0.15s;
+        transition-property: transform;
+        transition-timing-function: ease;
+        width: $hamburger-layer-width;
+    }
+
+    &::before,
+    &::after {
+        content: "";
+        display: block;
+    }
+
+    &::before {
+        top: ($hamburger-layer-spacing + $hamburger-layer-height) * -1;
+    }
+
+    &::after {
+        bottom: ($hamburger-layer-spacing + $hamburger-layer-height) * -1;
+    }
+}
+
+/* HAMBURGER EMPHATIC
+   ================================================== */
+
+.hamburger-emphatic {
+    overflow: hidden;
+
+    .hamburger-inner {
+        transition: background-color 0.125s 0.175s ease-in;
+
+        &::before {
+            left: 0;
+            transition: transform 0.125s cubic-bezier(0.6, 0.04, 0.98, 0.335),
+            top 0.05s 0.125s linear,
+            left 0.125s 0.175s ease-in;
+        }
+
+        &::after {
+            right: 0;
+            top: ($hamburger-layer-height) + ($hamburger-layer-spacing);
+            transition: transform 0.125s cubic-bezier(0.6, 0.04, 0.98, 0.335),
+            top 0.05s 0.125s linear,
+            right 0.125s 0.175s ease-in;
+        }
+    }
+
+    &:not(.collapsed) {
+        .hamburger-inner {
+            background-color: transparent;
+            transition-delay: 0s;
+            transition-timing-function: ease-out;
+
+            &::before {
+                left: $hamburger-layer-width * -2;
+                top: $hamburger-layer-width * -2;
+                transform: translate3d($hamburger-layer-width * 2, $hamburger-layer-width * 2, 0) rotate(45deg);
+                transition: left 0.125s ease-out,
+                top 0.05s 0.125s linear,
+                transform 0.125s 0.175s cubic-bezier(0.075, 0.82, 0.165, 1);
+            }
+
+            &::after {
+                right: $hamburger-layer-width * -2;
+                top: $hamburger-layer-width * -2;
+                transform: translate3d($hamburger-layer-width * -2, $hamburger-layer-width * 2, 0) rotate(-45deg);
+                transition: right 0.125s ease-out,
+                top 0.05s 0.125s linear,
+                transform 0.125s 0.175s cubic-bezier(0.075, 0.82, 0.165, 1);
+            }
+        }
+    }
+}
