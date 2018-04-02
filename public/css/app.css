@@ -10783,3 +10783,7 @@ button:focus {
   width: 7.625rem;
 }
 
+.card-background {
+  padding-top: 70%;
+}
+

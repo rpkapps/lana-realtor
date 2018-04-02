@@ -15,6 +15,8 @@ Route::get('/', 'PagesController@getIndex');
 
 Route::get('/contact', 'PagesController@getContact');
 
+Route::get('/listings', 'SimplyRetsController@getIndex');
+
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();

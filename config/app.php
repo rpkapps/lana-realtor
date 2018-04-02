@@ -226,6 +226,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        // Add helpers
+        'SimplyRetsHelper' => \App\Helpers\SimplyRetsHelper::class,
     ],
 
 ];
