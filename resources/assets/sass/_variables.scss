@@ -24,7 +24,7 @@ $grays: (
     '400': #ced4da,
     '500': #adb5bd,
     '600': #777777,
-    '700': #495057,
+    '700': #444A53,
     '800': #343a40,
     '900': #212529
 );
@@ -73,3 +73,12 @@ $container-max-widths: (
    ================================================== */
 
 $component-active-bg: theme-color("secondary");
+
+
+/* CARDS
+   ================================================== */
+
+$card-listings-margin: 3.375rem;
+$card-listings-gap: 1rem;
+$card-listings-count: 3;
+
