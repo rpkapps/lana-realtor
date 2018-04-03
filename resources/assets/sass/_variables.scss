@@ -80,5 +80,6 @@ $component-active-bg: theme-color("secondary");
 
 $card-listings-margin: 3.375rem;
 $card-listings-gap: 1rem;
-$card-listings-count: 3;
+// card-listings-col-count must be >= 3
+$card-listings-col-count: 3;
 

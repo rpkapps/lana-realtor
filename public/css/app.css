@@ -10826,9 +10826,9 @@ button:focus {
     display: flex;
     -ms-flex-wrap: wrap;
         flex-wrap: wrap;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    -webkit-box-pack: left;
+        -ms-flex-pack: left;
+            justify-content: left;
     -webkit-box-align: stretch;
         -ms-flex-align: stretch;
             align-items: stretch;
@@ -10838,13 +10838,27 @@ button:focus {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    width: calc(50% - 1rem);
+    margin-right: 1rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .card-listings .card {
+    width: calc(50% - 0.5rem);
+  }
+
+  .card-listings .card:nth-child(2n) {
+    margin-right: 0;
   }
 }
 
 @media (min-width: 1200px) {
   .card-listings .card {
-    width: calc(33.33333333% - 0.5rem);
+    width: calc(33.33333333% - 0.66666667rem);
+  }
+
+  .card-listings .card:nth-child(3n) {
+    margin-right: 0;
   }
 }
 
