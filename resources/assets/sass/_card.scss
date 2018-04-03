@@ -8,10 +8,26 @@
 }
 
 .card-background {
+    background-color: gray('700');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     padding-top: 56%;
+    position: relative;
+
+    .loader {
+        color: color-yiq(gray('700'));
+        font-size: 0.4rem;
+        left: calc(50% - 0.5em);
+        position: absolute;
+        top: calc(50% - 0.5em);
+    }
+
+    &.b-loaded {
+        .loader {
+            display: none;
+        }
+    }
 }
 
 .card-title {
@@ -33,14 +49,13 @@
         margin-bottom: $card-listings-margin;
     }
 
-    @media (min-width: 767px) {
+    @media (min-width: 768px) {
         display: flex;
         flex-wrap: wrap;
         justify-content: left;
         align-items: stretch;
 
         .card {
-            display: flex;
             margin-right: $card-listings-gap;
         }
 

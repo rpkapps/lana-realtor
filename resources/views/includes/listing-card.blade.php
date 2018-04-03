@@ -1,5 +1,7 @@
 <div class="card">
-    <div class="card-background" style="background-image: url({{ $listing['photos'][0] }})" ></div>
+    <div class="card-background b-lazy" data-src="{{ $listing['photos'][0] }}">
+        <span class="loader"></span>
+    </div>
     <div class="card-body">
         <div class="row">
             <div class="col-7 pr-1">
