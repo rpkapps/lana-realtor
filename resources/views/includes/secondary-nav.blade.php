@@ -1,27 +1,27 @@
 <nav id="secondaryNav" class="navbar px-0 navbar-secondary">
     <div class="container">
-        <form id="secondarySearchForm" class="search-form" action="">
+        <form id="secondarySearchForm" class="search-form" action="{{ route('listings') }}" method="GET">
             <div class="input-group secondary-search">
                 <input type="text" class="form-control" placeholder="Enter a city" aria-label="Enter a city"
-                       aria-describedby="basic-addon">
+                       aria-describedby="basic-addon" name="q" value="{{ FormHelper::value('q') }}">
                 <div class="input-group-append">
                     <button class="btn btn-secondary" type="submit" form="secondarySearchForm" value="Submit">Search</button>
                 </div>
             </div>
             <div class="custom-control custom-checkbox">
-                <input class="custom-control-input" type="checkbox" id="listingType1" name="listing_type" value="residential">
+                <input class="custom-control-input" type="checkbox" id="listingType1" name="type[]" value="residential" {{ FormHelper::checked('type', 'residential') }}>
                 <label class="custom-control-label" for="listingType1">Residential</label>
             </div>
             <div class="custom-control custom-checkbox">
-                <input class="custom-control-input" type="checkbox" id="listingType2" name="listing_type" value="multi-family">
+                <input class="custom-control-input" type="checkbox" id="listingType2" name="type[]" value="multifamily" {{ FormHelper::checked('type', 'multifamily') }}>
                 <label class="custom-control-label" for="listingType2">Multi-Family</label>
             </div>
             <div class="custom-control custom-checkbox">
-                <input class="custom-control-input" type="checkbox" id="listingType3" name="listing_type" value="vacant-land">
+                <input class="custom-control-input" type="checkbox" id="listingType3" name="type[]" value="land" {{ FormHelper::checked('type', 'land') }}>
                 <label class="custom-control-label" for="listingType3">Vacant Land</label>
             </div>
             <div class="custom-control custom-checkbox">
-                <input class="custom-control-input" type="checkbox" id="listingType4" name="listing_type" value="commercial">
+                <input class="custom-control-input" type="checkbox" id="listingType4" name="type[]" value="commercial" {{ FormHelper::checked('type', 'commercial') }}>
                 <label class="custom-control-label" for="listingType4">Commercial</label>
             </div>
         </form>

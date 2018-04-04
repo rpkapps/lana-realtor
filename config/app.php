@@ -228,6 +228,7 @@ return [
 
         // Add helpers
         'SimplyRetsHelper' => \App\Helpers\SimplyRetsHelper::class,
+        'FormHelper' => \App\Helpers\FormHelper::class,
     ],
 
 ];
