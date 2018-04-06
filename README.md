@@ -1,2 +1,0 @@
-# lana-realtor
-Realtor website

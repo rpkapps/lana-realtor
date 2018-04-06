@@ -10518,6 +10518,10 @@ a.text-dark:focus {
   }
 }
 
+html {
+  overflow-y: scroll;
+}
+
 *:focus,
 button:focus {
   outline-color: #cb3849;
@@ -10743,7 +10747,7 @@ button:focus {
   padding-top: 1.25rem;
 }
 
-.navbar-secondary .search-form {
+.navbar-secondary .navbar-inner {
   display: block;
   margin: 0;
   max-width: 78.25rem;
@@ -10751,7 +10755,7 @@ button:focus {
   width: 100%;
 }
 
-.navbar-secondary .search-form .custom-checkbox {
+.navbar-secondary .navbar-inner .custom-checkbox {
   display: inline-block;
   margin-right: 1rem;
   margin-top: 1rem;
@@ -10759,7 +10763,7 @@ button:focus {
 }
 
 @media (min-width: 1110px) {
-  .navbar-secondary .search-form {
+  .navbar-secondary .navbar-inner {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -10771,7 +10775,7 @@ button:focus {
             align-items: center;
   }
 
-  .navbar-secondary .search-form .custom-checkbox {
+  .navbar-secondary .navbar-inner .custom-checkbox {
     margin: 0;
   }
 }

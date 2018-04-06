@@ -3,9 +3,9 @@
 @section('title', 'Listings')
 
 @section('content')
-    <div class="card-listings">
-        @foreach ($listings as $listing)
-            @include('includes.listing-card')
-        @endforeach
+    <div id="cardListings" class="card-listings">
+        {{--@foreach ($listings as $listing)--}}
+            {{--@include('includes.listing-card')--}}
+        {{--@endforeach--}}
     </div>
 @endsection
