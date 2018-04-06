@@ -12,8 +12,13 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    padding-top: 56%;
     position: relative;
+
+    &:after {
+        content: '';
+        display: block;
+        padding-top: 56%;
+    }
 
     .loader {
         color: color-yiq(gray('700'));

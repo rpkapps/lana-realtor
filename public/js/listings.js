@@ -126,7 +126,7 @@ function determineTitle() {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(2);
-module.exports = __webpack_require__(9);
+module.exports = __webpack_require__(10);
 
 
 /***/ }),
@@ -137,11 +137,11 @@ module.exports = __webpack_require__(9);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__bootstrap_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_secondary_nav_js__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_secondary_nav_js__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_secondary_nav_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_secondary_nav_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_js__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__simplyrets_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__templates_listing_card_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__templates_listing_card_js__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__simplyrets__ = __webpack_require__(0);
 
 
@@ -952,47 +952,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 /***/ }),
 /* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/**
- * Format number to contain commas
- * @param number
- * @returns {string}
- */
-function formatNumber() {
-    var number = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-
-    return parseFloat(number) ? parseFloat(number).toLocaleString('en') : '';
-}
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-    formatNumber: formatNumber
-});
-
-/***/ }),
-/* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = (function () {
-    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    return "\n        <div class=\"card\">\n            <div class=\"card-background b-lazy\" data-src=\"" + data.photo + "\">\n                <span class=\"loader\"></span>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <h4 class=\"card-title text-primary\">" + data.title + "</h4>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <h4 class=\"card-title\">$" + data.price + "</h4>\n                    </div>\n                </div>\n        \n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <p class=\"card-text\">" + data.address + "</p>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <p class=\"card-text\">\n                            <strong>" + data.bedrooms + "</strong> bds\n                            <strong>" + data.bathrooms + "</strong> ba\n                            <strong>" + data.property + "</strong> sqft\n                        </p>\n                    </div>\n                </div>\n        \n            </div>\n        </div>\n    ";
-});
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */
 /***/ (function(module, exports) {
 
 var $checkboxes = $('#listingType1, #listingType2, #listingType3, #listingType4'),
@@ -1018,6 +977,43 @@ $checkboxes.on('change', function () {
     history.pushState(null, null, '?' + gSearchParams.toString());
     $.publish('snavbar.change');
 });
+
+/***/ }),
+/* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * Format number to contain commas
+ * @param number
+ * @returns {string}
+ */
+function formatNumber() {
+    var number = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
+    return parseFloat(number) ? parseFloat(number).toLocaleString('en') : '';
+}
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    formatNumber: formatNumber
+});
+
+/***/ }),
+/* 9 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = (function () {
+    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    return "\n        <div class=\"card\">\n            <div class=\"card-background b-lazy\" data-src=\"" + data.photo + "\">\n                <span class=\"loader\"></span>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <h4 class=\"card-title text-primary\">" + data.title + "</h4>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <h4 class=\"card-title\">$" + data.price + "</h4>\n                    </div>\n                </div>\n        \n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <p class=\"card-text\">" + data.address + "</p>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <p class=\"card-text\">\n                            <strong>" + data.bedrooms + "</strong> bds\n                            <strong>" + data.bathrooms + "</strong> ba\n                            <strong>" + data.property + "</strong> sqft\n                        </p>\n                    </div>\n                </div>\n        \n            </div>\n        </div>\n    ";
+});
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
