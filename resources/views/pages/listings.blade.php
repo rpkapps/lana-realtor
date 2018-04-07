@@ -8,4 +8,5 @@
             {{--@include('includes.listing-card')--}}
         {{--@endforeach--}}
     </div>
+    <div id="pagination"></div>
 @endsection

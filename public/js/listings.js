@@ -68,6 +68,9 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_js__ = __webpack_require__(8);
+
+
 /**
  * Clean query string
  * @param query
@@ -88,7 +91,7 @@ function getListings() {
 
     $.ajax({
         type: 'GET',
-        url: gConfig.simplyRetsApiUrl + '?' + cleanQuery(gSearchParams.toString()),
+        url: gConfig.simplyRetsApiUrl + ('?limit=' + gConfig.limit + '&' + cleanQuery(gSearchParams.toString())),
         dataType: 'json',
         beforeSend: function beforeSend(xhr) {
             xhr.setRequestHeader('Authorization', 'Basic ' + gConfig.simplyRetsBtoa);
@@ -116,9 +119,52 @@ function determineTitle() {
     return types[type] ? types[type] : 'Invalid Listing';
 }
 
+/**
+ * Parse response header
+ * @param xhr
+ * @returns {{offset: number, limit: number}}
+ */
+function parseXhr(xhr) {
+    var link = xhr.getResponseHeader('link') || '?',
+        searchParams = new URLSearchParams(link.match(/\?.*/)[0]);
+
+    return {
+        offset: parseInt(searchParams.get('offset'), 10) || parseInt(gSearchParams.get('offset'), 10),
+        limit: parseInt(searchParams.get('limit'), 10) || gConfig.limit,
+        total: parseInt(xhr.getResponseHeader('x-total-count'), 10)
+    };
+}
+
+/**
+ * Get number of pages
+ * @param xhr
+ * @returns {number}
+ */
+function getNumberOfPages(xhr) {
+    var paginate = parseXhr(xhr);
+
+    return parseInt(paginate.total / paginate.limit, 10) + 1;
+}
+
+/**
+ * Get the page offset given a page number
+ * @param page
+ * @param xhr
+ */
+function getPageOffset(page, xhr) {
+    var paginate = parseXhr(xhr),
+        offset = (page - 1) * paginate.limit,
+        maxOffset = parseInt(paginate.total / paginate.limit, 10) * paginate.limit;
+
+    return __WEBPACK_IMPORTED_MODULE_0__utils_js__["a" /* default */].clamp(offset, 0, maxOffset);
+}
+
 /* harmony default export */ __webpack_exports__["a"] = ({
     getListings: getListings,
-    determineTitle: determineTitle
+    determineTitle: determineTitle,
+    parseXhr: parseXhr,
+    getPageOffset: getPageOffset,
+    getNumberOfPages: getNumberOfPages
 });
 
 /***/ }),
@@ -137,12 +183,15 @@ module.exports = __webpack_require__(10);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__bootstrap_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_secondary_nav_js__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_secondary_nav_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_secondary_nav_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_js__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__simplyrets_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__templates_listing_card_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__simplyrets__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__templates_listing_card_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__simplyrets__ = __webpack_require__(0);
+
 
 
 
@@ -151,6 +200,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 var blazy = new Blazy(),
+    debouncedResize,
+    $pagination = $('#pagination').bootpag({
+    total: 1000,
+    page: 2,
+    maxVisible: 3,
+    leaps: true,
+    firstLastUse: true,
+    first: '←',
+    last: '→',
+    wrapClass: 'pagination',
+    activeClass: 'active',
+    disabledClass: 'disabled',
+    nextClass: 'next',
+    prevClass: 'prev',
+    lastClass: 'last',
+    firstClass: 'first'
+}),
+    currentXhr,
     lconfig = {
     $container: $('#cardListings')
 };
@@ -164,14 +231,14 @@ function updateListingCards() {
 
     var html = '';
     listings.forEach(function (listing) {
-        html += Object(__WEBPACK_IMPORTED_MODULE_4__templates_listing_card_js__["a" /* default */])({
+        html += Object(__WEBPACK_IMPORTED_MODULE_5__templates_listing_card_js__["a" /* default */])({
             photo: listing.photos[0],
-            title: __WEBPACK_IMPORTED_MODULE_5__simplyrets__["a" /* default */].determineTitle(listing.property.type),
-            price: __WEBPACK_IMPORTED_MODULE_2__utils_js__["a" /* default */].formatNumber(listing.listPrice),
+            title: __WEBPACK_IMPORTED_MODULE_6__simplyrets__["a" /* default */].determineTitle(listing.property.type),
+            price: __WEBPACK_IMPORTED_MODULE_3__utils_js__["a" /* default */].formatNumber(listing.listPrice),
             address: listing.address.full + ', ' + listing.address.city + ', ' + listing.address.state,
             bedrooms: listing.property.bedrooms || '',
             bathrooms: listing.property.bathrooms || '',
-            property: __WEBPACK_IMPORTED_MODULE_2__utils_js__["a" /* default */].formatNumber(listing.property.area)
+            property: __WEBPACK_IMPORTED_MODULE_3__utils_js__["a" /* default */].formatNumber(listing.property.area)
         });
     });
 
@@ -180,53 +247,79 @@ function updateListingCards() {
 }
 
 /**
+ * Resize pagination
+ */
+function resizePagination() {
+    $pagination.bootpag({
+        maxVisible: window.innerWidth > 767 ? 5 : 3
+    });
+}
+
+/**
  * Get listings from Simply RETS
  */
 function getListings() {
     lconfig.$container.addClass('loading');
-    __WEBPACK_IMPORTED_MODULE_3__simplyrets_js__["a" /* default */].getListings(function (data, textStatus, jqXHR) {
+    __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__["a" /* default */].getListings(function (data, textStatus, xhr) {
         updateListingCards(data);
         lconfig.$container.removeClass('loading');
-    }, function (jqXHR, textStatus, errorThrown) {
+        currentXhr = xhr;
+
+        $pagination.bootpag({
+            total: __WEBPACK_IMPORTED_MODULE_6__simplyrets__["a" /* default */].getNumberOfPages(xhr)
+        });
+    }, function (xhr, textStatus, errorThrown) {
         console.error(errorThrown);
     });
 }
 
+/* MAIN
+   ================================================== */
+
+debouncedResize = __WEBPACK_IMPORTED_MODULE_3__utils_js__["a" /* default */].debounce(function () {
+    resizePagination();
+}, 100);
+
+// Pagination event handler
+$pagination.on('page', function (event, page) {
+    // Set new offset
+    gSearchParams.set('offset', __WEBPACK_IMPORTED_MODULE_6__simplyrets__["a" /* default */].getPageOffset(page, currentXhr));
+    history.pushState(null, null, '?' + gSearchParams.toString());
+
+    // Scroll to top on pagination change
+    $(window).scrollTop($('#secondaryNav').offset().top);
+
+    getListings();
+});
+
+// Secondary Navbar event listener
+$.subscribe('snavbar.change ', function () {
+    // set offset back to 0
+    gSearchParams.set('offset', __WEBPACK_IMPORTED_MODULE_6__simplyrets__["a" /* default */].getPageOffset(0, currentXhr));
+    history.pushState(null, null, '?' + gSearchParams.toString());
+
+    getListings();
+});
+
+$(window).on('resize', debouncedResize);
+
 getListings();
-$.subscribe('snavbar.change ', getListings);
+resizePagination();
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(4);
+__webpack_require__(15);
 
 window.Blazy = __webpack_require__(6);
 window.gSearchParams = new URLSearchParams(location.search.slice(1));
 window.gConfig = {
     simplyRetsApiUrl: 'https://api.simplyrets.com/properties',
-    simplyRetsBtoa: btoa('simplyrets:simplyrets')
+    simplyRetsBtoa: btoa('simplyrets:simplyrets'),
+    limit: 3
 };
-
-/* jQuery Tiny Pub/Sub - v0.7 - 10/27/2011
- * http://benalman.com/
- * Copyright (c) 2011 "Cowboy" Ben Alman; Licensed MIT, GPL */
-(function ($) {
-
-    var o = $({});
-
-    $.subscribe = function () {
-        o.on.apply(o, arguments);
-    };
-
-    $.unsubscribe = function () {
-        o.off.apply(o, arguments);
-    };
-
-    $.publish = function () {
-        o.trigger.apply(o, arguments);
-    };
-})(jQuery);
 
 /***/ }),
 /* 4 */
@@ -994,8 +1087,47 @@ function formatNumber() {
     return parseFloat(number) ? parseFloat(number).toLocaleString('en') : '';
 }
 
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * N milliseconds. If `immediate` is passed, trigger the function on the
+ * leading edge, instead of the trailing.
+ * @param func
+ * @param wait
+ * @param immediate
+ * @returns {Function}
+ */
+function debounce(func, wait, immediate) {
+    var timeout;
+    return function () {
+        var context = this,
+            args = arguments;
+        var later = function later() {
+            timeout = null;
+            if (!immediate) {
+                func.apply(context, args);
+            }
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) {
+            func.apply(context, args);
+        }
+    };
+}
+
+/**
+ * Clamp a number
+ */
+function clamp(number, min, max) {
+    return Math.min(Math.max(number, min), max);
+}
+
 /* harmony default export */ __webpack_exports__["a"] = ({
-    formatNumber: formatNumber
+    formatNumber: formatNumber,
+    debounce: debounce,
+    clamp: clamp
 });
 
 /***/ }),
@@ -1014,6 +1146,189 @@ function formatNumber() {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 11 */,
+/* 12 */,
+/* 13 */,
+/* 14 */,
+/* 15 */
+/***/ (function(module, exports) {
+
+/* jQuery Tiny Pub/Sub - v0.7 - 10/27/2011
+ * http://benalman.com/
+ * Copyright (c) 2011 "Cowboy" Ben Alman; Licensed MIT, GPL */
+(function ($) {
+
+    var o = $({});
+
+    $.subscribe = function () {
+        o.on.apply(o, arguments);
+    };
+
+    $.unsubscribe = function () {
+        o.off.apply(o, arguments);
+    };
+
+    $.publish = function () {
+        o.trigger.apply(o, arguments);
+    };
+})(jQuery);
+
+/***/ }),
+/* 16 */,
+/* 17 */
+/***/ (function(module, exports) {
+
+/**
+ * @preserve
+ * bootpag - jQuery plugin for dynamic pagination
+ *
+ * Copyright (c) 2015 botmonster@7items.com
+ *
+ * Licensed under the MIT license:
+ *   http://www.opensource.org/licenses/mit-license.php
+ *
+ * Project home:
+ *   http://botmonster.com/jquery-bootpag/
+ *
+ * Version:  1.0.7
+ *
+ */
+(function ($, window) {
+
+    $.fn.bootpag = function (options) {
+
+        var $owner = this,
+            settings = $.extend({
+            total: 0,
+            page: 1,
+            maxVisible: null,
+            leaps: true,
+            href: 'javascript:void(0);',
+            hrefVariable: '{{number}}',
+            next: '&raquo;',
+            prev: '&laquo;',
+            firstLastUse: false,
+            first: '<span aria-hidden="true">&larr;</span>',
+            last: '<span aria-hidden="true">&rarr;</span>',
+            wrapClass: 'pagination',
+            activeClass: 'active',
+            disabledClass: 'disabled',
+            nextClass: 'next',
+            prevClass: 'prev',
+            lastClass: 'last',
+            firstClass: 'first'
+        }, $owner.data('settings') || {}, options || {});
+
+        if (settings.total <= 0) return this;
+
+        if (!$.isNumeric(settings.maxVisible) && !settings.maxVisible) {
+            settings.maxVisible = parseInt(settings.total, 10);
+        }
+
+        $owner.data('settings', settings);
+
+        function renderPage($bootpag, page) {
+
+            page = parseInt(page, 10);
+            var lp,
+                maxV = settings.maxVisible == 0 ? 1 : settings.maxVisible,
+                step = settings.maxVisible == 1 ? 0 : 1,
+                vis = Math.floor((page - 1) / maxV) * maxV,
+                $page = $bootpag.find('li');
+            settings.page = page = page < 0 ? 0 : page > settings.total ? settings.total : page;
+            $page.removeClass(settings.activeClass);
+            lp = page - 1 < 1 ? 1 : settings.leaps && page - 1 >= settings.maxVisible ? Math.floor((page - 1) / maxV) * maxV : page - 1;
+
+            if (settings.firstLastUse) {
+                $page.first().toggleClass(settings.disabledClass, page === 1);
+            }
+
+            var lfirst = $page.first();
+            if (settings.firstLastUse) {
+                lfirst = lfirst.next();
+            }
+
+            lfirst.toggleClass(settings.disabledClass, page === 1).attr('data-lp', lp).find('a').attr('href', href(lp));
+
+            var step = settings.maxVisible == 1 ? 0 : 1;
+
+            lp = page + 1 > settings.total ? settings.total : settings.leaps && page + 1 < settings.total - settings.maxVisible ? vis + settings.maxVisible + step : page + 1;
+
+            var llast = $page.last();
+            if (settings.firstLastUse) {
+                llast = llast.prev();
+            }
+
+            llast.toggleClass(settings.disabledClass, page === settings.total).attr('data-lp', lp).find('a').attr('href', href(lp));
+
+            $page.last().toggleClass(settings.disabledClass, page === settings.total);
+
+            var $currPage = $page.filter('[data-lp=' + page + ']');
+
+            var clist = "." + [settings.nextClass, settings.prevClass, settings.firstClass, settings.lastClass].join(",.");
+            if (!$currPage.not(clist).length) {
+                var d = page <= vis ? -settings.maxVisible : 0;
+                $page.not(clist).each(function (index) {
+                    lp = index + 1 + vis + d;
+                    $(this).attr('data-lp', lp).toggle(lp <= settings.total).find('a').html(lp).attr('href', href(lp));
+                });
+                $currPage = $page.filter('[data-lp=' + page + ']');
+            }
+            $currPage.not(clist).addClass(settings.activeClass);
+            $owner.data('settings', settings);
+        }
+
+        function href(c) {
+            return settings.href.replace(settings.hrefVariable, c);
+        }
+
+        return this.each(function () {
+
+            var $bootpag,
+                lp,
+                me = $(this),
+                p = ['<ul class="', settings.wrapClass, ' bootpag">'];
+
+            if (settings.firstLastUse) {
+                p = p.concat(['<li data-lp="1" class="', settings.firstClass, '"><a href="', href(1), '">', settings.first, '</a></li>']);
+            }
+            if (settings.prev) {
+                p = p.concat(['<li data-lp="1" class="', settings.prevClass, '"><a href="', href(1), '">', settings.prev, '</a></li>']);
+            }
+            for (var c = 1; c <= Math.min(settings.total, settings.maxVisible); c++) {
+                p = p.concat(['<li data-lp="', c, '"><a href="', href(c), '">', c, '</a></li>']);
+            }
+            if (settings.next) {
+                lp = settings.leaps && settings.total > settings.maxVisible ? Math.min(settings.maxVisible + 1, settings.total) : 2;
+                p = p.concat(['<li data-lp="', lp, '" class="', settings.nextClass, '"><a href="', href(lp), '">', settings.next, '</a></li>']);
+            }
+            if (settings.firstLastUse) {
+                p = p.concat(['<li data-lp="', settings.total, '" class="last"><a href="', href(settings.total), '">', settings.last, '</a></li>']);
+            }
+            p.push('</ul>');
+            me.find('ul.bootpag').remove();
+            me.append(p.join(''));
+            $bootpag = me.find('ul.bootpag');
+
+            me.find('li').click(function paginationClick() {
+
+                var me = $(this);
+                if (me.hasClass(settings.disabledClass) || me.hasClass(settings.activeClass)) {
+                    return;
+                }
+                var page = parseInt(me.attr('data-lp'), 10);
+                $owner.find('ul.bootpag').each(function () {
+                    renderPage($(this), page);
+                });
+
+                $owner.trigger('page', page);
+            });
+            renderPage($bootpag, settings.page);
+        });
+    };
+})(jQuery, window);
 
 /***/ })
 /******/ ]);
