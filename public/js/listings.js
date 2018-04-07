@@ -68,7 +68,7 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_js__ = __webpack_require__(8);
 
 
 /**
@@ -140,10 +140,24 @@ function parseXhr(xhr) {
  * @param xhr
  * @returns {number}
  */
-function getNumberOfPages(xhr, paginate) {
-    var paginate = paginate || parseXhr(xhr);
+function getNumberOfPages(xhr, pInfo) {
+    var pInfo = pInfo || parseXhr(xhr);
 
-    return Math.ceil(paginate.total / paginate.limit);
+    return Math.ceil(pInfo.total / pInfo.limit);
+}
+
+/**
+ * Clamp offset so that it's valid
+ * @param xhr
+ * @param offset
+ * @param pInfo  pagination info
+ * @returns {*}
+ */
+function clampOffset(xhr, offset, pInfo) {
+    var pInfo = pInfo || parseXhr(xhr),
+        maxOffset = getNumberOfPages(xhr, pInfo) * pInfo.limit;
+
+    return __WEBPACK_IMPORTED_MODULE_0__utils_js__["a" /* default */].clamp(offset, 0, maxOffset);
 }
 
 /**
@@ -152,19 +166,19 @@ function getNumberOfPages(xhr, paginate) {
  * @param xhr
  */
 function getPageOffset(page, xhr) {
-    var paginate = parseXhr(xhr),
-        offset = (page - 1) * paginate.limit,
-        maxOffset = getNumberOfPages(xhr, paginate) * paginate.limit;
+    var pInfo = parseXhr(xhr),
+        offset = (page - 1) * pInfo.limit;
 
-    return __WEBPACK_IMPORTED_MODULE_0__utils_js__["a" /* default */].clamp(offset, 0, maxOffset);
+    return clampOffset(xhr, offset, pInfo);
 }
 
 /* harmony default export */ __webpack_exports__["a"] = ({
     getListings: getListings,
     determineTitle: determineTitle,
     parseXhr: parseXhr,
-    getPageOffset: getPageOffset,
-    getNumberOfPages: getNumberOfPages
+    getNumberOfPages: getNumberOfPages,
+    clampOffset: clampOffset,
+    getPageOffset: getPageOffset
 });
 
 /***/ }),
@@ -172,7 +186,7 @@ function getPageOffset(page, xhr) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(2);
-module.exports = __webpack_require__(11);
+module.exports = __webpack_require__(10);
 
 
 /***/ }),
@@ -185,13 +199,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__bootstrap_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__templates_listing_card_js__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__simplyrets__ = __webpack_require__(0);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__templates_listing_card_js__ = __webpack_require__(9);
 
 
 
@@ -202,8 +214,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 var blazy = new Blazy(),
     debouncedResize,
     $pagination = $('#pagination').bootpag({
-    total: 1000,
-    page: 2,
+    total: 0,
+    page: 0,
     maxVisible: 3,
     leaps: true,
     firstLastUse: true,
@@ -233,7 +245,7 @@ function updateListingCards() {
     listings.forEach(function (listing) {
         html += Object(__WEBPACK_IMPORTED_MODULE_5__templates_listing_card_js__["a" /* default */])({
             photo: listing.photos[0],
-            title: __WEBPACK_IMPORTED_MODULE_6__simplyrets__["a" /* default */].determineTitle(listing.property.type),
+            title: __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__["a" /* default */].determineTitle(listing.property.type),
             price: __WEBPACK_IMPORTED_MODULE_3__utils_js__["a" /* default */].formatNumber(listing.listPrice),
             address: listing.address.full + ', ' + listing.address.city + ', ' + listing.address.state,
             bedrooms: listing.property.bedrooms || '',
@@ -256,12 +268,20 @@ function resizePagination() {
 }
 
 /**
+ * Handle empty data
+ */
+function handleNoData() {
+    $pagination.hide();
+}
+
+/**
  * Get listings from Simply RETS
  */
 function getListings() {
     var resetPagination = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
     lconfig.$container.addClass('loading');
+
     __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__["a" /* default */].getListings(function (data, textStatus, xhr) {
         updateListingCards(data);
         lconfig.$container.removeClass('loading');
@@ -271,10 +291,16 @@ function getListings() {
             // Update total number of pages for pagination
             $pagination.bootpag({
                 page: 1,
-                total: __WEBPACK_IMPORTED_MODULE_6__simplyrets__["a" /* default */].getNumberOfPages(currentXhr)
+                total: __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__["a" /* default */].getNumberOfPages(currentXhr),
+                firstLastUse: true
             });
         }
+
+        // Handle no data and when there is data, show the pagination
+        data.length < 1 ? handleNoData() : $pagination.show();
     }, function (xhr, textStatus, errorThrown) {
+        currentXhr = xhr;
+        handleNoData();
         console.error(errorThrown);
     });
 }
@@ -289,7 +315,7 @@ debouncedResize = __WEBPACK_IMPORTED_MODULE_3__utils_js__["a" /* default */].deb
 // Pagination event handler
 $pagination.on('page', function (event, page) {
     // Set new offset
-    gSearchParams.set('offset', __WEBPACK_IMPORTED_MODULE_6__simplyrets__["a" /* default */].getPageOffset(page, currentXhr));
+    gSearchParams.set('offset', __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__["a" /* default */].getPageOffset(page, currentXhr));
     history.pushState(null, null, '?' + gSearchParams.toString());
 
     // Scroll to top on pagination change
@@ -301,7 +327,7 @@ $pagination.on('page', function (event, page) {
 // Secondary Navbar event listener
 $.subscribe('snavbar.change ', function () {
     // Set offset back to 0
-    gSearchParams.set('offset', __WEBPACK_IMPORTED_MODULE_6__simplyrets__["a" /* default */].getPageOffset(0, currentXhr));
+    gSearchParams.set('offset', __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__["a" /* default */].getPageOffset(0, currentXhr));
     history.pushState(null, null, '?' + gSearchParams.toString());
 
     getListings(true);
@@ -309,7 +335,7 @@ $.subscribe('snavbar.change ', function () {
 
 $(window).on('resize', debouncedResize);
 
-getListings();
+getListings(true);
 resizePagination();
 
 /***/ }),
@@ -317,9 +343,9 @@ resizePagination();
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(4);
-__webpack_require__(6);
+__webpack_require__(15);
 
-window.Blazy = __webpack_require__(7);
+window.Blazy = __webpack_require__(6);
 window.gSearchParams = new URLSearchParams(location.search.slice(1));
 window.gConfig = {
     simplyRetsApiUrl: 'https://api.simplyrets.com/properties',
@@ -671,30 +697,6 @@ module.exports = g;
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
-
-/* jQuery Tiny Pub/Sub - v0.7 - 10/27/2011
- * http://benalman.com/
- * Copyright (c) 2011 "Cowboy" Ben Alman; Licensed MIT, GPL */
-(function ($) {
-
-    var o = $({});
-
-    $.subscribe = function () {
-        o.on.apply(o, arguments);
-    };
-
-    $.unsubscribe = function () {
-        o.off.apply(o, arguments);
-    };
-
-    $.publish = function () {
-        o.trigger.apply(o, arguments);
-    };
-})(jQuery);
-
-/***/ }),
-/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -1074,7 +1076,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports) {
 
 var $checkboxes = $('#listingType1, #listingType2, #listingType3, #listingType4'),
@@ -1102,7 +1104,7 @@ $checkboxes.on('change', function () {
 });
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1161,7 +1163,7 @@ function clamp(number, min, max) {
 });
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1172,16 +1174,40 @@ function clamp(number, min, max) {
 });
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
+/* 11 */,
 /* 12 */,
 /* 13 */,
 /* 14 */,
-/* 15 */,
+/* 15 */
+/***/ (function(module, exports) {
+
+/* jQuery Tiny Pub/Sub - v0.7 - 10/27/2011
+ * http://benalman.com/
+ * Copyright (c) 2011 "Cowboy" Ben Alman; Licensed MIT, GPL */
+(function ($) {
+
+    var o = $({});
+
+    $.subscribe = function () {
+        o.on.apply(o, arguments);
+    };
+
+    $.unsubscribe = function () {
+        o.off.apply(o, arguments);
+    };
+
+    $.publish = function () {
+        o.trigger.apply(o, arguments);
+    };
+})(jQuery);
+
+/***/ }),
 /* 16 */,
 /* 17 */
 /***/ (function(module, exports) {
