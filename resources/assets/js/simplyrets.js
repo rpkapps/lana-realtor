@@ -64,10 +64,24 @@ function parseXhr(xhr) {
  * @param xhr
  * @returns {number}
  */
-function getNumberOfPages(xhr, paginate) {
-    var paginate = paginate || parseXhr(xhr);
+function getNumberOfPages(xhr, pInfo) {
+    var pInfo = pInfo || parseXhr(xhr);
 
-    return Math.ceil(paginate.total / paginate.limit);
+    return Math.ceil(pInfo.total / pInfo.limit);
+}
+
+/**
+ * Clamp offset so that it's valid
+ * @param xhr
+ * @param offset
+ * @param pInfo  pagination info
+ * @returns {*}
+ */
+function clampOffset(xhr, offset, pInfo) {
+    var pInfo = pInfo || parseXhr(xhr),
+        maxOffset = getNumberOfPages(xhr, pInfo) * pInfo.limit;
+
+    return utils.clamp(offset, 0, maxOffset);
 }
 
 /**
@@ -76,17 +90,17 @@ function getNumberOfPages(xhr, paginate) {
  * @param xhr
  */
 function getPageOffset(page, xhr) {
-    var paginate = parseXhr(xhr),
-        offset = (page - 1) * paginate.limit,
-        maxOffset = getNumberOfPages(xhr, paginate) * paginate.limit;
+    var pInfo = parseXhr(xhr),
+        offset = (page - 1) * pInfo.limit;
 
-    return utils.clamp(offset, 0, maxOffset);
+    return clampOffset(xhr, offset, pInfo)
 }
 
 export default {
     getListings: getListings,
     determineTitle: determineTitle,
     parseXhr: parseXhr,
-    getPageOffset: getPageOffset,
-    getNumberOfPages: getNumberOfPages
+    getNumberOfPages: getNumberOfPages,
+    clampOffset: clampOffset,
+    getPageOffset: getPageOffset
 };
