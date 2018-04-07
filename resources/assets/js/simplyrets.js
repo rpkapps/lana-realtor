@@ -64,10 +64,10 @@ function parseXhr(xhr) {
  * @param xhr
  * @returns {number}
  */
-function getNumberOfPages(xhr) {
-    var paginate = parseXhr(xhr);
+function getNumberOfPages(xhr, paginate) {
+    var paginate = paginate || parseXhr(xhr);
 
-    return parseInt(paginate.total / paginate.limit, 10) + 1;
+    return Math.ceil(paginate.total / paginate.limit);
 }
 
 /**
@@ -78,7 +78,7 @@ function getNumberOfPages(xhr) {
 function getPageOffset(page, xhr) {
     var paginate = parseXhr(xhr),
         offset = (page - 1) * paginate.limit,
-        maxOffset = parseInt(paginate.total / paginate.limit, 10) * paginate.limit;
+        maxOffset = getNumberOfPages(xhr, paginate) * paginate.limit;
 
     return utils.clamp(offset, 0, maxOffset);
 }

@@ -68,7 +68,7 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_js__ = __webpack_require__(9);
 
 
 /**
@@ -140,10 +140,10 @@ function parseXhr(xhr) {
  * @param xhr
  * @returns {number}
  */
-function getNumberOfPages(xhr) {
-    var paginate = parseXhr(xhr);
+function getNumberOfPages(xhr, paginate) {
+    var paginate = paginate || parseXhr(xhr);
 
-    return parseInt(paginate.total / paginate.limit, 10) + 1;
+    return Math.ceil(paginate.total / paginate.limit);
 }
 
 /**
@@ -154,7 +154,7 @@ function getNumberOfPages(xhr) {
 function getPageOffset(page, xhr) {
     var paginate = parseXhr(xhr),
         offset = (page - 1) * paginate.limit,
-        maxOffset = parseInt(paginate.total / paginate.limit, 10) * paginate.limit;
+        maxOffset = getNumberOfPages(xhr, paginate) * paginate.limit;
 
     return __WEBPACK_IMPORTED_MODULE_0__utils_js__["a" /* default */].clamp(offset, 0, maxOffset);
 }
@@ -172,7 +172,7 @@ function getPageOffset(page, xhr) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(2);
-module.exports = __webpack_require__(10);
+module.exports = __webpack_require__(11);
 
 
 /***/ }),
@@ -185,11 +185,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__bootstrap_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_js__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__templates_listing_card_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__templates_listing_card_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__simplyrets__ = __webpack_require__(0);
 
 
@@ -259,15 +259,21 @@ function resizePagination() {
  * Get listings from Simply RETS
  */
 function getListings() {
+    var resetPagination = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
     lconfig.$container.addClass('loading');
     __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__["a" /* default */].getListings(function (data, textStatus, xhr) {
         updateListingCards(data);
         lconfig.$container.removeClass('loading');
         currentXhr = xhr;
 
-        $pagination.bootpag({
-            total: __WEBPACK_IMPORTED_MODULE_6__simplyrets__["a" /* default */].getNumberOfPages(xhr)
-        });
+        if (resetPagination) {
+            // Update total number of pages for pagination
+            $pagination.bootpag({
+                page: 1,
+                total: __WEBPACK_IMPORTED_MODULE_6__simplyrets__["a" /* default */].getNumberOfPages(currentXhr)
+            });
+        }
     }, function (xhr, textStatus, errorThrown) {
         console.error(errorThrown);
     });
@@ -294,11 +300,11 @@ $pagination.on('page', function (event, page) {
 
 // Secondary Navbar event listener
 $.subscribe('snavbar.change ', function () {
-    // set offset back to 0
+    // Set offset back to 0
     gSearchParams.set('offset', __WEBPACK_IMPORTED_MODULE_6__simplyrets__["a" /* default */].getPageOffset(0, currentXhr));
     history.pushState(null, null, '?' + gSearchParams.toString());
 
-    getListings();
+    getListings(true);
 });
 
 $(window).on('resize', debouncedResize);
@@ -311,9 +317,9 @@ resizePagination();
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(4);
-__webpack_require__(15);
+__webpack_require__(6);
 
-window.Blazy = __webpack_require__(6);
+window.Blazy = __webpack_require__(7);
 window.gSearchParams = new URLSearchParams(location.search.slice(1));
 window.gConfig = {
     simplyRetsApiUrl: 'https://api.simplyrets.com/properties',
@@ -665,6 +671,30 @@ module.exports = g;
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports) {
+
+/* jQuery Tiny Pub/Sub - v0.7 - 10/27/2011
+ * http://benalman.com/
+ * Copyright (c) 2011 "Cowboy" Ben Alman; Licensed MIT, GPL */
+(function ($) {
+
+    var o = $({});
+
+    $.subscribe = function () {
+        o.on.apply(o, arguments);
+    };
+
+    $.unsubscribe = function () {
+        o.off.apply(o, arguments);
+    };
+
+    $.publish = function () {
+        o.trigger.apply(o, arguments);
+    };
+})(jQuery);
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -1044,7 +1074,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 var $checkboxes = $('#listingType1, #listingType2, #listingType3, #listingType4'),
@@ -1072,7 +1102,7 @@ $checkboxes.on('change', function () {
 });
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1131,7 +1161,7 @@ function clamp(number, min, max) {
 });
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1142,40 +1172,16 @@ function clamp(number, min, max) {
 });
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 11 */,
 /* 12 */,
 /* 13 */,
 /* 14 */,
-/* 15 */
-/***/ (function(module, exports) {
-
-/* jQuery Tiny Pub/Sub - v0.7 - 10/27/2011
- * http://benalman.com/
- * Copyright (c) 2011 "Cowboy" Ben Alman; Licensed MIT, GPL */
-(function ($) {
-
-    var o = $({});
-
-    $.subscribe = function () {
-        o.on.apply(o, arguments);
-    };
-
-    $.unsubscribe = function () {
-        o.off.apply(o, arguments);
-    };
-
-    $.publish = function () {
-        o.trigger.apply(o, arguments);
-    };
-})(jQuery);
-
-/***/ }),
+/* 15 */,
 /* 16 */,
 /* 17 */
 /***/ (function(module, exports) {

@@ -26,7 +26,7 @@ var blazy = new Blazy(),
     }),
     currentXhr,
     lconfig = {
-        $container: $('#cardListings'),
+        $container: $('#cardListings')
     };
 
 /**
@@ -57,13 +57,13 @@ function updateListingCards(listings = []) {
 function resizePagination() {
     $pagination.bootpag({
         maxVisible: window.innerWidth > 767 ? 5 : 3
-    })
+    });
 }
 
 /**
  * Get listings from Simply RETS
  */
-function getListings() {
+function getListings(resetPagination = false) {
     lconfig.$container.addClass('loading');
     sRets.getListings(
         function(data, textStatus, xhr) {
@@ -71,9 +71,13 @@ function getListings() {
             lconfig.$container.removeClass('loading');
             currentXhr = xhr;
 
-            $pagination.bootpag({
-                total: simplyrets.getNumberOfPages(xhr)
-            })
+            if(resetPagination) {
+                // Update total number of pages for pagination
+                $pagination.bootpag({
+                    page: 1,
+                    total: simplyrets.getNumberOfPages(currentXhr)
+                });
+            }
         },
         function(xhr, textStatus, errorThrown) {
             console.error(errorThrown);
@@ -81,7 +85,6 @@ function getListings() {
     );
 
 }
-
 
 /* MAIN
    ================================================== */
@@ -104,11 +107,11 @@ $pagination.on('page', function(event, page) {
 
 // Secondary Navbar event listener
 $.subscribe('snavbar.change ', function() {
-    // set offset back to 0
+    // Set offset back to 0
     gSearchParams.set('offset', simplyrets.getPageOffset(0, currentXhr));
     history.pushState(null, null, `?${gSearchParams.toString()}`);
 
-    getListings();
+    getListings(true);
 });
 
 $(window).on('resize', debouncedResize);
