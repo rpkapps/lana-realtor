@@ -15,7 +15,7 @@ Route::get('/', ['as' => 'home', 'uses' => 'PagesController@getIndex']);
 
 Route::get('/contact', ['as' => 'contact', 'uses' => 'PagesController@getContact']);
 
-Route::get('/listings', ['as' => 'listings', 'uses' => 'SimplyRetsController@getIndex']);
+Route::get('/listings', ['as' => 'listings', 'uses' => 'PagesController@getListings']);
 
 
 Route::group(['prefix' => 'admin'], function () {

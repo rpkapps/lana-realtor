@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
+// TODO: DELETE THIS CONTROLLER
+
 
 class SimplyRetsController extends Controller
 {
@@ -43,6 +45,8 @@ class SimplyRetsController extends Controller
 
 
         return view('pages.listings', compact('listings'));
+
+        return view('pages.listings');
 
     }
 }

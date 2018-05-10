@@ -21,12 +21,6 @@
                     <a class="nav-link px-md-6 px-md-0" href="#" title="Contact">Contact</a>
                 </li>
             </ul>
-            <form id="mainSearchForm" class="form-inline my-2 my-md-0" action="{{ route('listings') }}" method="GET">
-                <div class="main-search">
-                    <input class="form-control" type="search" aria-label="Search" name="q">
-                    <button class="icn-search" type="submit" form="mainSearchForm" value="Submit"></button>
-                </div>
-            </form>
         </div>
     </div>
 </nav>

@@ -20,7 +20,7 @@ $spacers: (
 $grays: (
     '100': #f8f9fa,
     '200': #e9ecef,
-    '300': #dee2e6,
+    '300': #dddddd,
     '400': #cdd1d8,
     '500': #adb5bd,
     '600': #777777,
@@ -53,8 +53,9 @@ $theme-colors: (
     'info':         color('light-blue'),
     'warning':      color('yellow'),
     'danger':       color('red'),
-    'light':        color('bluish-white'),
+    'light':        gray('300'),
     'dark':         gray('800'),
+    'bluishlight':  color('bluish-white')  
 );
 
 

@@ -2,11 +2,11 @@
 
 @include('includes.head')
 
-<body class="bg-light">
+<body class="bg-bluishlight">
 
 @include('includes.main-nav')
 @include('includes.secondary-nav')
-
+@include('includes.filter-bar')
 <div class="container">
     @yield('content')
 </div>

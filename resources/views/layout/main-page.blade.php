@@ -2,7 +2,7 @@
 
 @include('includes.head')
 
-<body class="bg-light">
+<body class="bg-bluishlight">
 
 <div class="pt-4"></div>
 @include('includes.main-nav')

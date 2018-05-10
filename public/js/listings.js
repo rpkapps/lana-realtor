@@ -68,117 +68,58 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_js__ = __webpack_require__(8);
-
-
 /**
- * Clean query string
- * @param query
- */
-function cleanQuery(query) {
-    return query.replace(/%5B%5D/g, '');
-}
-
-/**
- * Get property listings from Simply RETS
- * @param data
- * @param onDone
- * @param onFail
- */
-function getListings() {
-    var onDone = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : $.noop;
-    var onFail = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : $.noop;
-
-    $.ajax({
-        type: 'GET',
-        url: gConfig.simplyRetsApiUrl + ('?limit=' + gConfig.limit + '&' + cleanQuery(gSearchParams.toString())),
-        dataType: 'json',
-        beforeSend: function beforeSend(xhr) {
-            xhr.setRequestHeader('Authorization', 'Basic ' + gConfig.simplyRetsBtoa);
-        }
-    }).done(onDone).fail(onFail);
-}
-
-/**
- * Determine listing title
- * @param type
+ * Format number to contain commas
+ * @param number
  * @returns {string}
  */
-function determineTitle() {
-    var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+function formatNumber() {
+    var number = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
-    var types = {
-        'RES': 'House For Sale',
-        'RNT': 'House For Rent',
-        'MLF': 'House For Sale',
-        'CRE': 'Commercial Building For Sale',
-        'LND': 'Land For Sale',
-        'FRM': 'Farm For Sale'
+    return parseFloat(number) ? parseFloat(number).toLocaleString('en') : '';
+}
+
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * N milliseconds. If `immediate` is passed, trigger the function on the
+ * leading edge, instead of the trailing.
+ * @param func
+ * @param wait
+ * @param immediate
+ * @returns {Function}
+ */
+function debounce(func, wait, immediate) {
+    var timeout;
+    return function () {
+        var context = this,
+            args = arguments;
+        var later = function later() {
+            timeout = null;
+            if (!immediate) {
+                func.apply(context, args);
+            }
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) {
+            func.apply(context, args);
+        }
     };
-
-    return types[type] ? types[type] : 'Invalid Listing';
 }
 
 /**
- * Parse response header
- * @param xhr
- * @returns {{offset: number, limit: number}}
+ * Clamp a number
  */
-function parseXhr(xhr) {
-    var link = xhr.getResponseHeader('link') || '?',
-        searchParams = new URLSearchParams(link.match(/\?.*/)[0]);
-
-    return {
-        offset: parseInt(searchParams.get('offset'), 10) || parseInt(gSearchParams.get('offset'), 10),
-        limit: parseInt(searchParams.get('limit'), 10) || gConfig.limit,
-        total: parseInt(xhr.getResponseHeader('x-total-count'), 10)
-    };
-}
-
-/**
- * Get number of pages
- * @param xhr
- * @returns {number}
- */
-function getNumberOfPages(xhr, pInfo) {
-    var pInfo = pInfo || parseXhr(xhr);
-
-    return Math.ceil(pInfo.total / pInfo.limit);
-}
-
-/**
- * Clamp offset so that it's valid
- * @param xhr
- * @param offset
- * @param pInfo  pagination info
- * @returns {*}
- */
-function clampOffset(xhr, offset, pInfo) {
-    var pInfo = pInfo || parseXhr(xhr),
-        maxOffset = getNumberOfPages(xhr, pInfo) * pInfo.limit;
-
-    return __WEBPACK_IMPORTED_MODULE_0__utils_js__["a" /* default */].clamp(offset, 0, maxOffset);
-}
-
-/**
- * Get the page offset given a page number
- * @param page
- * @param xhr
- */
-function getPageOffset(page, xhr) {
-    var pInfo = parseXhr(xhr),
-        offset = (page - 1) * pInfo.limit;
-
-    return clampOffset(xhr, offset, pInfo);
+function clamp(number, min, max) {
+    return Math.min(Math.max(number, min), max);
 }
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-    getListings: getListings,
-    determineTitle: determineTitle,
-    parseXhr: parseXhr,
-    getNumberOfPages: getNumberOfPages,
-    clampOffset: clampOffset,
-    getPageOffset: getPageOffset
+    formatNumber: formatNumber,
+    debounce: debounce,
+    clamp: clamp
 });
 
 /***/ }),
@@ -186,7 +127,7 @@ function getPageOffset(page, xhr) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(2);
-module.exports = __webpack_require__(10);
+module.exports = __webpack_require__(13);
 
 
 /***/ }),
@@ -197,13 +138,16 @@ module.exports = __webpack_require__(10);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__bootstrap_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_js__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__templates_listing_card_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_filter_bar_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_filter_bar_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_filter_bar_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_js__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__templates_listing_card_js__ = __webpack_require__(12);
+
 
 
 
@@ -243,14 +187,14 @@ function updateListingCards() {
 
     var html = '';
     listings.forEach(function (listing) {
-        html += Object(__WEBPACK_IMPORTED_MODULE_5__templates_listing_card_js__["a" /* default */])({
+        html += Object(__WEBPACK_IMPORTED_MODULE_6__templates_listing_card_js__["a" /* default */])({
             photo: listing.photos[0],
-            title: __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__["a" /* default */].determineTitle(listing.property.type),
-            price: __WEBPACK_IMPORTED_MODULE_3__utils_js__["a" /* default */].formatNumber(listing.listPrice),
+            title: __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__["a" /* default */].determineTitle(listing.property.type),
+            price: __WEBPACK_IMPORTED_MODULE_4__utils_js__["a" /* default */].formatNumber(listing.listPrice),
             address: listing.address.full + ', ' + listing.address.city + ', ' + listing.address.state,
             bedrooms: listing.property.bedrooms || '',
             bathrooms: listing.property.bathrooms || '',
-            property: __WEBPACK_IMPORTED_MODULE_3__utils_js__["a" /* default */].formatNumber(listing.property.area)
+            property: __WEBPACK_IMPORTED_MODULE_4__utils_js__["a" /* default */].formatNumber(listing.property.area)
         });
     });
 
@@ -282,7 +226,7 @@ function getListings() {
 
     lconfig.$container.addClass('loading');
 
-    __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__["a" /* default */].getListings(function (data, textStatus, xhr) {
+    __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__["a" /* default */].getListings(function (data, textStatus, xhr) {
         updateListingCards(data);
         lconfig.$container.removeClass('loading');
         currentXhr = xhr;
@@ -291,7 +235,7 @@ function getListings() {
             // Update total number of pages for pagination
             $pagination.bootpag({
                 page: 1,
-                total: __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__["a" /* default */].getNumberOfPages(currentXhr),
+                total: __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__["a" /* default */].getNumberOfPages(currentXhr),
                 firstLastUse: true
             });
         }
@@ -308,14 +252,14 @@ function getListings() {
 /* MAIN
    ================================================== */
 
-debouncedResize = __WEBPACK_IMPORTED_MODULE_3__utils_js__["a" /* default */].debounce(function () {
+debouncedResize = __WEBPACK_IMPORTED_MODULE_4__utils_js__["a" /* default */].debounce(function () {
     resizePagination();
 }, 100);
 
 // Pagination event handler
 $pagination.on('page', function (event, page) {
     // Set new offset
-    gSearchParams.set('offset', __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__["a" /* default */].getPageOffset(page, currentXhr));
+    gSearchParams.set('offset', __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__["a" /* default */].getPageOffset(page, currentXhr));
     history.pushState(null, null, '?' + gSearchParams.toString());
 
     // Scroll to top on pagination change
@@ -324,10 +268,10 @@ $pagination.on('page', function (event, page) {
     getListings();
 });
 
-// Secondary Navbar event listener
-$.subscribe('snavbar.change ', function () {
+// Event listener
+$.subscribe('snavbar.change filter.change', function () {
     // Set offset back to 0
-    gSearchParams.set('offset', __WEBPACK_IMPORTED_MODULE_4__simplyrets_js__["a" /* default */].getPageOffset(0, currentXhr));
+    gSearchParams.set('offset', __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__["a" /* default */].getPageOffset(0, currentXhr));
     history.pushState(null, null, '?' + gSearchParams.toString());
 
     getListings(true);
@@ -343,9 +287,9 @@ resizePagination();
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(4);
-__webpack_require__(15);
+__webpack_require__(6);
 
-window.Blazy = __webpack_require__(6);
+window.Blazy = __webpack_require__(7);
 window.gSearchParams = new URLSearchParams(location.search.slice(1));
 window.gConfig = {
     simplyRetsApiUrl: 'https://api.simplyrets.com/properties',
@@ -697,6 +641,30 @@ module.exports = g;
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports) {
+
+/* jQuery Tiny Pub/Sub - v0.7 - 10/27/2011
+ * http://benalman.com/
+ * Copyright (c) 2011 "Cowboy" Ben Alman; Licensed MIT, GPL */
+(function ($) {
+
+    var o = $({});
+
+    $.subscribe = function () {
+        o.on.apply(o, arguments);
+    };
+
+    $.unsubscribe = function () {
+        o.off.apply(o, arguments);
+    };
+
+    $.publish = function () {
+        o.trigger.apply(o, arguments);
+    };
+})(jQuery);
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -1076,140 +1044,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-var $checkboxes = $('#listingType1, #listingType2, #listingType3, #listingType4'),
-    $search = $('#secondarySearch');
-
-$('#secondarySearchForm').on('submit', function (event) {
-    event.preventDefault();
-    $search.val() ? gSearchParams.set('q', $search.val()) : gSearchParams.delete('q');
-
-    history.pushState(null, null, '?' + gSearchParams.toString());
-    $.publish('snavbar.change');
-});
-
-$checkboxes.on('change', function () {
-    gSearchParams.delete('type[]');
-
-    $checkboxes.each(function () {
-        if (this.checked) {
-            gSearchParams.append('type[]', this.value);
-        }
-    });
-
-    history.pushState(null, null, '?' + gSearchParams.toString());
-    $.publish('snavbar.change');
-});
-
-/***/ }),
 /* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/**
- * Format number to contain commas
- * @param number
- * @returns {string}
- */
-function formatNumber() {
-    var number = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-
-    return parseFloat(number) ? parseFloat(number).toLocaleString('en') : '';
-}
-
-/**
- * Returns a function, that, as long as it continues to be invoked, will not
- * be triggered. The function will be called after it stops being called for
- * N milliseconds. If `immediate` is passed, trigger the function on the
- * leading edge, instead of the trailing.
- * @param func
- * @param wait
- * @param immediate
- * @returns {Function}
- */
-function debounce(func, wait, immediate) {
-    var timeout;
-    return function () {
-        var context = this,
-            args = arguments;
-        var later = function later() {
-            timeout = null;
-            if (!immediate) {
-                func.apply(context, args);
-            }
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) {
-            func.apply(context, args);
-        }
-    };
-}
-
-/**
- * Clamp a number
- */
-function clamp(number, min, max) {
-    return Math.min(Math.max(number, min), max);
-}
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-    formatNumber: formatNumber,
-    debounce: debounce,
-    clamp: clamp
-});
-
-/***/ }),
-/* 9 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = (function () {
-    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    return "\n        <div class=\"card\">\n            <div class=\"card-background b-lazy\" data-src=\"" + data.photo + "\">\n                <span class=\"loader\"></span>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <h4 class=\"card-title text-primary\">" + data.title + "</h4>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <h4 class=\"card-title\">$" + data.price + "</h4>\n                    </div>\n                </div>\n        \n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <p class=\"card-text\">" + data.address + "</p>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <p class=\"card-text\">\n                            <strong>" + data.bedrooms + "</strong> bds\n                            <strong>" + data.bathrooms + "</strong> ba\n                            <strong>" + data.property + "</strong> sqft\n                        </p>\n                    </div>\n                </div>\n        \n            </div>\n        </div>\n    ";
-});
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */,
-/* 15 */
-/***/ (function(module, exports) {
-
-/* jQuery Tiny Pub/Sub - v0.7 - 10/27/2011
- * http://benalman.com/
- * Copyright (c) 2011 "Cowboy" Ben Alman; Licensed MIT, GPL */
-(function ($) {
-
-    var o = $({});
-
-    $.subscribe = function () {
-        o.on.apply(o, arguments);
-    };
-
-    $.unsubscribe = function () {
-        o.off.apply(o, arguments);
-    };
-
-    $.publish = function () {
-        o.trigger.apply(o, arguments);
-    };
-})(jQuery);
-
-/***/ }),
-/* 16 */,
-/* 17 */
 /***/ (function(module, exports) {
 
 /**
@@ -1361,6 +1196,287 @@ function clamp(number, min, max) {
         });
     };
 })(jQuery, window);
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+var $checkboxes = $('#listingType1, #listingType2, #listingType3, #listingType4'),
+    $search = $('#secondarySearch');
+
+$('#secondarySearchForm').on('submit', function (event) {
+    event.preventDefault();
+    $search.val() ? gSearchParams.set('q', $search.val()) : gSearchParams.delete('q');
+
+    history.pushState(null, null, '?' + gSearchParams.toString());
+    $.publish('snavbar.change');
+});
+
+$checkboxes.on('change', function () {
+    gSearchParams.delete('type[]');
+
+    $checkboxes.each(function () {
+        if (this.checked) {
+            gSearchParams.append('type[]', this.value);
+        }
+    });
+
+    history.pushState(null, null, '?' + gSearchParams.toString());
+    $.publish('snavbar.change');
+});
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+// Cache values so that we don't query DOM more than needed
+var $bdrmFilters = $('#filterBdrms > .dropdown-item');
+var $bathFilters = $('#filterbaths > .dropdown-item');
+var $homeTypeFilters = $('#filterHomeType > .dropdown-item');
+var $minPriceFilters = $('#filterMinPrice > .dropdown-item');
+var $maxPriceFilters = $('#filterMaxPrice > .dropdown-item');
+var $minAreaFilters = $('#filterMinArea > .dropdown-item');
+var $maxAreaFilters = $('#filterMaxArea > .dropdown-item');
+
+$bdrmFilters.on('click', function (event) {
+	var $this = $(this);
+	event.preventDefault();
+
+	$bdrmFilters.removeClass('active');
+
+	$this.addClass('active');
+
+	gSearchParams.set('minbeds', $this.data('value'));
+
+	history.pushState(null, null, '?' + gSearchParams.toString());
+
+	$.publish('filter.change');
+});
+
+$bathFilters.on('click', function (event) {
+	var $this = $(this);
+	event.preventDefault();
+
+	$bathFilters.removeClass('active');
+
+	$this.addClass('active');
+
+	gSearchParams.set('minbaths', $this.data('value'));
+
+	history.pushState(null, null, '?' + gSearchParams.toString());
+
+	$.publish('filter.change');
+});
+
+$homeTypeFilters.on('click', function (event) {
+	var $this = $(this);
+	event.preventDefault();
+
+	$homeTypeFilters.removeClass('active');
+
+	$this.addClass('active');
+
+	gSearchParams.set('subtype', $this.data('value'));
+
+	history.pushState(null, null, '?' + gSearchParams.toString());
+
+	$.publish('filter.change');
+});
+
+$minPriceFilters.on('change', function () {
+	var $this = $(this);
+	event.preventDefault();
+
+	$minPriceFilters.removeClass('active');
+
+	$this.addClass('active');
+
+	$this.val() ? gSearchParams.set('minprice', $this.val()) : gSearchParams.delete('minprice');
+
+	history.pushState(null, null, '?' + gSearchParams.toString());
+
+	$.publish('filter.change');
+});
+
+$maxPriceFilters.on('change', function () {
+	var $this = $(this);
+	event.preventDefault();
+
+	$maxPriceFilters.removeClass('active');
+
+	$this.addClass('active');
+
+	$this.val() ? gSearchParams.set('maxprice', $this.val()) : gSearchParams.delete('maxprice');
+
+	history.pushState(null, null, '?' + gSearchParams.toString());
+
+	$.publish('filter.change');
+});
+
+$minAreaFilters.on('change', function () {
+	var $this = $(this);
+	event.preventDefault();
+
+	$minAreaFilters.removeClass('active');
+
+	$this.addClass('active');
+
+	$this.val() ? gSearchParams.set('minarea', $this.val()) : gSearchParams.delete('minarea');
+
+	history.pushState(null, null, '?' + gSearchParams.toString());
+
+	$.publish('filter.change');
+});
+
+$maxAreaFilters.on('change', function () {
+	var $this = $(this);
+	event.preventDefault();
+
+	$maxAreaFilters.removeClass('active');
+
+	$this.addClass('active');
+
+	$this.val() ? gSearchParams.set('maxarea', $this.val()) : gSearchParams.delete('maxarea');
+
+	history.pushState(null, null, '?' + gSearchParams.toString());
+
+	$.publish('filter.change');
+});
+
+/***/ }),
+/* 11 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_js__ = __webpack_require__(0);
+
+
+/**
+ * Clean query string
+ * @param query
+ */
+function cleanQuery(query) {
+    return query.replace(/%5B%5D/g, '');
+}
+
+/**
+ * Get property listings from Simply RETS
+ * @param data
+ * @param onDone
+ * @param onFail
+ */
+function getListings() {
+    var onDone = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : $.noop;
+    var onFail = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : $.noop;
+
+    $.ajax({
+        type: 'GET',
+        url: gConfig.simplyRetsApiUrl + ('?limit=' + gConfig.limit + '&' + cleanQuery(gSearchParams.toString())),
+        dataType: 'json',
+        beforeSend: function beforeSend(xhr) {
+            xhr.setRequestHeader('Authorization', 'Basic ' + gConfig.simplyRetsBtoa);
+        }
+    }).done(onDone).fail(onFail);
+}
+
+/**
+ * Determine listing title
+ * @param type
+ * @returns {string}
+ */
+function determineTitle() {
+    var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+    var types = {
+        'RES': 'House For Sale',
+        'RNT': 'House For Rent',
+        'MLF': 'House For Sale',
+        'CRE': 'Commercial Building For Sale',
+        'LND': 'Land For Sale',
+        'FRM': 'Farm For Sale'
+    };
+
+    return types[type] ? types[type] : 'Invalid Listing';
+}
+
+/**
+ * Parse response header
+ * @param xhr
+ * @returns {{offset: number, limit: number}}
+ */
+function parseXhr(xhr) {
+    var link = xhr.getResponseHeader('link') || '?',
+        searchParams = new URLSearchParams(link.match(/\?.*/)[0]);
+
+    return {
+        offset: parseInt(searchParams.get('offset'), 10) || parseInt(gSearchParams.get('offset'), 10),
+        limit: parseInt(searchParams.get('limit'), 10) || gConfig.limit,
+        total: parseInt(xhr.getResponseHeader('x-total-count'), 10)
+    };
+}
+
+/**
+ * Get number of pages
+ * @param xhr
+ * @returns {number}
+ */
+function getNumberOfPages(xhr, pInfo) {
+    var pInfo = pInfo || parseXhr(xhr);
+
+    return Math.ceil(pInfo.total / pInfo.limit);
+}
+
+/**
+ * Clamp offset so that it's valid
+ * @param xhr
+ * @param offset
+ * @param pInfo  pagination info
+ * @returns {*}
+ */
+function clampOffset(xhr, offset, pInfo) {
+    var pInfo = pInfo || parseXhr(xhr),
+        maxOffset = getNumberOfPages(xhr, pInfo) * pInfo.limit;
+
+    return __WEBPACK_IMPORTED_MODULE_0__utils_js__["a" /* default */].clamp(offset, 0, maxOffset);
+}
+
+/**
+ * Get the page offset given a page number
+ * @param page
+ * @param xhr
+ */
+function getPageOffset(page, xhr) {
+    var pInfo = parseXhr(xhr),
+        offset = (page - 1) * pInfo.limit;
+
+    return clampOffset(xhr, offset, pInfo);
+}
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    getListings: getListings,
+    determineTitle: determineTitle,
+    parseXhr: parseXhr,
+    getNumberOfPages: getNumberOfPages,
+    clampOffset: clampOffset,
+    getPageOffset: getPageOffset
+});
+
+/***/ }),
+/* 12 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = (function () {
+    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    return "\n        <div class=\"card\">\n            <div class=\"card-background b-lazy\" data-src=\"" + data.photo + "\">\n                <span class=\"loader\"></span>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <h4 class=\"card-title text-primary\">" + data.title + "</h4>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <h4 class=\"card-title\">$" + data.price + "</h4>\n                    </div>\n                </div>\n        \n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <p class=\"card-text\">" + data.address + "</p>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <p class=\"card-text\">\n                            <strong>" + data.bedrooms + "</strong> bds\n                            <strong>" + data.bathrooms + "</strong> ba\n                            <strong>" + data.property + "</strong> sqft\n                        </p>\n                    </div>\n                </div>\n        \n            </div>\n        </div>\n    ";
+});
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

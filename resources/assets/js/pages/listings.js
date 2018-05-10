@@ -1,6 +1,7 @@
 import '../bootstrap.js';
 import '../components/bootpag.js';
 import '../components/secondary-nav.js';
+import '../components/filter-bar.js';
 import utils from '../utils.js';
 import sRets from '../simplyrets.js';
 import listingCard from '../templates/listing-card.js';
@@ -117,8 +118,8 @@ $pagination.on('page', function(event, page) {
     getListings();
 });
 
-// Secondary Navbar event listener
-$.subscribe('snavbar.change ', function() {
+// Event listener
+$.subscribe('snavbar.change filter.change', function() {
     // Set offset back to 0
     gSearchParams.set('offset', sRets.getPageOffset(0, currentXhr));
     history.pushState(null, null, `?${gSearchParams.toString()}`);

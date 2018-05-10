@@ -1,3 +1,5 @@
+<!-- TODO remove later - replaced by jquery -->
+
 <div class="card">
     <div class="card-background b-lazy" data-src="{{ $listing['photos'][0] }}">
         <span class="loader"></span>

@@ -12,4 +12,8 @@ class FormHelper
     static function value($key) {
         return request()->input($key) ? request()->input($key) : '';
     }
+
+    static function activeClass($key, $value){
+		return request()->input($key) == $value ? 'active' : '';
+    }    	
 }

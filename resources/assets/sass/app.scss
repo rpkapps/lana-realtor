@@ -1,5 +1,8 @@
-// Bootstrap Settings
-@import "../../../node_modules/bootstrap/scss/functions";
+// Bootstrap Functions
+@import '../../../node_modules/bootstrap/scss/functions';
+
+// Our Functions
+@import 'functions';
 
 // Our Variables
 @import 'variables';
@@ -18,3 +21,4 @@
 @import 'pagination';
 @import 'loader';
 @import 'card';
+@import 'filter-bar';
