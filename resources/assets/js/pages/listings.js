@@ -24,6 +24,7 @@ var blazy = new Blazy(),
         lastClass: 'last',
         firstClass: 'first'
     }),
+    currentListings = [],
     currentXhr,
     lconfig = {
         $container: $('#cardListings')
@@ -34,9 +35,12 @@ var blazy = new Blazy(),
  * @param listings
  */
 function updateListingCards(listings = []) {
+    currentListings = listings;
+
     var html = '';
     listings.forEach(function(listing) {
         html += listingCard({
+            id: listing.mlsId, // change this
             photo: listing.photos[0],
             title: sRets.determineTitle(listing.property.type),
             price: utils.formatNumber(listing.listPrice),
@@ -49,6 +53,18 @@ function updateListingCards(listings = []) {
 
     lconfig.$container.html(html);
     blazy.revalidate();
+}
+
+function displayGridView() {
+
+}
+
+function displayMapView() {
+
+}
+
+function displayListing() {
+
 }
 
 /**

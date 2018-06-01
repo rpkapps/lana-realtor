@@ -1,6 +1,6 @@
 export default function(data = {}) {
     return `
-        <div class="card">
+        <a href="/listing-item/${data.id}" id="${data.id}" class="card">
             <div class="card-background b-lazy" data-src="${data.photo}">
                 <span class="loader"></span>
             </div>
@@ -28,6 +28,6 @@ export default function(data = {}) {
                 </div>
         
             </div>
-        </div>
+        </a>
     `;
 }

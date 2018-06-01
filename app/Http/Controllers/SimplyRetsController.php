@@ -46,7 +46,5 @@ class SimplyRetsController extends Controller
 
         return view('pages.listings', compact('listings'));
 
-        return view('pages.listings');
-
     }
 }

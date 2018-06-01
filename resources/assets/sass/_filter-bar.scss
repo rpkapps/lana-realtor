@@ -1,6 +1,14 @@
 .filter-bar {
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+
 	.btn-outline-light{
 		color: gray('800');
+
+		min-width: 172px;
+		min-height: 40px;
 
 		&:hover, &:focus{
 			background-color: gray('500');
@@ -13,5 +21,9 @@
 			color: color('white');
 			background-color: color-level(gray('500'), +2);
 		}
+	}
+
+	.dropdown-menu {
+		min-width: 300px;
 	}
 }

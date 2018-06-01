@@ -17,6 +17,7 @@ Route::get('/contact', ['as' => 'contact', 'uses' => 'PagesController@getContact
 
 Route::get('/listings', ['as' => 'listings', 'uses' => 'PagesController@getListings']);
 
+Route::get('/listing-item/{mlsId}', ['as' => 'listing-item', 'uses' => 'PagesController@getListingItem']);
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();

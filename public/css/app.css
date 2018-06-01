@@ -13,6 +13,9 @@
 /* CARDS
    ================================================== */
 
+/* LISTING ITEM
+   ================================================== */
+
 @font-face {
   font-family: 'icons';
   src: url("/fonts/icons/icons.ttf?evq0tj") format("truetype"), url("/fonts/icons/icons.woff?evq0tj") format("woff"), url("/fonts/icons/icons.svg?evq0tj#icons") format("svg");
@@ -11183,8 +11186,20 @@ button:focus {
   }
 }
 
+.filter-bar {
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
 .filter-bar .btn-outline-light {
   color: #343a40;
+  min-width: 172px;
+  min-height: 40px;
 }
 
 .filter-bar .btn-outline-light:hover,
@@ -11197,5 +11212,65 @@ button:focus {
 .filter-bar .btn-outline-light:not(:disabled):not(.disabled).active {
   color: #fff;
   background-color: #91989f;
+}
+
+.filter-bar .dropdown-menu {
+  min-width: 300px;
+}
+
+.listing-info-container {
+  background-color: #fff;
+  margin-top: 1.1rem;
+  padding: 2.6rem 3.5rem;
+}
+
+.listing-type {
+  font-size: 1.38rem;
+  margin: 0;
+  color: #cb3849;
+  text-transform: uppercase;
+}
+
+.listing-address {
+  font-size: 2.25rem;
+  line-height: 1.2;
+  margin: 0 0 3.6rem 0;
+}
+
+.listing-address > span {
+  display: block;
+}
+
+.listing-address > span:nth-child(2) {
+  font-size: .67em;
+}
+
+.listing-contact-container {
+  background-color: #fafafa;
+  padding: 2rem;
+  margin-right: -3.5rem;
+}
+
+.left-column {
+  padding-left: 0;
+  padding-right: .5rem;
+}
+
+.left-column img {
+  width: 100%;
+}
+
+.right-column {
+  padding-left: 1rem;
+  padding-right: 0;
+}
+
+.right-column .col {
+  padding-left: 0;
+  padding-right: .5rem;
+}
+
+.right-column .img {
+  margin-bottom: 2rem;
 }
 

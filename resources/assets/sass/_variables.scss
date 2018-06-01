@@ -18,7 +18,7 @@ $spacers: (
    ================================================== */
 
 $grays: (
-    '100': #f8f9fa,
+    '100': #fafafa,
     '200': #e9ecef,
     '300': #dddddd,
     '400': #cdd1d8,
@@ -83,4 +83,10 @@ $card-listings-margin: 3.375rem;
 $card-listings-gap: 1rem;
 // card-listings-col-count must be >= 3
 $card-listings-col-count: 3;
+
+
+/* LISTING ITEM
+   ================================================== */
+
+$listing-info-padding-h: 3.5rem;
 

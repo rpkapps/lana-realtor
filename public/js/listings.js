@@ -173,6 +173,7 @@ var blazy = new Blazy(),
     lastClass: 'last',
     firstClass: 'first'
 }),
+    currentListings = [],
     currentXhr,
     lconfig = {
     $container: $('#cardListings')
@@ -185,9 +186,12 @@ var blazy = new Blazy(),
 function updateListingCards() {
     var listings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
+    currentListings = listings;
+
     var html = '';
     listings.forEach(function (listing) {
         html += Object(__WEBPACK_IMPORTED_MODULE_6__templates_listing_card_js__["a" /* default */])({
+            id: listing.mlsId, // change this
             photo: listing.photos[0],
             title: __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__["a" /* default */].determineTitle(listing.property.type),
             price: __WEBPACK_IMPORTED_MODULE_4__utils_js__["a" /* default */].formatNumber(listing.listPrice),
@@ -201,6 +205,12 @@ function updateListingCards() {
     lconfig.$container.html(html);
     blazy.revalidate();
 }
+
+function displayGridView() {}
+
+function displayMapView() {}
+
+function displayListing() {}
 
 /**
  * Resize pagination
@@ -294,7 +304,7 @@ window.gSearchParams = new URLSearchParams(location.search.slice(1));
 window.gConfig = {
     simplyRetsApiUrl: 'https://api.simplyrets.com/properties',
     simplyRetsBtoa: btoa('simplyrets:simplyrets'),
-    limit: 3
+    limit: 6
 };
 
 /***/ }),
@@ -1469,7 +1479,7 @@ function getPageOffset(page, xhr) {
 /* harmony default export */ __webpack_exports__["a"] = (function () {
     var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    return "\n        <div class=\"card\">\n            <div class=\"card-background b-lazy\" data-src=\"" + data.photo + "\">\n                <span class=\"loader\"></span>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <h4 class=\"card-title text-primary\">" + data.title + "</h4>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <h4 class=\"card-title\">$" + data.price + "</h4>\n                    </div>\n                </div>\n        \n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <p class=\"card-text\">" + data.address + "</p>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <p class=\"card-text\">\n                            <strong>" + data.bedrooms + "</strong> bds\n                            <strong>" + data.bathrooms + "</strong> ba\n                            <strong>" + data.property + "</strong> sqft\n                        </p>\n                    </div>\n                </div>\n        \n            </div>\n        </div>\n    ";
+    return "\n        <a href=\"/listing-item/" + data.id + "\" id=\"" + data.id + "\" class=\"card\">\n            <div class=\"card-background b-lazy\" data-src=\"" + data.photo + "\">\n                <span class=\"loader\"></span>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <h4 class=\"card-title text-primary\">" + data.title + "</h4>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <h4 class=\"card-title\">$" + data.price + "</h4>\n                    </div>\n                </div>\n        \n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <p class=\"card-text\">" + data.address + "</p>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <p class=\"card-text\">\n                            <strong>" + data.bedrooms + "</strong> bds\n                            <strong>" + data.bathrooms + "</strong> ba\n                            <strong>" + data.property + "</strong> sqft\n                        </p>\n                    </div>\n                </div>\n        \n            </div>\n        </a>\n    ";
 });
 
 /***/ }),
