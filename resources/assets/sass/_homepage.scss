@@ -1,0 +1,96 @@
+.homepage-template {
+	.navbar-main {
+		margin-top: 1.5rem;
+	}
+}
+
+.homepage-background {
+	display: block;
+	background-image: url(https://s3-us-west-2.amazonaws.com/cdn.simplyrets.com/properties/trial/home-inside-2.jpg);
+	background-size:cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	width:100%;
+	max-width: 102.5rem;
+	height: 34.59rem;
+	margin-top: -4.94rem;
+}
+
+.homepage-nav {
+	display: block;
+	background-color: theme-color('primary');
+	border-radius: 0 3px 3px 3px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	max-width: 50.75rem;
+	height: 12rem;
+}
+
+.homepage-tabs {
+	display: block;
+	margin-top: -7.56rem;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50.75rem;
+
+	.nav-tabs {
+		border: none;
+	}
+
+	.nav-link {
+		background-color: theme-color('primary-light');
+		color: color-yiq(theme-color('primary-light'));
+		text-align: center;
+		border-radius: 0;
+		border: none;
+		box-shadow: -1px 0 0 0 rgba(0, 0, 0, 0.16);
+
+		&.active{
+			background-color: theme-color('primary');
+			color: color-yiq(theme-color('primary'));
+		}
+
+		&:not(.active):hover{
+			background-color: theme-color-level('primary-light', .5);
+		}
+
+		&:not(.active):active{
+			background-color: theme-color-level('primary-light', 1.25);
+		}
+	}
+
+	.nav-item:first-child .nav-link{
+		border-radius: 3px 0 0 0; 
+		box-shadow: none;
+	}
+
+	.nav-item:last-child .nav-link{
+		border-radius: 0 3px 0 0;
+	}
+
+	.nav-item {
+		width: 11.88rem;
+	}
+}
+
+.homepage-nav {
+	color: color-yiq(theme-color('primary'));
+	
+	.navbar-inner{
+		margin-left: auto;
+		margin-right: auto;
+		padding-top: 4.25rem;
+
+		.custom-checkbox {
+	        display: inline-block;
+	        margin-right: 1rem;
+	        
+	        min-height: 0;
+	     }
+    }
+}
+
+.feature-listings {
+	padding-top: 3.38rem;
+}

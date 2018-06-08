@@ -35,6 +35,7 @@ $colors: (
     'purple':       #6f42c1,
     'pink':         #e83e8c,
     'red':          #cb3849,
+    'light-red':    #da6068,
     'orange':       #fd7e14,
     'yellow':       #ffc107,
     'green':        #28a745,
@@ -48,6 +49,7 @@ $colors: (
 
 $theme-colors: (
     'primary':      color('red'),
+    'primary-light':color('light-red'),
     'secondary':    color('light-blue'),
     'success':      color('green'),
     'info':         color('light-blue'),

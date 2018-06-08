@@ -13,11 +13,13 @@ function cleanQuery(query) {
  * @param data
  * @param onDone
  * @param onFail
+ * @param query
  */
-function getListings(onDone = $.noop, onFail = $.noop) {
+function getListings(onDone = $.noop, onFail = $.noop, query) {
+    query = query || `limit=${gConfig.limit}&${cleanQuery(gSearchParams.toString())}`;
     $.ajax({
         type: 'GET',
-        url: gConfig.simplyRetsApiUrl + `?limit=${gConfig.limit}&${cleanQuery(gSearchParams.toString())}`,
+        url: gConfig.simplyRetsApiUrl + `?${query}`,
         dataType: 'json',
         beforeSend: function(xhr) {
             xhr.setRequestHeader('Authorization', `Basic ${gConfig.simplyRetsBtoa}`);

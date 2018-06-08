@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1005,476 +1005,11 @@ function getPageOffset(page, xhr) {
 });
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(8);
-module.exports = __webpack_require__(13);
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__bootstrap_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_filter_bar_js__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_filter_bar_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_filter_bar_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__templates_listing_card_js__ = __webpack_require__(12);
-
-
-
-
-
-
-
-
-var blazy = new Blazy(),
-    debouncedResize,
-    $pagination = $('#pagination').bootpag({
-    total: 0,
-    page: 0,
-    maxVisible: 3,
-    leaps: true,
-    firstLastUse: true,
-    first: '←',
-    last: '→',
-    wrapClass: 'pagination',
-    activeClass: 'active',
-    disabledClass: 'disabled',
-    nextClass: 'next',
-    prevClass: 'prev',
-    lastClass: 'last',
-    firstClass: 'first'
-}),
-    currentListings = [],
-    currentXhr,
-    lconfig = {
-    $container: $('#cardListings')
-};
-
-/**
- * Update listings
- * @param listings
- */
-function updateListingCards() {
-    var listings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-
-    currentListings = listings;
-
-    var html = '';
-    listings.forEach(function (listing) {
-        html += Object(__WEBPACK_IMPORTED_MODULE_6__templates_listing_card_js__["a" /* default */])({
-            id: listing.mlsId, // change this
-            photo: listing.photos[0],
-            title: __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__["a" /* default */].determineTitle(listing.property.type),
-            price: __WEBPACK_IMPORTED_MODULE_4__utils_js__["a" /* default */].formatNumber(listing.listPrice),
-            address: listing.address.full + ', ' + listing.address.city + ', ' + listing.address.state,
-            bedrooms: listing.property.bedrooms || '',
-            bathrooms: listing.property.bathrooms || '',
-            property: __WEBPACK_IMPORTED_MODULE_4__utils_js__["a" /* default */].formatNumber(listing.property.area)
-        });
-    });
-
-    lconfig.$container.html(html);
-    blazy.revalidate();
-}
-
-function displayGridView() {}
-
-function displayMapView() {}
-
-function displayListing() {}
-
-/**
- * Resize pagination
- */
-function resizePagination() {
-    $pagination.bootpag({
-        maxVisible: window.innerWidth > 767 ? 5 : 3
-    });
-}
-
-/**
- * Handle empty data
- */
-function handleNoData() {
-    $pagination.hide();
-}
-
-/**
- * Get listings from Simply RETS
- */
-function getListings() {
-    var resetPagination = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
-    lconfig.$container.addClass('loading');
-
-    __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__["a" /* default */].getListings(function (data, textStatus, xhr) {
-        updateListingCards(data);
-        lconfig.$container.removeClass('loading');
-        currentXhr = xhr;
-
-        if (resetPagination) {
-            // Update total number of pages for pagination
-            $pagination.bootpag({
-                page: 1,
-                total: __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__["a" /* default */].getNumberOfPages(currentXhr),
-                firstLastUse: true
-            });
-        }
-
-        // Handle no data and when there is data, show the pagination
-        data.length < 1 ? handleNoData() : $pagination.show();
-    }, function (xhr, textStatus, errorThrown) {
-        currentXhr = xhr;
-        handleNoData();
-        console.error(errorThrown);
-    });
-}
-
-/* MAIN
-   ================================================== */
-
-debouncedResize = __WEBPACK_IMPORTED_MODULE_4__utils_js__["a" /* default */].debounce(function () {
-    resizePagination();
-}, 100);
-
-// Pagination event handler
-$pagination.on('page', function (event, page) {
-    // Set new offset
-    gSearchParams.set('offset', __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__["a" /* default */].getPageOffset(page, currentXhr));
-    history.pushState(null, null, '?' + gSearchParams.toString());
-
-    // Scroll to top on pagination change
-    $(window).scrollTop($('#secondaryNav').offset().top);
-
-    getListings();
-});
-
-// Event listener
-$.subscribe('snavbar.change filter.change', function () {
-    // Set offset back to 0
-    gSearchParams.set('offset', __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__["a" /* default */].getPageOffset(0, currentXhr));
-    history.pushState(null, null, '?' + gSearchParams.toString());
-
-    getListings(true);
-});
-
-$(window).on('resize', debouncedResize);
-
-getListings(true);
-resizePagination();
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports) {
-
-/**
- * @preserve
- * bootpag - jQuery plugin for dynamic pagination
- *
- * Copyright (c) 2015 botmonster@7items.com
- *
- * Licensed under the MIT license:
- *   http://www.opensource.org/licenses/mit-license.php
- *
- * Project home:
- *   http://botmonster.com/jquery-bootpag/
- *
- * Version:  1.0.7
- *
- */
-(function ($, window) {
-
-    $.fn.bootpag = function (options) {
-
-        var $owner = this,
-            settings = $.extend({
-            total: 0,
-            page: 1,
-            maxVisible: null,
-            leaps: true,
-            href: 'javascript:void(0);',
-            hrefVariable: '{{number}}',
-            next: '&raquo;',
-            prev: '&laquo;',
-            firstLastUse: false,
-            first: '<span aria-hidden="true">&larr;</span>',
-            last: '<span aria-hidden="true">&rarr;</span>',
-            wrapClass: 'pagination',
-            activeClass: 'active',
-            disabledClass: 'disabled',
-            nextClass: 'next',
-            prevClass: 'prev',
-            lastClass: 'last',
-            firstClass: 'first'
-        }, $owner.data('settings') || {}, options || {});
-
-        if (settings.total <= 0) return this;
-
-        if (!$.isNumeric(settings.maxVisible) && !settings.maxVisible) {
-            settings.maxVisible = parseInt(settings.total, 10);
-        }
-
-        $owner.data('settings', settings);
-
-        function renderPage($bootpag, page) {
-
-            page = parseInt(page, 10);
-            var lp,
-                maxV = settings.maxVisible == 0 ? 1 : settings.maxVisible,
-                step = settings.maxVisible == 1 ? 0 : 1,
-                vis = Math.floor((page - 1) / maxV) * maxV,
-                $page = $bootpag.find('li');
-            settings.page = page = page < 0 ? 0 : page > settings.total ? settings.total : page;
-            $page.removeClass(settings.activeClass);
-            lp = page - 1 < 1 ? 1 : settings.leaps && page - 1 >= settings.maxVisible ? Math.floor((page - 1) / maxV) * maxV : page - 1;
-
-            if (settings.firstLastUse) {
-                $page.first().toggleClass(settings.disabledClass, page === 1);
-            }
-
-            var lfirst = $page.first();
-            if (settings.firstLastUse) {
-                lfirst = lfirst.next();
-            }
-
-            lfirst.toggleClass(settings.disabledClass, page === 1).attr('data-lp', lp).find('a').attr('href', href(lp));
-
-            var step = settings.maxVisible == 1 ? 0 : 1;
-
-            lp = page + 1 > settings.total ? settings.total : settings.leaps && page + 1 < settings.total - settings.maxVisible ? vis + settings.maxVisible + step : page + 1;
-
-            var llast = $page.last();
-            if (settings.firstLastUse) {
-                llast = llast.prev();
-            }
-
-            llast.toggleClass(settings.disabledClass, page === settings.total).attr('data-lp', lp).find('a').attr('href', href(lp));
-
-            $page.last().toggleClass(settings.disabledClass, page === settings.total);
-
-            var $currPage = $page.filter('[data-lp=' + page + ']');
-
-            var clist = "." + [settings.nextClass, settings.prevClass, settings.firstClass, settings.lastClass].join(",.");
-            if (!$currPage.not(clist).length) {
-                var d = page <= vis ? -settings.maxVisible : 0;
-                $page.not(clist).each(function (index) {
-                    lp = index + 1 + vis + d;
-                    $(this).attr('data-lp', lp).toggle(lp <= settings.total).find('a').html(lp).attr('href', href(lp));
-                });
-                $currPage = $page.filter('[data-lp=' + page + ']');
-            }
-            $currPage.not(clist).addClass(settings.activeClass);
-            $owner.data('settings', settings);
-        }
-
-        function href(c) {
-            return settings.href.replace(settings.hrefVariable, c);
-        }
-
-        return this.each(function () {
-
-            var $bootpag,
-                lp,
-                me = $(this),
-                p = ['<ul class="', settings.wrapClass, ' bootpag">'];
-
-            if (settings.firstLastUse) {
-                p = p.concat(['<li data-lp="1" class="', settings.firstClass, '"><a href="', href(1), '">', settings.first, '</a></li>']);
-            }
-            if (settings.prev) {
-                p = p.concat(['<li data-lp="1" class="', settings.prevClass, '"><a href="', href(1), '">', settings.prev, '</a></li>']);
-            }
-            for (var c = 1; c <= Math.min(settings.total, settings.maxVisible); c++) {
-                p = p.concat(['<li data-lp="', c, '"><a href="', href(c), '">', c, '</a></li>']);
-            }
-            if (settings.next) {
-                lp = settings.leaps && settings.total > settings.maxVisible ? Math.min(settings.maxVisible + 1, settings.total) : 2;
-                p = p.concat(['<li data-lp="', lp, '" class="', settings.nextClass, '"><a href="', href(lp), '">', settings.next, '</a></li>']);
-            }
-            if (settings.firstLastUse) {
-                p = p.concat(['<li data-lp="', settings.total, '" class="last"><a href="', href(settings.total), '">', settings.last, '</a></li>']);
-            }
-            p.push('</ul>');
-            me.find('ul.bootpag').remove();
-            me.append(p.join(''));
-            $bootpag = me.find('ul.bootpag');
-
-            me.find('li').click(function paginationClick() {
-
-                var me = $(this);
-                if (me.hasClass(settings.disabledClass) || me.hasClass(settings.activeClass)) {
-                    return;
-                }
-                var page = parseInt(me.attr('data-lp'), 10);
-                $owner.find('ul.bootpag').each(function () {
-                    renderPage($(this), page);
-                });
-
-                $owner.trigger('page', page);
-            });
-            renderPage($bootpag, settings.page);
-        });
-    };
-})(jQuery, window);
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports) {
-
-var $checkboxes = $('#listingType1, #listingType2, #listingType3, #listingType4'),
-    $search = $('#secondarySearch');
-
-$('#secondarySearchForm').on('submit', function (event) {
-    event.preventDefault();
-    $search.val() ? gSearchParams.set('q', $search.val()) : gSearchParams.delete('q');
-
-    history.pushState(null, null, '?' + gSearchParams.toString());
-    $.publish('snavbar.change');
-});
-
-$checkboxes.on('change', function () {
-    gSearchParams.delete('type[]');
-
-    $checkboxes.each(function () {
-        if (this.checked) {
-            gSearchParams.append('type[]', this.value);
-        }
-    });
-
-    history.pushState(null, null, '?' + gSearchParams.toString());
-    $.publish('snavbar.change');
-});
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-// Cache values so that we don't query DOM more than needed
-var $bdrmFilters = $('#filterBdrms > .dropdown-item');
-var $bathFilters = $('#filterbaths > .dropdown-item');
-var $homeTypeFilters = $('#filterHomeType > .dropdown-item');
-var $minPriceFilters = $('#filterMinPrice > .dropdown-item');
-var $maxPriceFilters = $('#filterMaxPrice > .dropdown-item');
-var $minAreaFilters = $('#filterMinArea > .dropdown-item');
-var $maxAreaFilters = $('#filterMaxArea > .dropdown-item');
-
-$bdrmFilters.on('click', function (event) {
-	var $this = $(this);
-	event.preventDefault();
-
-	$bdrmFilters.removeClass('active');
-
-	$this.addClass('active');
-
-	gSearchParams.set('minbeds', $this.data('value'));
-
-	history.pushState(null, null, '?' + gSearchParams.toString());
-
-	$.publish('filter.change');
-});
-
-$bathFilters.on('click', function (event) {
-	var $this = $(this);
-	event.preventDefault();
-
-	$bathFilters.removeClass('active');
-
-	$this.addClass('active');
-
-	gSearchParams.set('minbaths', $this.data('value'));
-
-	history.pushState(null, null, '?' + gSearchParams.toString());
-
-	$.publish('filter.change');
-});
-
-$homeTypeFilters.on('click', function (event) {
-	var $this = $(this);
-	event.preventDefault();
-
-	$homeTypeFilters.removeClass('active');
-
-	$this.addClass('active');
-
-	gSearchParams.set('subtype', $this.data('value'));
-
-	history.pushState(null, null, '?' + gSearchParams.toString());
-
-	$.publish('filter.change');
-});
-
-$minPriceFilters.on('change', function () {
-	var $this = $(this);
-	event.preventDefault();
-
-	$minPriceFilters.removeClass('active');
-
-	$this.addClass('active');
-
-	$this.val() ? gSearchParams.set('minprice', $this.val()) : gSearchParams.delete('minprice');
-
-	history.pushState(null, null, '?' + gSearchParams.toString());
-
-	$.publish('filter.change');
-});
-
-$maxPriceFilters.on('change', function () {
-	var $this = $(this);
-	event.preventDefault();
-
-	$maxPriceFilters.removeClass('active');
-
-	$this.addClass('active');
-
-	$this.val() ? gSearchParams.set('maxprice', $this.val()) : gSearchParams.delete('maxprice');
-
-	history.pushState(null, null, '?' + gSearchParams.toString());
-
-	$.publish('filter.change');
-});
-
-$minAreaFilters.on('change', function () {
-	var $this = $(this);
-	event.preventDefault();
-
-	$minAreaFilters.removeClass('active');
-
-	$this.addClass('active');
-
-	$this.val() ? gSearchParams.set('minarea', $this.val()) : gSearchParams.delete('minarea');
-
-	history.pushState(null, null, '?' + gSearchParams.toString());
-
-	$.publish('filter.change');
-});
-
-$maxAreaFilters.on('change', function () {
-	var $this = $(this);
-	event.preventDefault();
-
-	$maxAreaFilters.removeClass('active');
-
-	$this.addClass('active');
-
-	$this.val() ? gSearchParams.set('maxarea', $this.val()) : gSearchParams.delete('maxarea');
-
-	history.pushState(null, null, '?' + gSearchParams.toString());
-
-	$.publish('filter.change');
-});
-
-/***/ }),
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */,
+/* 11 */,
 /* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1486,10 +1021,90 @@ $maxAreaFilters.on('change', function () {
 });
 
 /***/ }),
-/* 13 */
-/***/ (function(module, exports) {
+/* 13 */,
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
 
-// removed by extract-text-webpack-plugin
+module.exports = __webpack_require__(15);
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__bootstrap_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_js__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__simplyrets_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__templates_listing_card_js__ = __webpack_require__(12);
+
+
+
+
+
+var $checkboxes = $('#homeListingType1, #homeListingType2, #homeListingType3, #homeListingType4'),
+    $search = $('#homeSearch'),
+    blazy = new Blazy(),
+    currentListings,
+    lconfig = {
+    $container: $('#featureListings')
+};;
+
+$('#homeSearchForm').on('submit', function (event) {
+
+    event.preventDefault();
+
+    var urlstr = window.location.origin + '/listings?';
+    $checkboxes.each(function () {
+        if (this.checked) {
+            urlstr += 'type%5B%5D=' + this.value + '&';
+        }
+    });
+
+    if ($search.val()) {
+        urlstr += 'q=' + $search.val();
+    };
+
+    window.location.href = urlstr;
+});
+
+function updateListingCards() {
+    var listings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+    currentListings = listings;
+
+    var html = '';
+    listings.forEach(function (listing) {
+        html += Object(__WEBPACK_IMPORTED_MODULE_3__templates_listing_card_js__["a" /* default */])({
+            id: listing.mlsId, // change this
+            photo: listing.photos[0],
+            title: __WEBPACK_IMPORTED_MODULE_2__simplyrets_js__["a" /* default */].determineTitle(listing.property.type),
+            price: __WEBPACK_IMPORTED_MODULE_1__utils_js__["a" /* default */].formatNumber(listing.listPrice),
+            address: listing.address.full + ', ' + listing.address.city + ', ' + listing.address.state,
+            bedrooms: listing.property.bedrooms || '',
+            bathrooms: listing.property.bathrooms || '',
+            property: __WEBPACK_IMPORTED_MODULE_1__utils_js__["a" /* default */].formatNumber(listing.property.area)
+        });
+    });
+
+    lconfig.$container.html(html);
+    blazy.revalidate();
+}
+
+function getListings() {
+    lconfig.$container.addClass('loading');
+
+    __WEBPACK_IMPORTED_MODULE_2__simplyrets_js__["a" /* default */].getListings(function (data, textStatus) {
+        updateListingCards(data);
+        lconfig.$container.removeClass('loading');
+    }, function (textStatus, errorThrown) {
+        console.error(errorThrown);
+    }, 'limit=' + gConfig.limit);
+}
+
+getListings();
 
 /***/ })
 /******/ ]);

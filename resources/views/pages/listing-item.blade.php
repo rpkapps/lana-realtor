@@ -118,7 +118,7 @@
 						<textarea class="form-control" id="inputHelpQuestion" rows="3" required>I am interested in {{ $listing['address']['full'] }}, {{ $listing['address']['city'] }}, {{ $listing['address']['state'] }}, {{ $listing['address']['postalCode'] }} </textarea>
 					</div>
 					<div class="text-right">
-						<button type="submit" class="btn btn-primary">Submit</button>
+						<button type="submit" class="btn btn-secondary">Submit</button>
 					</div>
 				</form>
 			</div>
