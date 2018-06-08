@@ -3,34 +3,31 @@ import utils from '../utils.js';
 import sRets from '../simplyrets.js';
 import listingCard from '../templates/listing-card.js';
 
-
-
-var $checkboxes = $('#homeListingType1, #homeListingType2, #homeListingType3, #homeListingType4'),
+var $checkboxes = $('#homeCheckboxes input'),
     $search = $('#homeSearch'),
     blazy = new Blazy(),
     currentListings,
     lconfig = {
-        $container: $('#featureListings')
-    };;
+        $container: $('#homeListings')
+    };
 
 $('#homeSearchForm').on('submit', function(event) {
 
-	event.preventDefault();
+    event.preventDefault();
 
     var urlstr = window.location.origin + '/listings?';
     $checkboxes.each(function() {
         if(this.checked) {
-            urlstr += 'type%5B%5D='+this.value+'&';
+            urlstr += 'type%5B%5D=' + this.value + '&';
         }
     });
 
-    if ($search.val()) {
-        urlstr += 'q='+$search.val();
-    };
+    if($search.val()) {
+        urlstr += 'q=' + $search.val();
+    }
 
     window.location.href = urlstr;
 });
-
 
 function updateListingCards(listings = []) {
     currentListings = listings;

@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1006,29 +1006,40 @@ function getPageOffset(page, xhr) {
 
 /***/ }),
 /* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = (function () {
+    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    return "\n        <a href=\"/listing-item/" + data.id + "\" id=\"" + data.id + "\" class=\"card\">\n            <div class=\"card-background b-lazy\" data-src=\"" + data.photo + "\">\n                <span class=\"loader\"></span>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <h4 class=\"card-title text-primary\">" + data.title + "</h4>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <h4 class=\"card-title\">$" + data.price + "</h4>\n                    </div>\n                </div>\n        \n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <p class=\"card-text\">" + data.address + "</p>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <p class=\"card-text\">\n                            <strong>" + data.bedrooms + "</strong> bds\n                            <strong>" + data.bathrooms + "</strong> ba\n                            <strong>" + data.property + "</strong> sqft\n                        </p>\n                    </div>\n                </div>\n        \n            </div>\n        </a>\n    ";
+});
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(8);
+__webpack_require__(9);
 module.exports = __webpack_require__(13);
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__bootstrap_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_bootpag_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_bootpag_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_secondary_nav_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_filter_bar_js__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_filter_bar_js__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_filter_bar_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_filter_bar_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__simplyrets_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__templates_listing_card_js__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__templates_listing_card_js__ = __webpack_require__(7);
 
 
 
@@ -1175,7 +1186,7 @@ getListings(true);
 resizePagination();
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 /**
@@ -1329,7 +1340,7 @@ resizePagination();
 })(jQuery, window);
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 var $checkboxes = $('#listingType1, #listingType2, #listingType3, #listingType4'),
@@ -1357,7 +1368,7 @@ $checkboxes.on('change', function () {
 });
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 // Cache values so that we don't query DOM more than needed
@@ -1472,17 +1483,6 @@ $maxAreaFilters.on('change', function () {
 	history.pushState(null, null, '?' + gSearchParams.toString());
 
 	$.publish('filter.change');
-});
-
-/***/ }),
-/* 12 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = (function () {
-    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    return "\n        <a href=\"/listing-item/" + data.id + "\" id=\"" + data.id + "\" class=\"card\">\n            <div class=\"card-background b-lazy\" data-src=\"" + data.photo + "\">\n                <span class=\"loader\"></span>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <h4 class=\"card-title text-primary\">" + data.title + "</h4>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <h4 class=\"card-title\">$" + data.price + "</h4>\n                    </div>\n                </div>\n        \n                <div class=\"row\">\n                    <div class=\"col-7 pr-1\">\n                        <p class=\"card-text\">" + data.address + "</p>\n                    </div>\n                    <div class=\"col-5 pl-1 text-right\">\n                        <p class=\"card-text\">\n                            <strong>" + data.bedrooms + "</strong> bds\n                            <strong>" + data.bathrooms + "</strong> ba\n                            <strong>" + data.property + "</strong> sqft\n                        </p>\n                    </div>\n                </div>\n        \n            </div>\n        </a>\n    ";
 });
 
 /***/ }),

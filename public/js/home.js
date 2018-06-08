@@ -1005,12 +1005,7 @@ function getPageOffset(page, xhr) {
 });
 
 /***/ }),
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1021,6 +1016,11 @@ function getPageOffset(page, xhr) {
 });
 
 /***/ }),
+/* 8 */,
+/* 9 */,
+/* 10 */,
+/* 11 */,
+/* 12 */,
 /* 13 */,
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -1038,19 +1038,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__bootstrap_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__simplyrets_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__templates_listing_card_js__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__templates_listing_card_js__ = __webpack_require__(7);
 
 
 
 
 
-var $checkboxes = $('#homeListingType1, #homeListingType2, #homeListingType3, #homeListingType4'),
+var $checkboxes = $('#homeCheckboxes input'),
     $search = $('#homeSearch'),
     blazy = new Blazy(),
     currentListings,
     lconfig = {
-    $container: $('#featureListings')
-};;
+    $container: $('#homeListings')
+};
 
 $('#homeSearchForm').on('submit', function (event) {
 
@@ -1065,7 +1065,7 @@ $('#homeSearchForm').on('submit', function (event) {
 
     if ($search.val()) {
         urlstr += 'q=' + $search.val();
-    };
+    }
 
     window.location.href = urlstr;
 });

@@ -2,7 +2,7 @@
 
 @include('includes.head')
 
-<body class="bg-bluishlight homepage-template">
+<body class="bg-bluishlight home-template">
 	
 @include('includes.main-nav')
 
