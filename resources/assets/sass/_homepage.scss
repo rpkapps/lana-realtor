@@ -9,8 +9,8 @@
 }
 
 .home-background {
-    background-image: url(https://s3-us-west-2.amazonaws.com/cdn.simplyrets.com/properties/trial/home-inside-2.jpg);
-    background-position: center;
+    background-image: url(https://s3.amazonaws.com/lana-realtor/images/marquee-home.jpg);
+    background-position: right;
     background-repeat: no-repeat;
     background-size: cover;
     display: block;
@@ -19,7 +19,12 @@
     max-width: 102.5rem;
     width: 100%;
 
+    @media (max-width: $breakpoint-md) {
+        background-image: url(https://s3.amazonaws.com/lana-realtor/images/marquee-home-tablet.jpg);
+    }
+
     @media (max-width: $home-nav-breakpoint) {
+        background-image: url(https://s3.amazonaws.com/lana-realtor/images/marquee-home-mobile.jpg);
         height: 30rem;
     }
 }
