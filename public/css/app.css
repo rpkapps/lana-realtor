@@ -10860,6 +10860,14 @@ button:focus {
   outline-color: #429dce;
 }
 
+.page-title {
+  color: #343a40;
+  font-size: 3rem;
+  font-weight: 100;
+  line-height: 1.2;
+  margin: 0.75rem 0 0.25rem 0;
+}
+
 /* SETTINGS
    ================================================== */
 
@@ -11007,6 +11015,32 @@ button:focus {
   background-color: #fff;
 }
 
+.navbar-main .navbar-brand {
+  display: block;
+  position: absolute;
+  top: -0.4rem;
+  width: 7rem;
+}
+
+@media (max-width: 767px) {
+  .navbar-main .navbar-brand {
+    top: 0.2rem;
+    left: auto;
+    right: 0;
+    width: 6rem;
+  }
+}
+
+.navbar-main .navbar-brand img {
+  width: inherit;
+}
+
+@media (min-width: 768px) {
+  .navbar-main .container {
+    position: relative;
+  }
+}
+
 .navbar-main .navbar-nav .nav-link {
   color: #777777;
   text-align: center;
@@ -11075,7 +11109,6 @@ button:focus {
 .navbar-secondary {
   background-color: #cb3849;
   color: #fff;
-  margin-top: 4.375rem;
   padding-bottom: 1.25rem;
   padding-top: 1.25rem;
 }

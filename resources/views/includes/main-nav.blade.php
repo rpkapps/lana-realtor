@@ -6,6 +6,7 @@
               </span>
     </button>
     <div class="container">
+        <a class="navbar-brand" href="/"><img src="https://s3.amazonaws.com/lana-realtor/images/logo.svg" alt="Lana Sells Delta" title="Lana Sells Delta"></a>
         <div class="collapse navbar-collapse justify-content-end" id="mainNavToggle">
             <ul class="navbar-nav mt-2 mt-md-0">
                 <li class="nav-item">

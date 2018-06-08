@@ -5,6 +5,9 @@
 <body class="bg-bluishlight">
 
 @include('includes.main-nav')
+<div class="container">
+    <h1 class="page-title">@yield('title')</h1>
+</div>
 @include('includes.secondary-nav')
 
 <div class="container">

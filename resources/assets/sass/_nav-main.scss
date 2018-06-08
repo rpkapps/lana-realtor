@@ -2,6 +2,30 @@
     align-items: flex-start;
     background-color: color('white');
 
+    .navbar-brand {
+        display: block;
+        position: absolute;
+        top: -0.4rem;
+        width: 7rem;
+
+        @media (max-width: $breakpoint-sm) {
+            top: 0.2rem;
+            left: auto;
+            right: 0;
+            width: 6rem;
+        }
+
+        img {
+            width: inherit;
+        }
+    }
+
+    .container {
+        @media (min-width: $breakpoint-sm + 1) {
+            position: relative;
+        }
+    }
+
     .navbar-nav {
         .nav-link {
             color: gray('600');
