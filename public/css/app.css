@@ -11699,7 +11699,7 @@ button:focus {
 @media (max-width: 640px) {
   .home-nav .navbar-inner .custom-checkbox {
     width: 50%;
-    min-width: 150px;
+    min-width: 124px;
     margin-bottom: 0.75rem;
   }
 }
