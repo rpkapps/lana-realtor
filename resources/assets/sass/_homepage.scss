@@ -2,7 +2,7 @@
     .navbar-main {
         margin-top: 1.5rem;
 
-        @media (max-width: $mobile-breakpoint) {
+        @media (max-width: $breakpoint-sm) {
             margin-top: 0;
         }
     }

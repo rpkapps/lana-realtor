@@ -95,6 +95,11 @@ $listing-info-padding-h: 3.5rem;
 /* BREAKPOINTS
    ============================================================================ */
 
-$mobile-breakpoint: 767px;
+$breakpoint-xs: 5755px;
+$breakpoint-sm: 767px;
+$breakpoint-md: 991px;
+$breakpoint-lg: 1199px;
+
+$card-breakpoint: 400px;
 $home-nav-breakpoint: 640px;
 

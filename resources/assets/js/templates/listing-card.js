@@ -5,24 +5,30 @@ export default function(data = {}) {
                 <span class="loader"></span>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-7 pr-1">
+                <div class="row card-body-row">
+                    <div class="col-7">
                         <h4 class="card-title text-primary">${data.title}</h4>
                     </div>
-                    <div class="col-5 pl-1 text-right">
+                    <div class="col-5">
                         <h4 class="card-title">$${data.price}</h4>
                     </div>
                 </div>
         
-                <div class="row">
-                    <div class="col-7 pr-1">
+                <div class="row card-body-row">
+                    <div class="col-7 card-col-reverse">
                         <p class="card-text">${data.address}</p>
                     </div>
-                    <div class="col-5 pl-1 text-right">
+                    <div class="col-5 card-col-reverse">
                         <p class="card-text">
-                            <strong>${data.bedrooms}</strong> bds
-                            <strong>${data.bathrooms}</strong> ba
-                            <strong>${data.property}</strong> sqft
+                            <span class="card-item-info">
+                                <strong>${data.bedrooms}</strong> bds
+                            </span>    
+                            <span class="card-item-info">
+                                <strong>${data.bathrooms}</strong> ba
+                            </span>    
+                            <span class="card-item-info">
+                                <strong>${data.property}</strong> sqft
+                            </span>    
                         </p>
                     </div>
                 </div>
