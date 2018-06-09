@@ -178,3 +178,7 @@ $RECYCLE.BIN/
 
 
 # End of https://www.gitignore.io/api/macos,windows,laravel,composer,phpstorm,sublimetext
+public/css/app.css
+public/js/listings.js
+public/js/home.js
+public/js/app.js
