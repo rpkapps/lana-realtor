@@ -1,8 +1,12 @@
 .card {
     box-shadow: 0 2px 3px 0 rgba(0, 0, 0, .16);
     color: color('black') !important;
-    margin-bottom: 3.375rem;
+    margin-bottom: $card-listings-margin;
     text-decoration: none !important;
+
+    @media (max-width: $breakpoint-xs) {
+        margin-bottom: #{$card-listings-margin / 1.5};
+    }
 }
 
 .card-body {
@@ -84,7 +88,7 @@
 
 .card-title {
     color: gray('700');
-    font-size: 1.375rem;
+    font-size: $font-size-4;
     font-weight: bold;
     margin-bottom: 1rem;
     text-transform: uppercase;
@@ -95,15 +99,6 @@
 }
 
 .card-listings {
-    .card {
-        margin-bottom: $card-columns-margin;
-    }
-}
-
-.card-listings {
-    .card {
-        margin-bottom: $card-listings-margin;
-    }
 
     @media (min-width: $breakpoint-sm + 1) {
         display: flex;

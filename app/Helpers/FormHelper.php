@@ -15,5 +15,13 @@ class FormHelper
 
     static function activeClass($key, $value){
 		return request()->input($key) == $value ? 'active' : '';
-    }    	
+    }
+
+    static function fallback($feature) {
+        if($feature) {
+            return $feature;
+        }
+
+        return 'N/A';
+    }
 }

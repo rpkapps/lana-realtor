@@ -25,7 +25,7 @@
 			<span>{{ $listing['address']['city'] }}, {{ $listing['address']['state'] }}, {{ $listing['address']['postalCode'] }}</span>
 			</h1>
 		</div>
-		<div class="col-md-5 text-right">
+		<div class="col-md-5 text-md-right">
 			<h2 class="listing-price">${{ number_format($listing['listPrice']) }}</h2>
 			<p class="listing-details">
 				<strong>{{ $listing['property']['bedrooms'] }}</strong> beds
@@ -48,52 +48,52 @@
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Type</h5>
-								<p>{{ $listing['property']['subType'] }}</p>
+								<p>{{ FormHelper::fallback($listing['property']['subType']) }}</p>
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Year Built</h5>
-								<p>{{ $listing['property']['yearBuilt'] }}</p>
+								<p>{{ FormHelper::fallback($listing['property']['yearBuilt']) }}</p>
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Heating</h5>
-								<p>{{ str_replace(",", ", ", $listing['property']['heating']) }}</p>
+								<p>{{ FormHelper::fallback(str_replace(",", ", ", $listing['property']['heating'])) }}</p>
 							</div>
 						</div>
 						<div class="w-100"> </div>
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Price/sqft</h5>
-								<p>${{ number_format(SimplyRetsHelper::determineSqFtPrice($listing['listPrice'], $listing['property']['area'])) }}</p>
+								<p>${{ FormHelper::fallback(number_format(SimplyRetsHelper::determineSqFtPrice($listing['listPrice'], $listing['property']['area']))) }}</p>
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Parking</h5>
-								<p>{{ str_replace(",", ", ", $listing['property']['parking']['description']) }}</p>
+								<p>{{ FormHelper::fallback(str_replace(",", ", ", $listing['property']['parking']['description'])) }}</p>
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Lot Size</h5>
-								<p>{{ $listing['property']['lotSizeAreaUnits'] }} Acres</p>
+								<p>{{ FormHelper::fallback($listing['property']['lotSizeAreaUnits']) }} Acres</p>
 							</div>
 						</div>
 						<div class="w-100"> </div>
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Cooling</h5>
-								<p>{{ $listing['property']['cooling'] }}</p>
+								<p>{{ FormHelper::fallback($listing['property']['cooling']) }}</p>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-5">
+		<div class="col-md-5 d-flex">
 			<div class="listing-contact-container">
 				<p class="text-center"> Contact Realtor </p>
 				<form>

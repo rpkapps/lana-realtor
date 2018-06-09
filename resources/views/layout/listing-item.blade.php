@@ -7,7 +7,7 @@
 @include('includes.main-nav')
 @include('includes.secondary-nav')
 
-<div class="container">
+<div class="container main-container">
     @yield('content')
 </div>
 

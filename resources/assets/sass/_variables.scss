@@ -60,6 +60,15 @@ $theme-colors: (
     'bluishlight':  color('bluish-white')  
 );
 
+/* FONT SIZES
+   ================================================== */
+
+$font-size-1: 3rem;
+$font-size-2: 1.875rem;
+$font-size-3: 1.5rem;
+$font-size-4: 1.375rem;
+$font-size-5: 1.125rem;
+
 
 /* CONTAINERS
    ================================================== */
@@ -91,11 +100,12 @@ $card-listings-col-count: 3;
    ================================================== */
 
 $listing-info-padding-h: 3.5rem;
+$listing-info-padding-h-sm: 1.5rem;
 
 /* BREAKPOINTS
-   ============================================================================ */
+   ================================================== */
 
-$breakpoint-xs: 5755px;
+$breakpoint-xs: 575px;
 $breakpoint-sm: 767px;
 $breakpoint-md: 991px;
 $breakpoint-lg: 1199px;
