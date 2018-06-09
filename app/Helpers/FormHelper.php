@@ -17,9 +17,9 @@ class FormHelper
 		return request()->input($key) == $value ? 'active' : '';
     }
 
-    static function fallback($feature) {
+    static function fallback($feature, $textIfValid = '') {
         if($feature) {
-            return $feature;
+            return $feature . $textIfValid;
         }
 
         return 'N/A';

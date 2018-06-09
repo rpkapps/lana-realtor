@@ -79,7 +79,7 @@
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Lot Size</h5>
-								<p>{{ FormHelper::fallback($listing['property']['lotSizeAreaUnits']) }} Acres</p>
+								<p>{{ FormHelper::fallback($listing['property']['lotSizeAreaUnits'], ' Acres') }}</p>
 							</div>
 						</div>
 						<div class="w-100"> </div>

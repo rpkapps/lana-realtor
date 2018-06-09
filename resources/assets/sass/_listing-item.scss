@@ -66,19 +66,19 @@
     }
 }
 
-.listing-feature {
-    margin-top: 4rem;
-
-    &:last-child {
-        margin-bottom: 4rem;
-    }
+.listing-description {
+    margin-bottom: 4rem;
 
     @media (max-width: $breakpoint-sm) {
-        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+}
 
-        &:last-child {
-            margin-bottom: 2rem;
-        }
+.listing-feature {
+    margin-bottom: 4rem;
+
+    @media (max-width: $breakpoint-sm) {
+        margin-bottom: 2rem;
     }
 
     p {
