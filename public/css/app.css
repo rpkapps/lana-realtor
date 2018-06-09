@@ -11490,23 +11490,27 @@ button:focus {
 }
 
 .listing-type {
-  font-size: 1.38rem;
+  font-size: 1.125rem;
   margin: 0;
   color: #cb3849;
   text-transform: uppercase;
 }
 
 .listing-price {
-  font-size: 1.94rem;
+  font-size: 1.375rem;
   margin-bottom: 2rem;
 }
 
 .listing-details {
-  font-size: 1.87rem;
+  font-size: 1.125rem;
+}
+
+.listing-description {
+  font-size: .75rem;
 }
 
 .listing-address {
-  font-size: 2.25rem;
+  font-size: 1.5rem;
   line-height: 1.2;
   margin: 0 0 3.6rem 0;
 }
@@ -11523,10 +11527,39 @@ button:focus {
   margin-top: 4rem;
 }
 
+.listing-feature p {
+  font-size: .75rem;
+}
+
+.listing-feature-title {
+  font-size: .875rem;
+}
+
 .listing-contact-container {
   background-color: #fafafa;
   padding: 2rem;
   margin-right: -3.5rem;
+  font-size: .75rem;
+}
+
+.listing-contact-container .text-center {
+  font-size: 1rem;
+}
+
+.listing-contact-container ::-webkit-input-placeholder {
+  font-size: .75rem;
+}
+
+.listing-contact-container :-ms-input-placeholder {
+  font-size: .75rem;
+}
+
+.listing-contact-container ::-ms-input-placeholder {
+  font-size: .75rem;
+}
+
+.listing-contact-container ::placeholder {
+  font-size: .75rem;
 }
 
 .left-column {
