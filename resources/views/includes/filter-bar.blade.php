@@ -59,7 +59,10 @@
     </button>
     <div id="filterHomeType" class="dropdown-menu" aria-labelledby="filterHomeTypeBtn">
       @foreach (SimplyRetsHelper::getSubType() as $subType => $cleanSubType)
-      <a class="dropdown-item {{ FormHelper::activeClass('subtype', $subType) }}" href="javascript:void(0)" data-value="{{ $subType }}"> {{ $cleanSubType }}</a>
+      <div class="custom-control custom-checkbox">
+        <input class="custom-control-input" type="checkbox" id="listingSubType{{ $loop->index }}" name="subtype[]" value="{{ $subType }}" {{ FormHelper::checked('type', $subType) }}>
+        <label class="custom-control-label" for="listingSubType{{ $loop->index }}">{{ $cleanSubType }}</label>
+      </div>
       @endforeach
     </div>
   </div>

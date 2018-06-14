@@ -1,12 +1,12 @@
 // Cache values so that we don't query DOM more than needed
 let $bdrmFilters = $('#filterBdrms > .dropdown-item');
 let $bathFilters = $('#filterbaths > .dropdown-item');
-let $homeTypeFilters = $('#filterHomeType > .dropdown-item');
+let $homeTypeFilters = $('#filterHomeType .custom-control-input');
 let $minPriceFilters = $('#filterMinPrice > .dropdown-item');
 let $maxPriceFilters = $('#filterMaxPrice > .dropdown-item');
 let $minAreaFilters = $('#filterMinArea > .dropdown-item');
 let $maxAreaFilters = $('#filterMaxArea > .dropdown-item');
-
+ 
 $bdrmFilters.on('click', function(event) {
 	let $this = $(this);
 	event.preventDefault();
@@ -37,20 +37,17 @@ $bathFilters.on('click', function(event) {
 	$.publish('filter.change');
 });
 
+$homeTypeFilters.on('change', function() {
+    gSearchParams.delete('subtype[]');
 
-$homeTypeFilters.on('click', function(event) {
-	let $this = $(this);
-	event.preventDefault();
-
-	$homeTypeFilters.removeClass('active');
-
-	$this.addClass('active');
-
-	gSearchParams.set('subtype', $this.data('value'));
+    $homeTypeFilters.each(function() {
+        if(this.checked) {
+            gSearchParams.append('subtype[]', this.value);
+        }      
+    });
 
     history.pushState(null, null, `?${gSearchParams.toString()}`);
-
-	$.publish('filter.change');
+    $.publish('filter.change');
 });
 
 
@@ -113,4 +110,6 @@ $maxAreaFilters.on('change', function() {
 
 	$.publish('filter.change');
 });
+
+
 
