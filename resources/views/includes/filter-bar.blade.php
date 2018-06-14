@@ -1,6 +1,6 @@
 <div class="btn-group filter-bar" role="group" aria-label="Button group with nested dropdown">
   <div class="btn-group" role="group">
-    <button id="FilterPrice" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button id="filterPriceBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Price
     </button>
     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -17,7 +17,7 @@
     </div>
   </div>
   <div class="btn-group" role="group">
-    <button id="FilterArea" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button id="filterAreaBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Area
     </button>
     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">

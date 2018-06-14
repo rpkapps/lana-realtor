@@ -22,8 +22,21 @@
 			background-color: color-level(gray('500'), +2);
 		}
 	}
+}
 
-	.dropdown-menu {
-		min-width: 300px;
-	}
+#filterAreaBtn + .dropdown-menu {
+	min-width: 18.75rem;
+	padding-right: 1rem;
+	padding-left: 1rem;
+}
+
+#filterPriceBtn + .dropdown-menu {
+	min-width: 18.75rem;
+	padding-right: 1rem;
+	padding-left: 1rem;
+}
+
+#filterHomeTypeBtn + .dropdown-menu {
+	min-width: 18.75rem;
+	padding-left: 1rem;
 }
