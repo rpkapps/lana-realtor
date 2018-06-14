@@ -11,19 +11,19 @@ $factory->define(App\Property::class, function (Faker $faker) {
     $fullAddress = "$streetNumber $streetName, $city, $postalCode ";
 
     return [
+        'listPrice' => $faker->randomNumber(4),
         'area' => $faker->randomNumber(4),
         'bathrooms' => $faker->randomNumber(1),
         'bedrooms' => $faker->randomNumber(1),
-        'parking_description' => $faker->text(),
+        'parkingDescription' => $faker->text(),
         'terms' => $faker->text(),
-        'street_number' => $streetNumber,
-        'street_name' => $streetName,
+        'streetNumber' => $streetNumber,
+        'streetName' => $streetName,
         'city' => $city,
-        'postal_code' => $postalCode,
-        'full_address' => $fullAddress,
-        'elementary_school' => $faker->text(20),
-        'middle_school' => $faker->text(20),
-        'high_school' => $faker->text(20),
+        'postalCode' => $postalCode,
+        'elementarySchool' => $faker->text(20),
+        'middleSchool' => $faker->text(20),
+        'highSchool' => $faker->text(20),
         'photos' => $faker->imageUrl()
     ];
 });
