@@ -20,7 +20,7 @@
 		<div class="container">
 			<div class="navbar-inner">
 				<form id="homeSearchForm" class="input-group home-search" action="">
-					<input id="homeSearch" type="text" class="form-control" placeholder="Enter a city" aria-label="Enter a city"
+					<input id="homeSearch" type="text" class="form-control" placeholder="Enter an address, city, or ZIP code" aria-label="Enter an address, city, or ZIP code"
 					aria-describedby="basic-addon" name="q" value="{{ FormHelper::value('q') }}">
 					<div class="input-group-append">
 						<button class="btn btn-secondary" type="submit" form="homeSearchForm" value="Submit">Search</button>

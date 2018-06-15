@@ -2,7 +2,7 @@
     <div class="container">
         <div class="navbar-inner">
             <form id="secondarySearchForm" class="input-group secondary-search" action="">
-                <input id="secondarySearch" type="text" class="form-control" placeholder="Enter a city" aria-label="Enter a city"
+                <input id="secondarySearch" type="text" class="form-control" placeholder="Enter an address, city, or ZIP code" aria-label="Enter an address, city, or ZIP code"
                        aria-describedby="basic-addon" name="q" value="{{ FormHelper::value('q') }}">
                 <div class="input-group-append">
                     <button class="btn btn-secondary" type="submit" form="secondarySearchForm" value="Submit">Search</button>

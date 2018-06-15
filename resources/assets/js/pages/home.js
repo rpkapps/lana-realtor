@@ -39,7 +39,7 @@ function updateListingCards(listings = []) {
             photo: listing.photos[0],
             title: sRets.determineTitle(listing.property.type),
             price: utils.formatNumber(listing.listPrice),
-            address: `${listing.address.full}, ${listing.address.city}, ${listing.address.state}`,
+            address: `${listing.address.full}, ${listing.address.city}, ${listing.address.state}, ${listing.address.postalCode}`,
             bedrooms: listing.property.bedrooms || '',
             bathrooms: (listing.property.bathsFull || 0) + (listing.property.bathsHalf || 0) + (listing.property.bathsThreeQuarter || 0),
             property: utils.formatNumber(listing.property.area)
