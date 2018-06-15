@@ -41,7 +41,7 @@ function updateListingCards(listings = []) {
             price: utils.formatNumber(listing.listPrice),
             address: `${listing.address.full}, ${listing.address.city}, ${listing.address.state}`,
             bedrooms: listing.property.bedrooms || '',
-            bathrooms: listing.property.bathrooms || '',
+            bathrooms: (listing.property.bathsFull || 0) + (listing.property.bathsHalf || 0) + (listing.property.bathsThreeQuarter || 0),
             property: utils.formatNumber(listing.property.area)
         });
     });

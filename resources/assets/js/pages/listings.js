@@ -1,10 +1,11 @@
 import '../bootstrap.js';
 import '../components/bootpag.js';
-import '../components/secondary-nav.js';
 import '../components/filter-bar.js';
+import secondaryNav from '../components/secondary-nav.js';
 import utils from '../utils.js';
 import sRets from '../simplyrets.js';
 import listingCard from '../templates/listing-card.js';
+import simplyrets from '../simplyrets';
 
 var blazy = new Blazy(),
     debouncedResize,
@@ -46,7 +47,7 @@ function updateListingCards(listings = []) {
             price: utils.formatNumber(listing.listPrice),
             address: `${listing.address.full}, ${listing.address.city}, ${listing.address.state}`,
             bedrooms: listing.property.bedrooms || '',
-            bathrooms: listing.property.bathrooms || '',
+            bathrooms: (listing.property.bathsFull || 0) + (listing.property.bathsHalf || 0) + (listing.property.bathsThreeQuarter || 0),
             property: utils.formatNumber(listing.property.area)
         });
     });
@@ -89,6 +90,10 @@ function handleNoData() {
 function getListings(resetPagination = false) {
     lconfig.$container.addClass('loading');
 
+    if(secondaryNav.allUnchecked()) {
+        simplyrets.addAllTypesExcept(['rental', 'condominium']);
+    }
+
     sRets.getListings(
         function(data, textStatus, xhr) {
             updateListingCards(data);
@@ -111,7 +116,7 @@ function getListings(resetPagination = false) {
             currentXhr = xhr;
             handleNoData();
             console.error(errorThrown);
-        }
+        },
     );
 }
 

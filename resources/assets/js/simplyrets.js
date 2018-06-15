@@ -1,11 +1,37 @@
 import utils from './utils.js';
 
+const URL_QUERY_TYPES = [
+    'residential',
+    'rental',
+    'multifamily',
+    'condominium',
+    'commercial',
+    'land',
+    'farm'
+];
+
 /**
  * Clean query string
  * @param query
  */
 function cleanQuery(query) {
     return query.replace(/%5B%5D/g, '');
+}
+
+/**
+ * Add all types to the global search params except for "types"
+ * @param {array|string} types
+ */
+function addAllTypesExcept(types) {
+    types = typeof types === 'string' ? [types] : types;
+
+    gSearchParams.delete('type[]');
+
+    URL_QUERY_TYPES.forEach(function(type) {
+        if(types.indexOf(type) === -1) {
+            gSearchParams.append('type[]', type);
+        }
+    });
 }
 
 /**
@@ -39,7 +65,8 @@ function determineTitle(type = '') {
         'MLF': 'House For Sale',
         'CRE': 'Commercial Building For Sale',
         'LND': 'Land For Sale',
-        'FRM': 'Farm For Sale'
+        'FRM': 'Farm For Sale',
+        'CND': 'Condo For Sale'
     };
 
     return types[type] ? types[type] : 'Invalid Listing';
@@ -95,7 +122,7 @@ function getPageOffset(page, xhr) {
     var pInfo = parseXhr(xhr),
         offset = (page - 1) * pInfo.limit;
 
-    return clampOffset(xhr, offset, pInfo)
+    return clampOffset(xhr, offset, pInfo);
 }
 
 export default {
@@ -104,5 +131,6 @@ export default {
     parseXhr: parseXhr,
     getNumberOfPages: getNumberOfPages,
     clampOffset: clampOffset,
-    getPageOffset: getPageOffset
+    getPageOffset: getPageOffset,
+    addAllTypesExcept: addAllTypesExcept
 };

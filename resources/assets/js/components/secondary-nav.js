@@ -21,3 +21,14 @@ $checkboxes.on('change', function() {
     history.pushState(null, null, `?${gSearchParams.toString()}`);
     $.publish('snavbar.change');
 });
+
+/**
+ * Check if all checkboxes are unchecked with secondary nav
+ */
+function allUnchecked() {
+    return $checkboxes.filter(':checked').length < 1;
+}
+
+export default {
+    allUnchecked: allUnchecked
+}

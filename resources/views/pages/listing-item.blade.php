@@ -29,7 +29,7 @@
 			<h2 class="listing-price">${{ number_format($listing['listPrice']) }}</h2>
 			<p class="listing-details">
 				<strong>{{ $listing['property']['bedrooms'] }}</strong> beds
-				<strong>{{ $listing['property']['bathrooms'] }}</strong> baths
+				<strong>{{ intval($listing['property']['bathsFull']) + intval($listing['property']['bathsHalf']) + intval($listing['property']['bathsThreeQuarter']) }}</strong> baths
 				<strong>{{ number_format($listing['property']['area']) }}</strong> sqft
 			</p>
 		</div>
