@@ -1,11 +1,11 @@
 // Cache values so that we don't query DOM more than needed
-let $bdrmFilters = $('#filterBdrms > .dropdown-item');
-let $bathFilters = $('#filterbaths > .dropdown-item');
-let $homeTypeFilters = $('#filterHomeType .custom-control-input');
-let $minPriceFilters = $('#filterMinPrice > .form-control');
-let $maxPriceFilters = $('#filterMaxPrice > .form-control');
-let $minAreaFilters = $('#filterMinArea > .form-control');
-let $maxAreaFilters = $('#filterMaxArea > .form-control');
+var $bdrmFilters = $('#filterBdrms > .dropdown-item'),
+    $bathFilters = $('#filterbaths > .dropdown-item'),
+    $homeTypeFilters = $('#filterHomeType .custom-control-input'),
+    $minPriceFilters = $('#filterMinPrice > .form-control'),
+    $maxPriceFilters = $('#filterMaxPrice > .form-control'),
+    $minAreaFilters = $('#filterMinArea > .form-control'),
+    $maxAreaFilters = $('#filterMaxArea > .form-control');
 
 /**
  * Update url query parameter
@@ -38,7 +38,7 @@ function updateQueryParamArray(key, values = []) {
 }
  
 $bdrmFilters.on('click', function(event) {
-	let $this = $(this);
+	var $this = $(this);
 	event.preventDefault();
 
 	$bdrmFilters.removeClass('active');
@@ -49,7 +49,7 @@ $bdrmFilters.on('click', function(event) {
 });
 
 $bathFilters.on('click', function(event) {
-	let $this = $(this);
+	var $this = $(this);
 	event.preventDefault();
 
 	$bathFilters.removeClass('active');
@@ -60,7 +60,7 @@ $bathFilters.on('click', function(event) {
 });
 
 $homeTypeFilters.on('change', function() {
-    let checkedValues = $homeTypeFilters.filter(':checked').toArray().map(function(checkbox) {
+    var checkedValues = $homeTypeFilters.filter(':checked').toArray().map(function(checkbox) {
         return checkbox.value;
     });
 
