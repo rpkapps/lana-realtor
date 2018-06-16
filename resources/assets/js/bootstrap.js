@@ -6,5 +6,6 @@ window.gSearchParams = new URLSearchParams(location.search.slice(1));
 window.gConfig = {
     simplyRetsApiUrl: 'https://api.simplyrets.com/properties',
     simplyRetsBtoa: btoa('simplyrets:simplyrets'),
+    progressBarSpeed: 40,
     limit: 9
 };
