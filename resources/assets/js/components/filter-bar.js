@@ -2,10 +2,40 @@
 let $bdrmFilters = $('#filterBdrms > .dropdown-item');
 let $bathFilters = $('#filterbaths > .dropdown-item');
 let $homeTypeFilters = $('#filterHomeType .custom-control-input');
-let $minPriceFilters = $('#filterMinPrice > .dropdown-item');
-let $maxPriceFilters = $('#filterMaxPrice > .dropdown-item');
-let $minAreaFilters = $('#filterMinArea > .dropdown-item');
-let $maxAreaFilters = $('#filterMaxArea > .dropdown-item');
+let $minPriceFilters = $('#filterMinPrice > .form-control');
+let $maxPriceFilters = $('#filterMaxPrice > .form-control');
+let $minAreaFilters = $('#filterMinArea > .form-control');
+let $maxAreaFilters = $('#filterMaxArea > .form-control');
+
+/**
+ * Update url query parameter
+ * @param key
+ * @param value
+ */
+function updateQueryParam(key, value) {
+    value ? gSearchParams.set(key, value) : gSearchParams.delete(key);
+
+    history.pushState(null, null, `?${gSearchParams.toString()}`);
+
+    $.publish('filter.change');
+}
+
+/**
+ * Update url query parameter that is an array
+ * @param key
+ * @param values
+ */
+function updateQueryParamArray(key, values = []) {
+    gSearchParams.delete(`${key}[]`);
+
+    values.forEach(function(value) {
+        gSearchParams.append(`${key}[]`, value);
+    });
+
+    history.pushState(null, null, `?${gSearchParams.toString()}`);
+
+    $.publish('filter.change');
+}
  
 $bdrmFilters.on('click', function(event) {
 	let $this = $(this);
@@ -15,11 +45,7 @@ $bdrmFilters.on('click', function(event) {
 
 	$this.addClass('active');
 
-	gSearchParams.set('minbeds', $this.data('value'));
-
-    history.pushState(null, null, `?${gSearchParams.toString()}`);
-
-	$.publish('filter.change');
+    updateQueryParam('minbeds', $this.data('value'));
 });
 
 $bathFilters.on('click', function(event) {
@@ -30,86 +56,33 @@ $bathFilters.on('click', function(event) {
 
 	$this.addClass('active');
 
-	gSearchParams.set('minbaths', $this.data('value'));
-
-    history.pushState(null, null, `?${gSearchParams.toString()}`);
-
-	$.publish('filter.change');
+    updateQueryParam('minbaths', $this.data('value'));
 });
 
 $homeTypeFilters.on('change', function() {
-    gSearchParams.delete('subtype[]');
-
-    $homeTypeFilters.each(function() {
-        if(this.checked) {
-            gSearchParams.append('subtype[]', this.value);
-        }      
+    let checkedValues = $homeTypeFilters.filter(':checked').toArray().map(function(checkbox) {
+        return checkbox.value;
     });
 
-    history.pushState(null, null, `?${gSearchParams.toString()}`);
-    $.publish('filter.change');
+    updateQueryParamArray('subtype', checkedValues);
 });
 
-
 $minPriceFilters.on('change', function() {
-	let $this = $(this);
 	event.preventDefault();
-
-	$minPriceFilters.removeClass('active');
-
-	$this.addClass('active');
-
-	$this.val() ? gSearchParams.set('minprice', $this.val()) : gSearchParams.delete('minprice');
-
-    history.pushState(null, null, `?${gSearchParams.toString()}`);
-
-	$.publish('filter.change');
+    updateQueryParam('minprice', this.value);
 });
 
 $maxPriceFilters.on('change', function() {
-	let $this = $(this);
 	event.preventDefault();
-
-	$maxPriceFilters.removeClass('active');
-
-	$this.addClass('active');
-
-	$this.val() ? gSearchParams.set('maxprice', $this.val()) : gSearchParams.delete('maxprice');
-
-    history.pushState(null, null, `?${gSearchParams.toString()}`);
-
-	$.publish('filter.change');
+    updateQueryParam('maxprice', this.value);
 });
 
 $minAreaFilters.on('change', function() {
-	let $this = $(this);
-	event.preventDefault();
-
-	$minAreaFilters.removeClass('active');
-
-	$this.addClass('active');
-
-	$this.val() ? gSearchParams.set('minarea', $this.val()) : gSearchParams.delete('minarea');
-
-    history.pushState(null, null, `?${gSearchParams.toString()}`);
-
-	$.publish('filter.change');
+    event.preventDefault();
+    updateQueryParam('minarea', this.value);
 });
 
 $maxAreaFilters.on('change', function() {
-	let $this = $(this);
 	event.preventDefault();
-
-	$maxAreaFilters.removeClass('active');
-
-	$this.addClass('active');
-
-	$this.val() ? gSearchParams.set('maxarea', $this.val()) : gSearchParams.delete('maxarea');
-
-    history.pushState(null, null, `?${gSearchParams.toString()}`);
-
-	$.publish('filter.change');
+    updateQueryParam('maxarea', this.value);
 });
-
-
-
