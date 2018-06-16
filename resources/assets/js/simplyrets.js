@@ -1,4 +1,5 @@
 import utils from './utils.js';
+import NProgress from 'nprogress';
 
 const URL_QUERY_TYPES = [
     'residential',
@@ -9,6 +10,13 @@ const URL_QUERY_TYPES = [
     'land',
     'farm'
 ];
+
+NProgress.configure({
+    showSpinner: false,
+    trickleSpeed: gConfig.progressBarSpeed
+});
+
+var request = null;
 
 /**
  * Clean query string
@@ -43,14 +51,27 @@ function addAllTypesExcept(types) {
  */
 function getListings(onDone = $.noop, onFail = $.noop, query) {
     query = query || `limit=${gConfig.limit}&${cleanQuery(gSearchParams.toString())}`;
-    $.ajax({
+    request = $.ajax({
         type: 'GET',
         url: gConfig.simplyRetsApiUrl + `?${query}`,
         dataType: 'json',
         beforeSend: function(xhr) {
+            $('body').addClass('loading');
+            NProgress.remove();
+            NProgress.set(0);
+            NProgress.start();
+
+            if(request !== null) {
+                request.abort();
+            }
             xhr.setRequestHeader('Authorization', `Basic ${gConfig.simplyRetsBtoa}`);
         }
-    }).done(onDone).fail(onFail);
+    }).done(function() {
+        onDone(...arguments);
+
+        $('body').removeClass('loading');
+        NProgress.done();
+    }).fail(onFail);
 }
 
 /**

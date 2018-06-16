@@ -7,9 +7,7 @@ var $checkboxes = $('#homeCheckboxes input'),
     $search = $('#homeSearch'),
     blazy = new Blazy(),
     currentListings,
-    lconfig = {
-        $container: $('#homeListings')
-    };
+    $container = $('#homeListings');
 
 $('#homeSearchForm').on('submit', function(event) {
 
@@ -29,6 +27,10 @@ $('#homeSearchForm').on('submit', function(event) {
     window.location.href = urlstr;
 });
 
+/**
+ * Update listings
+ * @param listings
+ */
 function updateListingCards(listings = []) {
     currentListings = listings;
 
@@ -46,17 +48,17 @@ function updateListingCards(listings = []) {
         });
     });
 
-    lconfig.$container.html(html);
+    $container.html(html);
     blazy.revalidate();
 }
 
+/**
+ * Get listings
+ */
 function getListings() {
-    lconfig.$container.addClass('loading');
-
     sRets.getListings(
         function(data, textStatus) {
             updateListingCards(data);
-            lconfig.$container.removeClass('loading');
         },
         function(textStatus, errorThrown) {
             console.error(errorThrown);

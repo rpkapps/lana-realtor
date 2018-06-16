@@ -1,5 +1,4 @@
 import '../bootstrap.js';
-import NProgress from 'nprogress';
 import '../components/bootpag.js';
 import '../components/filter-bar.js';
 import secondaryNav from '../components/secondary-nav.js';
@@ -8,10 +7,6 @@ import sRets from '../simplyrets.js';
 import listingCard from '../templates/listing-card.js';
 import simplyrets from '../simplyrets';
 
-NProgress.configure({
-    showSpinner: false,
-    trickleSpeed: gConfig.progressBarSpeed
-});
 
 var blazy = new Blazy(),
     debouncedResize,
@@ -33,9 +28,7 @@ var blazy = new Blazy(),
     }),
     currentListings = [],
     currentXhr,
-    lconfig = {
-        $container: $('#cardListings')
-    };
+    $container = $('#cardListings');
 
 /**
  * Update listings
@@ -58,7 +51,7 @@ function updateListingCards(listings = []) {
         });
     });
 
-    lconfig.$container.html(html);
+    $container.html(html || gConfig.noListingsFoundHtml);
     blazy.revalidate();
 }
 
@@ -94,8 +87,7 @@ function handleNoData() {
  * Get listings from Simply RETS
  */
 function getListings(resetPagination = false) {
-    $('body').addClass('loading');
-    NProgress.start();
+
 
     if(secondaryNav.allUnchecked()) {
         simplyrets.addAllTypesExcept(['rental', 'condominium']);
@@ -104,8 +96,6 @@ function getListings(resetPagination = false) {
     sRets.getListings(
         function(data, textStatus, xhr) {
             updateListingCards(data);
-            $('body').removeClass('loading');
-            NProgress.done();
             currentXhr = xhr;
 
             if(resetPagination) {
@@ -142,7 +132,7 @@ $pagination.on('page', function(event, page) {
     history.pushState(null, null, `?${gSearchParams.toString()}`);
 
     // Scroll to top on pagination change
-    $('html,body').animate({scrollTop: $('#secondaryNav').offset().top}, 300);
+    $('html,body').animate({scrollTop: 0}, 1);
 
     getListings();
 });

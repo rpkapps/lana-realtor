@@ -7,5 +7,6 @@ window.gConfig = {
     simplyRetsApiUrl: 'https://api.simplyrets.com/properties',
     simplyRetsBtoa: btoa('simplyrets:simplyrets'),
     progressBarSpeed: 40,
+    noListingsFoundHtml: `<p class="no-listing-found">Sorry, there are no listings available using those search terms.</p>`,
     limit: 9
 };
