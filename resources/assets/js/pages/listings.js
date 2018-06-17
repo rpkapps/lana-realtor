@@ -7,7 +7,6 @@ import sRets from '../simplyrets.js';
 import listingCard from '../templates/listing-card.js';
 import simplyrets from '../simplyrets';
 
-
 var blazy = new Blazy(),
     debouncedResize,
     $pagination = $('#pagination').bootpag({
@@ -26,34 +25,98 @@ var blazy = new Blazy(),
         lastClass: 'last',
         firstClass: 'first'
     }),
+    noListingsFoundHtml = `<p class="no-listing-found">Sorry, there are no listings available using those search terms.</p>`,
     currentListings = [],
+    view,
     currentXhr,
     $container = $('#cardListings');
 
-/**
- * Update listings
- * @param listings
- */
-function updateListingCards(listings = []) {
-    currentListings = listings;
+/* BUY View METHODS
+   ================================================== */
+var buyView = {
+    /**
+     * Update listing cards
+     * @param listings
+     */
+    updateListingCards: function(listings) {
+        currentListings = listings;
 
-    var html = '';
-    listings.forEach(function(listing) {
-        html += listingCard({
-            id: listing.mlsId, // change this
-            photo: listing.photos[0],
-            title: sRets.determineTitle(listing.property.type),
-            price: utils.formatNumber(listing.listPrice),
-            address: `${listing.address.full}, ${listing.address.city}, ${listing.address.state}, ${listing.address.postalCode}`,
-            bedrooms: listing.property.bedrooms || '',
-            bathrooms: (listing.property.bathsFull || 0) + (listing.property.bathsHalf || 0) + (listing.property.bathsThreeQuarter || 0),
-            property: utils.formatNumber(listing.property.area)
+        var html = '';
+        listings.forEach(function(listing) {
+            html += listingCard({
+                id: listing.mlsId, // change this
+                photo: listing.photos[0],
+                title: sRets.determineTitle(listing.property.type),
+                price: utils.formatNumber(listing.listPrice),
+                address: `${listing.address.full}, ${listing.address.city}, ${listing.address.state}, ${listing.address.postalCode}`,
+                bedrooms: listing.property.bedrooms || '',
+                bathrooms: (listing.property.bathsFull || 0) + (listing.property.bathsHalf || 0) +
+                (listing.property.bathsThreeQuarter || 0),
+                property: utils.formatNumber(listing.property.area)
+            });
         });
-    });
 
-    $container.html(html || gConfig.noListingsFoundHtml);
-    blazy.revalidate();
-}
+        updateDOM(html);
+    },
+    /**
+     * Get listings from Simply RETS
+     * @param resetPagination
+     */
+    getListings: function getListings(resetPagination = false) {
+        var self = this;
+
+        if(secondaryNav.allUnchecked()) {
+            simplyrets.addAllTypesExcept(['rental', 'condominium']);
+        }
+
+        sRets.getListings(
+            function(data, textStatus, xhr) {
+                self.updateListingCards(data);
+                currentXhr = xhr;
+
+                if(resetPagination) {
+                    // Update total number of pages for pagination
+                    $pagination.bootpag({
+                        page: 1,
+                        total: sRets.getNumberOfPages(currentXhr),
+                        firstLastUse: true
+                    });
+                }
+
+                // Handle no data and when there is data, show the pagination
+                (data.length < 1) ? handleNoData() : $pagination.show();
+            },
+            function(xhr, textStatus, errorThrown) {
+                currentXhr = xhr;
+                handleNoData();
+                console.error(errorThrown);
+            }
+        );
+    }
+};
+
+/* RENT View METHODS
+   ================================================== */
+
+var rentView = {
+    /**
+     * Update listing cards
+     * @param listings
+     */
+    updateListingCards: function(listings) {
+        updateDOM('TODO: Show rental listings.');
+    },
+    /**
+     * Get listings from Simply RETS
+     * @param resetPagination
+     */
+    getListings: function getListings(resetPagination = false) {
+        this.updateListingCards();
+    }
+};
+
+/* HELPER METHODS
+   ================================================== */
 
 function displayGridView() {
 
@@ -63,8 +126,13 @@ function displayMapView() {
 
 }
 
-function displayListing() {
-
+/**
+ * Update DOM with new listings
+ * @param html
+ */
+function updateDOM(html) {
+    $container.html(html || noListingsFoundHtml);
+    blazy.revalidate();
 }
 
 /**
@@ -83,41 +151,6 @@ function handleNoData() {
     $pagination.hide();
 }
 
-/**
- * Get listings from Simply RETS
- */
-function getListings(resetPagination = false) {
-
-
-    if(secondaryNav.allUnchecked()) {
-        simplyrets.addAllTypesExcept(['rental', 'condominium']);
-    }
-
-    sRets.getListings(
-        function(data, textStatus, xhr) {
-            updateListingCards(data);
-            currentXhr = xhr;
-
-            if(resetPagination) {
-                // Update total number of pages for pagination
-                $pagination.bootpag({
-                    page: 1,
-                    total: sRets.getNumberOfPages(currentXhr),
-                    firstLastUse: true
-                });
-            }
-
-            // Handle no data and when there is data, show the pagination
-            (data.length < 1) ? handleNoData() : $pagination.show();
-        },
-        function(xhr, textStatus, errorThrown) {
-            currentXhr = xhr;
-            handleNoData();
-            console.error(errorThrown);
-        }
-    );
-}
-
 /* MAIN
    ================================================== */
 
@@ -134,7 +167,7 @@ $pagination.on('page', function(event, page) {
     // Scroll to top on pagination change
     $('html,body').animate({scrollTop: 0}, 1);
 
-    getListings();
+    view.getListings();
 });
 
 // Event listener
@@ -143,10 +176,11 @@ $.subscribe('snavbar.change filter.change', function() {
     gSearchParams.set('offset', sRets.getPageOffset(0, currentXhr));
     history.pushState(null, null, `?${gSearchParams.toString()}`);
 
-    getListings(true);
+    view.getListings(true);
 });
 
 $(window).on('resize', debouncedResize);
 
-getListings(true);
+view = utils.getPageName() === 'rent' ? rentView : buyView;
+view.getListings(true);
 resizePagination();

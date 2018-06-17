@@ -3,15 +3,15 @@
 @section('content')
 <div class="home-background"> </div>
 <nav class="home-tabs">
-	<ul class="nav nav-tabs" id="myTab" role="tablist">
+	<ul class="nav nav-tabs" id="homeNavTabs" role="tablist">
 		<li class="nav-item">
-			<a class="nav-link active" id="home-nav-buy" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">BUY</a>
+			<a class="nav-link active" id="homeNavBuy" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">BUY</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" id="home-nav-rent" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">RENT</a>
+			<a class="nav-link" id="homeNavRent" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">RENT</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" id="home-nav-sell" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">SELL</a>
+			<a class="nav-link" id="homeNavSell" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">SELL</a>
 		</li>
 	</ul>
 </nav>

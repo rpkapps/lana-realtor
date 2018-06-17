@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Client;
+
 class PagesController extends Controller
 {
 
@@ -13,26 +15,36 @@ class PagesController extends Controller
 		return view('pages.contact');
 	}
 
-	public function getListings() {
-		return view('pages.listings');
+	public function getBuyListings() {
+	    $title = 'For Sale';
+	    $showNavCheckboxes = true;
+
+		return view('pages.listings', compact('title', 'showNavCheckboxes'));
 	}
 
-	public function getListingItem($mlsId) {
+    public function getRentListings() {
+        $title = 'For Rent';
+        $showNavCheckboxes = false;
 
+        return view('pages.listings', compact('title', 'showNavCheckboxes'));
+    }
 
-        $client = new \GuzzleHttp\Client;
-
+	public function getListing($mlsId) {
         $url = 'https://api.simplyrets.com/properties/'. $mlsId;
+        $showNavCheckboxes = false;
 
-        $listing = $client->get(
-            $url,
-            ['auth' => [env('SIMPLYRETS_USERNAME'), env('SIMPLYRETS_PASSWORD')]]
-        );
+        try {
+            $listing = (new Client)->get(
+                $url,
+                ['auth' => [env('SIMPLYRETS_USERNAME'), env('SIMPLYRETS_PASSWORD')]]
+            );
 
-        // Parse it into an array
-        $listing = json_decode($listing->getBody(), true);
+            // Parse it into an array
+            $listing = json_decode($listing->getBody(), true);
+        } catch (\Exception $e) {
+            abort(404);
+        }
 
-
-		return view('pages.listing-item', compact('listing'));
+		return view('pages.listing-item', compact('listing', 'showNavCheckboxes'));
 	}
 }

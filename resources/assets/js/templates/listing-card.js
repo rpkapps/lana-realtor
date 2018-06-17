@@ -1,6 +1,6 @@
 export default function(data = {}) {
     return `
-        <a href="/listing-item/${data.id}" id="${data.id}" class="card" title="View listing. This opens a new window." target="_blank">
+        <a href="/listing/${data.id}" id="${data.id}" class="card" title="View listing. This opens a new window." target="_blank">
             <div class="card-background b-lazy" data-src="${data.photo}">
                 <span class="loader"></span>
             </div>

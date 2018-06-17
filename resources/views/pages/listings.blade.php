@@ -1,6 +1,6 @@
 @extends('layout.sub-page')
 
-@section('title', 'For Sale')
+@section('title', $title)
 
 @section('content')
     <div id="cardListings" class="card-listings"></div>

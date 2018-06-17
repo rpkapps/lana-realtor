@@ -3,28 +3,37 @@ import utils from '../utils.js';
 import sRets from '../simplyrets.js';
 import listingCard from '../templates/listing-card.js';
 
-var $checkboxes = $('#homeCheckboxes input'),
+var $checkboxesContainer = $('#homeCheckboxes'),
+    $checkboxes = $('#homeCheckboxes input'),
+    $tabs = $('#homeNavTabs .nav-link'),
     $search = $('#homeSearch'),
     blazy = new Blazy(),
     currentListings,
     $container = $('#homeListings');
 
+
 $('#homeSearchForm').on('submit', function(event) {
+    var page = $tabs.filter('#homeNavRent.active').length ? 'rent' : 'buy',
+        origin = window.location.origin + `/${page}`,
+        values = [];
 
     event.preventDefault();
 
-    var urlstr = window.location.origin + '/listings?';
-    $checkboxes.each(function() {
-        if(this.checked) {
-            urlstr += 'type%5B%5D=' + this.value + '&';
-        }
-    });
-
-    if($search.val()) {
-        urlstr += 'q=' + $search.val();
+    if(page === 'buy') {
+        $checkboxes.filter(':checked').each(function() {
+            values.push('type%5B%5D=' + this.value);
+        });
     }
 
-    window.location.href = urlstr;
+    if($search.val()) {
+        values.push('q=' + $search.val());
+    }
+
+    window.location.href = values.length ? origin + '?' + values.join('&') : origin;
+});
+
+$tabs.on('show.bs.tab', function(event) {
+    $checkboxesContainer.css('display', this.id === 'homeNavRent' ? 'none' : '');
 });
 
 /**

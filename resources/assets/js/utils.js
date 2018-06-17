@@ -44,8 +44,19 @@ function clamp(number, min, max) {
     return Math.min(Math.max(number, min), max);
 }
 
+/**
+ * Get page name from the URL buy getting the last portion after the slash
+ * i.e.: for www.domain.com/path1/path2 the page name would be path2
+ * @returns {*}
+ */
+function getPageName() {
+    var path = window.location.pathname.split('/');
+    return path.length ? path[path.length - 1] : '';
+}
+
 export default {
     formatNumber: formatNumber,
     debounce: debounce,
-    clamp: clamp
+    clamp: clamp,
+    getPageName: getPageName
 };
