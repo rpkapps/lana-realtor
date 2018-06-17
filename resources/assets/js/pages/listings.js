@@ -6,6 +6,7 @@ import utils from '../utils.js';
 import sRets from '../simplyrets.js';
 import listingCard from '../templates/listing-card.js';
 import simplyrets from '../simplyrets';
+import rentHelper from '../rent-helper';
 
 var blazy = new Blazy(),
     debouncedResize,
@@ -62,7 +63,7 @@ var buyView = {
      * Get listings from Simply RETS
      * @param resetPagination
      */
-    getListings: function getListings(resetPagination = false) {
+    getListings: function(resetPagination = false) {
         var self = this;
 
         if(secondaryNav.allUnchecked()) {
@@ -81,6 +82,7 @@ var buyView = {
                         total: sRets.getNumberOfPages(currentXhr),
                         firstLastUse: true
                     });
+                    resizePagination();
                 }
 
                 // Handle no data and when there is data, show the pagination
@@ -92,6 +94,20 @@ var buyView = {
                 console.error(errorThrown);
             }
         );
+    },
+    /**
+     * Handle anything specific for buy view on paginate
+     */
+    handlePagination: function(page) {
+        // Set new offset
+        gSearchParams.set('offset', sRets.getPageOffset(page, currentXhr));
+    },
+    /**
+     * Handle nav and filter bar change for buy view
+     */
+    handleNavChange: function() {
+        // Set offset back to 0
+        gSearchParams.set('offset', sRets.getPageOffset(0, currentXhr));
     }
 };
 
@@ -104,14 +120,75 @@ var rentView = {
      * @param listings
      */
     updateListingCards: function(listings) {
-        updateDOM('TODO: Show rental listings.');
+        var html = '';
+
+        listings.forEach(function(listing) {
+            var firstPhoto;
+
+            try {
+                firstPhoto = JSON.parse(listing.photos)[0];
+            }
+            catch(e) {
+                // If not array - will be a string of one photo or none
+                firstPhoto = listing.photos;
+            }
+
+            html += listingCard({
+                id: listing.id,
+                photo: firstPhoto,
+                title: 'House For Rent',
+                price: utils.formatNumber(listing.listPrice),
+                address: `${listing.streetNumber} ${listing.streetName}, ${listing.city}, ${listing.state}, ${listing.postalCode}`,
+                bedrooms: listing.bedrooms || '',
+                bathrooms: listing.bathrooms || 0,
+                property: utils.formatNumber(listing.area)
+            });
+        });
+
+        updateDOM(html);
     },
     /**
-     * Get listings from Simply RETS
+     * Get listings from Rent API
      * @param resetPagination
      */
-    getListings: function getListings(resetPagination = false) {
-        this.updateListingCards();
+    getListings: function(resetPagination = false) {
+        var self = this;
+        rentHelper.getListings(function(data) {
+                self.updateListingCards(data.data);
+
+                if(resetPagination) {
+                    // Update total number of pages for pagination
+                    $pagination.bootpag({
+                        page: 1,
+                        total: data.meta.last_page,
+                        firstLastUse: true
+                    });
+                    resizePagination();
+                }
+
+                // Handle no data and when there is data, show the pagination
+                (data.length < 1) ? handleNoData() : $pagination.show();
+
+            },
+            function(xhr, textStatus, errorThrown) {
+                handleNoData();
+                console.error(errorThrown);
+            }
+        );
+    },
+    /**
+     * Handle anything specific for rent view on paginate
+     */
+    handlePagination: function(page) {
+        // Set new page
+        gSearchParams.set('page', page);
+    },
+    /**
+     * Handle nav and filter bar change for rent view
+     */
+    handleNavChange: function() {
+        // Set page to 1
+        gSearchParams.set('page', 1);
     }
 };
 
@@ -149,6 +226,7 @@ function resizePagination() {
  */
 function handleNoData() {
     $pagination.hide();
+    updateDOM();
 }
 
 /* MAIN
@@ -160,8 +238,7 @@ debouncedResize = utils.debounce(function() {
 
 // Pagination event handler
 $pagination.on('page', function(event, page) {
-    // Set new offset
-    gSearchParams.set('offset', sRets.getPageOffset(page, currentXhr));
+    view.handlePagination(page);
     history.pushState(null, null, `?${gSearchParams.toString()}`);
 
     // Scroll to top on pagination change
@@ -172,8 +249,7 @@ $pagination.on('page', function(event, page) {
 
 // Event listener
 $.subscribe('snavbar.change filter.change', function() {
-    // Set offset back to 0
-    gSearchParams.set('offset', sRets.getPageOffset(0, currentXhr));
+    view.handleNavChange();
     history.pushState(null, null, `?${gSearchParams.toString()}`);
 
     view.getListings(true);

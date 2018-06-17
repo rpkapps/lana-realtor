@@ -14,7 +14,7 @@ var $checkboxesContainer = $('#homeCheckboxes'),
 
 $('#homeSearchForm').on('submit', function(event) {
     var page = $tabs.filter('#homeNavRent.active').length ? 'rent' : 'buy',
-        origin = window.location.origin + `/${page}`,
+        path = `/${page}`,
         values = [];
 
     event.preventDefault();
@@ -29,7 +29,7 @@ $('#homeSearchForm').on('submit', function(event) {
         values.push('q=' + $search.val());
     }
 
-    window.location.href = values.length ? origin + '?' + values.join('&') : origin;
+    window.location.href = values.length ? path + '?' + values.join('&') : path;
 });
 
 $tabs.on('show.bs.tab', function(event) {

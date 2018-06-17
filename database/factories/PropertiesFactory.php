@@ -20,6 +20,7 @@ $factory->define(App\Property::class, function (Faker $faker) {
         'streetNumber' => $streetNumber,
         'streetName' => $streetName,
         'city' => $city,
+        'state' => 'Alaska',
         'postalCode' => $postalCode,
         'elementarySchool' => $faker->text(20),
         'middleSchool' => $faker->text(20),

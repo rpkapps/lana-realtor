@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['prefix' => 'v1', 'as' => 'api.'], function () {
-    Route::get('property', ['as' => 'property.index', 'uses' => 'PropertyController@index']);
-    Route::get('property/{property}', ['as' => 'property.show', 'uses' => 'PropertyController@show']);
+    Route::get('properties', ['as' => 'property.index', 'uses' => 'PropertyController@index']);
+    Route::get('properties/{property}', ['as' => 'property.show', 'uses' => 'PropertyController@show']);
 });
 

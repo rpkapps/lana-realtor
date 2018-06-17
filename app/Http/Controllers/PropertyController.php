@@ -82,6 +82,7 @@ class PropertyController extends Controller
      */
     protected function search(Builder $query, $columns = [], $value)
     {
+        // TODO: Fix search for full addresses
         if ($value) {
             foreach ($columns as $index => $column) {
                 $query->orWhere($column, 'LIKE', '%' . $value . '%');
@@ -133,7 +134,7 @@ class PropertyController extends Controller
         // Remove the '-' from string
         $sortBy = $sortBy[0] === '-' ? substr($sortBy, 1) : $sortBy;
 
-        if ($columnMap[$sortBy]) {
+        if (array_key_exists($sortBy, $columnMap)) {
             $query->orderBy($columnMap[$sortBy], $order);
         }
 
