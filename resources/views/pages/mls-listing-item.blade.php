@@ -4,8 +4,7 @@
 <div class="container">
 	<div class="row listing-wrapper">
 		<div class="col-lg-8 left-column">
-			<div class="listing-main-img">
-				<img src="{{ $listing['photos'][0] }}" class="img-fluid" alt="Responsive image">
+			<div class="listing-main-img" style="background-image: url({{ $listing['photos'][0] }})">
 				<a href="javascript:void(0);" class="gallery-icon d-flex d-lg-none" title="View image gallery.">
 					<svg class="listing-gallery-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="36" height="32" viewBox="0 0 36 32">
 						<title>View image gallery.</title>
