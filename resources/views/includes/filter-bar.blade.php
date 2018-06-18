@@ -47,15 +47,17 @@
             @endfor
         </div>
     </div>
-    <div class="btn-group" role="group">
-        <button id="filterHomeTypeBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Home Type</button>
-        <div id="filterHomeType" class="dropdown-menu" aria-labelledby="filterHomeTypeBtn">
-            @foreach (ListingHelper::getSubType() as $subType => $cleanSubType)
-                <div class="custom-control custom-checkbox">
-                    <input class="custom-control-input" type="checkbox" id="listingSubType{{ $loop->index }}" name="subtype[]" value="{{ $subType }}" {{ FormHelper::checked('subtype', $subType) }}>
-                    <label class="custom-control-label" for="listingSubType{{ $loop->index }}">{{ $cleanSubType }}</label>
-                </div>
-            @endforeach
+    @if ($pageType === 'buy')
+        <div class="btn-group" role="group">
+            <button id="filterHomeTypeBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Home Type</button>
+            <div id="filterHomeType" class="dropdown-menu" aria-labelledby="filterHomeTypeBtn">
+                @foreach (ListingHelper::getSubType() as $subType => $cleanSubType)
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" id="listingSubType{{ $loop->index }}" name="subtype[]" value="{{ $subType }}" {{ FormHelper::checked('subtype', $subType) }}>
+                        <label class="custom-control-label" for="listingSubType{{ $loop->index }}">{{ $cleanSubType }}</label>
+                    </div>
+                @endforeach
+            </div>
         </div>
-    </div>
+     @endif
 </div>

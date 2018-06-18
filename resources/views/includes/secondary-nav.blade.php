@@ -8,7 +8,7 @@
                     <button class="btn btn-secondary" type="submit" form="secondarySearchForm" value="Submit">Search</button>
                 </div>
             </form>
-            @if ($showNavCheckboxes)
+            @if ($pageType === 'buy')
                 <div class="custom-control custom-checkbox">
                     <input class="custom-control-input" type="checkbox" id="listingType1" name="type[]" value="residential" {{ FormHelper::checked('type', 'residential') }}>
                     <label class="custom-control-label" for="listingType1">Residential</label>

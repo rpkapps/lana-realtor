@@ -18,21 +18,21 @@ class PagesController extends Controller
 
 	public function getBuyListings() {
 	    $title = 'For Sale';
-	    $showNavCheckboxes = true;
+	    $pageType = 'buy';
 
-		return view('pages.listings', compact('title', 'showNavCheckboxes'));
+		return view('pages.listings', compact('title', 'pageType'));
 	}
 
     public function getRentListings() {
         $title = 'For Rent';
-        $showNavCheckboxes = false;
+        $pageType = 'rent';
 
-        return view('pages.listings', compact('title', 'showNavCheckboxes'));
+        return view('pages.listings', compact('title', 'pageType'));
     }
 
 	public function getMlsListing($mlsId) {
         $url = 'https://api.simplyrets.com/properties/'. $mlsId;
-        $showNavCheckboxes = false;
+        $pageType = 'buy';
 
         try {
             $listing = (new Client)->get(
@@ -46,12 +46,12 @@ class PagesController extends Controller
             abort(404);
         }
 
-		return view('pages.mls-listing-item', compact('listing', 'showNavCheckboxes'));
+		return view('pages.mls-listing-item', compact('listing', 'pageType'));
 	}
 
 	public function getLocalListing($id) {
         $listing = Property::find($id);
-        $showNavCheckboxes = false;
+        $pageType = 'rent';
 
         $listing['photos'] = Property::arrayifyPhotos( $listing['photos']);
 
@@ -59,6 +59,6 @@ class PagesController extends Controller
             abort(404);
         }
 
-        return view('pages.local-listing-item', compact('listing', 'showNavCheckboxes' ));
+        return view('pages.local-listing-item', compact('listing', 'pageType' ));
     }
 }
