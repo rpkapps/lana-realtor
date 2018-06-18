@@ -7,7 +7,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-7 pr-1">
-                <h4 class="card-title text-primary">{{ SimplyRetsHelper::determineTitle($listing['property']['type']) }}</h4>
+                <h4 class="card-title text-primary">{{ ListingHelper::determineTitle($listing['property']['type']) }}</h4>
             </div>
             <div class="col-5 pl-1 text-right">
                 <h4 class="card-title"> ${{ number_format($listing['listPrice']) }}</h4>

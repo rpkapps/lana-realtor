@@ -19,7 +19,7 @@
 <div class="listing-info-container">
 	<div class="row">
 		<div class="col-md-7">
-			<h2 class="listing-type"> {{ SimplyRetsHelper::determineTitle($listing['property']['type']) }} </h2>
+			<h2 class="listing-type"> {{ ListingHelper::determineTitle($listing['property']['type']) }} </h2>
 			<h1 class="listing-address">
 			<span>{{ $listing['address']['full'] }},</span>
 			<span>{{ $listing['address']['city'] }}, {{ $listing['address']['state'] }}, {{ $listing['address']['postalCode'] }}</span>
@@ -67,7 +67,7 @@
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Price/sqft</h5>
-								<p>${{ FormHelper::fallback(number_format(SimplyRetsHelper::determineSqFtPrice($listing['listPrice'], $listing['property']['area']))) }}</p>
+								<p>${{ FormHelper::fallback(number_format(ListingHelper::determineSqFtPrice($listing['listPrice'], $listing['property']['area']))) }}</p>
 							</div>
 						</div>
 						<div class="col-md-4">

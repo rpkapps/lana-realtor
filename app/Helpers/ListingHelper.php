@@ -3,7 +3,7 @@
 namespace App\Helpers;
 
 
-class SimplyRetsHelper
+class ListingHelper
 {
     static function determineTitle($type)
     {

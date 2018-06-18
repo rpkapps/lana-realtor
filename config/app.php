@@ -227,7 +227,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         // Add helpers
-        'SimplyRetsHelper' => \App\Helpers\SimplyRetsHelper::class,
+        'ListingHelper' => \App\Helpers\ListingHelper::class,
         'FormHelper' => \App\Helpers\FormHelper::class,
     ],
 
