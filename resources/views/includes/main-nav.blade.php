@@ -10,15 +10,17 @@
         <div class="collapse navbar-collapse justify-content-end" id="mainNavToggle">
             <ul class="navbar-nav mt-2 mt-md-0">
                 <li class="nav-item">
-                    <a class="nav-link px-md-6 px-md-0" href="#" title="Buy">Buy</a>
+                    <a class="nav-link px-md-6 px-md-0" href="{{ route('buy') }}" title="Buy">Buy</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-md-6 px-md-0" href="#" title="Rent">Rent</a>
+                    <a class="nav-link px-md-6 px-md-0" href="{{ route('rent') }}" title="Rent">Rent</a>
                 </li>
                 <li class="nav-item">
+                    {{-- TODO: Update href--}}
                     <a class="nav-link px-md-6 px-md-0" href="#" title="Sell">Sell</a>
                 </li>
                 <li class="nav-item">
+                    {{-- TODO: Update href--}}
                     <a class="nav-link px-md-6 px-md-0" href="#" title="Contact">Contact</a>
                 </li>
             </ul>
