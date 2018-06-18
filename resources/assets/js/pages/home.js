@@ -46,6 +46,7 @@ function updateListingCards(listings = []) {
     var html = '';
     listings.forEach(function(listing) {
         html += listingCard({
+            vendor: 'm',
             id: listing.mlsId, // change this
             photo: listing.photos[0],
             title: sRets.determineTitle(listing.property.type),

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Property;
 use GuzzleHttp\Client;
 
 class PagesController extends Controller
@@ -29,7 +30,7 @@ class PagesController extends Controller
         return view('pages.listings', compact('title', 'showNavCheckboxes'));
     }
 
-	public function getListing($mlsId) {
+	public function getMlsListing($mlsId) {
         $url = 'https://api.simplyrets.com/properties/'. $mlsId;
         $showNavCheckboxes = false;
 
@@ -45,6 +46,19 @@ class PagesController extends Controller
             abort(404);
         }
 
-		return view('pages.listing-item', compact('listing', 'showNavCheckboxes'));
+		return view('pages.mls-listing-item', compact('listing', 'showNavCheckboxes'));
 	}
+
+	public function getLocalListing($id) {
+        $listing = Property::find($id);
+        $showNavCheckboxes = false;
+
+        $listing['photos'] = Property::arrayifyPhotos( $listing['photos']);
+
+        if (!$listing){
+            abort(404);
+        }
+
+        return view('pages.local-listing-item', compact('listing', 'showNavCheckboxes' ));
+    }
 }

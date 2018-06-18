@@ -18,7 +18,9 @@ Route::get('/contact', ['as' => 'contact', 'uses' => 'PagesController@getContact
 Route::get('/buy', ['as' => 'buy', 'uses' => 'PagesController@getBuyListings']);
 Route::get('/rent', ['as' => 'rent', 'uses' => 'PagesController@getRentListings']);
 
-Route::get('/listing/{mlsId}', ['as' => 'listing', 'uses' => 'PagesController@getListing']);
+Route::get('/listing/m/{mlsId}', ['as' => 'listing-mls', 'uses' => 'PagesController@getMlsListing']);
+
+Route::get('/listing/l/{id}', ['as' => 'listing-local', 'uses' => 'PagesController@getLocalListing']);
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();

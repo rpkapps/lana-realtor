@@ -19,8 +19,7 @@ class SimplyRetsHelper
 
         try {
             return $types[$type];
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return 'Invalid Listing';
         }
     }
@@ -28,18 +27,18 @@ class SimplyRetsHelper
     static function getSubType()
     {
         $types = [
-            'apartment' => 'Apartment', 
+            'apartment' => 'Apartment',
             'boatslip' => 'Boat',
             'singlefamilyresidence' => 'Single Family Residence',
             'deededparking' => 'Deeded Parking',
             'cabin' => 'Cabin',
-            'condominium'  => 'Condominium',
+            'condominium' => 'Condominium',
             'duplex' => 'Duplex',
             'manufacturedhome' => 'Mobile Home',
             'ownyourown' => 'Own Your Own',
             'quadruplex' => 'Quadruplex',
             'stockcooperative' => 'Stock Cooperative',
-            'townhouse' => 'Townhouse', 
+            'townhouse' => 'Townhouse',
             'timeshare' => 'Timeshare',
             'triplex' => 'Triplex',
             'manufacturedonland' => 'Manufacted On Land'
@@ -50,7 +49,6 @@ class SimplyRetsHelper
 
     static function determineSqFtPrice($Price, $SqFt)
     {
-        return $Price/$SqFt;
+        return $Price / $SqFt;
     }
-
 }
