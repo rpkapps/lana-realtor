@@ -14,3 +14,8 @@ let mix = require('laravel-mix');
 mix.js('resources/assets/js/pages/listings.js', 'public/js')
    .js('resources/assets/js/pages/home.js', 'public/js') 
    .sass('resources/assets/sass/app.scss', 'public/css');
+
+
+if (mix.inProduction()) {
+    mix.version();
+}
