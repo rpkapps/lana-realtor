@@ -10,9 +10,6 @@
 		<li class="nav-item">
 			<a class="nav-link" id="homeNavRent" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">RENT</a>
 		</li>
-		<li class="nav-item">
-			<a class="nav-link" id="homeNavSell" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">SELL</a>
-		</li>
 	</ul>
 </nav>
 <div class="home-nav-background">
