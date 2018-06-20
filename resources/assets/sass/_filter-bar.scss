@@ -22,6 +22,19 @@
 			background-color: color-level(gray('500'), +2);
 		}
 	}
+
+	@media (max-width: $breakpoint-sm) {
+		.btn-group,
+		.btn {
+			width: 100%;
+		}
+
+		.dropdown-menu {
+			min-width: 0 !important;
+			width: 100%;
+		}
+	}
+
 }
 
 #filterAreaBtn + .dropdown-menu {
