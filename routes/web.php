@@ -24,4 +24,6 @@ Route::get('/listing/l/{id}', ['as' => 'listing-local', 'uses' => 'PagesControll
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
+
+    Route::get('/', ['as' => 'voyager.dashboard', 'uses' => 'Voyager@redirectToProperties']);
 });
