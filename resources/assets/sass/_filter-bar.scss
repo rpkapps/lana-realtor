@@ -1,55 +1,69 @@
 .filter-bar {
-	flex-wrap: wrap;
-	justify-content: flex-start;
-	padding-top: 1rem;
-	padding-bottom: 1rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
 
-	.btn-outline-light{
-		color: gray('800');
+    .btn {
+        color: gray('800');
+        max-width: 12.5rem;
+        min-height: 2.5rem;
+        min-width: 10.75rem;
+        padding-right: 1.5rem;
 
-		min-width: 172px;
-		min-height: 40px;
+        &:hover, &:focus {
+            background-color: gray('500');
+            color: color('white');
 
-		&:hover, &:focus{
-			background-color: gray('500');
-			color: color('white');
+        }
 
-		}
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active {
+            background-color: color-level(gray('500'), +2);
+            color: color('white');
+        }
+    }
 
-		&:not(:disabled):not(.disabled):active,
-		&:not(:disabled):not(.disabled).active {
-			color: color('white');
-			background-color: color-level(gray('500'), +2);
-		}
-	}
+    .dropdown-toggle::after {
+        position: absolute;
+        right: 0.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
 
-	@media (max-width: $breakpoint-sm) {
-		.btn-group,
-		.btn {
-			width: 100%;
-		}
+    @media (max-width: $breakpoint-md) {
+        .btn {
+            min-width: 7.5rem;
+        }
+    }
 
-		.dropdown-menu {
-			min-width: 0 !important;
-			width: 100%;
-		}
-	}
+    @media (max-width: $breakpoint-sm) {
+        .btn-group,
+        .btn {
+            width: 100%;
+        }
+
+        .dropdown-menu {
+            min-width: 0 !important;
+            width: 100%;
+        }
+    }
 
 }
 
 #filterAreaBtn + .dropdown-menu {
-	min-width: 18.75rem;
-	padding-right: 1rem;
-	padding-left: 1rem;
+    min-width: 18.75rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 #filterPriceBtn + .dropdown-menu {
-	min-width: 18.75rem;
-	padding-right: 1rem;
-	padding-left: 1rem;
+    min-width: 18.75rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
-#filterHomeTypeBtn + .dropdown-menu {
-	min-width: 18.75rem;
-	padding-left: 1rem;
+#filterPropertySubTypeBtn + .dropdown-menu {
+    min-width: 18.75rem;
+    padding-left: 1rem;
 }

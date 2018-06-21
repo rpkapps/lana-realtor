@@ -54,9 +54,19 @@ function getPageName() {
     return path.length ? path[path.length - 1] : '';
 }
 
+/**
+ * Add commas to number
+ * @param number
+ * @returns {string}
+ */
+function numberWithCommas(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export default {
     formatNumber: formatNumber,
     debounce: debounce,
     clamp: clamp,
-    getPageName: getPageName
+    getPageName: getPageName,
+    numberWithCommas: numberWithCommas
 };

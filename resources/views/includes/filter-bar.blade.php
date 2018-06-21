@@ -1,36 +1,50 @@
-<div class="btn-group filter-bar" role="group" aria-label="Button group with nested dropdown">
+<div id="filter-bar" class="btn-group filter-bar" role="group" aria-label="Button group with nested dropdown">
     <div class="btn-group" role="group">
-        <button id="filterPriceBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Price</button>
-        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <form>
-                <div class="form-row">
-                    <div id="filterMinPrice" class="col">
-                        <input type="text" class="form-control" name="minprice" value="{{ FormHelper::value('minprice') }}" placeholder="Min Price">
-                    </div>
-                    <div id="filterMaxPrice" class="col">
-                        <input type="text" class="form-control" name="maxprice" value="{{ FormHelper::value('maxprice') }}" placeholder="Max Price">
-                    </div>
+        <button id="filterPriceBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false" data-default="Price">
+            {{ FormHelper::formatPriceFromQuery('minprice', 'maxprice', 'Price') }}
+        </button>
+        <div class="dropdown-menu stay-open" aria-labelledby="btnGroupDrop1">
+            <div class="form-row align-items-center">
+                <div class="col">
+                    <select id="filterMinPrice" class="custom-select">
+                        @foreach(FormHelper::getPrices('No Min') as $price => $formattedPrice)
+                            <option {{ FormHelper::selected('minprice', $price) }} value="{{ $price }}">{{ $formattedPrice }}</option>
+                        @endforeach
+                    </select>
                 </div>
-            </form>
+                –
+                <div class="col">
+                    <select id="filterMaxPrice" class="custom-select">
+                        @foreach(FormHelper::getPrices('No Max') as $price => $formattedPrice)
+                            <option {{ FormHelper::selected('maxprice', $price) }} value="{{ $price }}">{{ $formattedPrice }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
     <div class="btn-group" role="group">
-        <button id="filterAreaBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Area</button>
-        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <form>
-                <div class="form-row">
-                    <div id="filterMinArea" class="col">
-                        <input type="text" class="form-control" name="minarea" value="{{ FormHelper::value('minarea') }}" placeholder="Min Area">
-                    </div>
-                    <div id="filterMaxArea" class="col">
-                        <input type="text" class="form-control" name="maxarea" value="{{ FormHelper::value('maxarea') }}" placeholder="Max Area">
-                    </div>
+        <button id="filterAreaBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false" data-default="Area">
+            {{ FormHelper::formatAreaFromQuery('minarea', 'maxarea', 'Area') }}
+        </button>
+        <div class="dropdown-menu stay-open" aria-labelledby="btnGroupDrop1">
+            <div class="form-row align-items-center">
+                <div id="filterMinArea" class="col">
+                    <input type="number" class="form-control" data-max="5" name="minarea" value="{{ FormHelper::value('minarea') }}" placeholder="Min Area">
                 </div>
-            </form>
+                –
+                <div id="filterMaxArea" class="col">
+                    <input type="number" class="form-control" data-max="5" name="maxarea" value="{{ FormHelper::value('maxarea') }}" placeholder="Max Area">
+                </div>
+            </div>
         </div>
     </div>
     <div class="btn-group" role="group">
-        <button id="filterBdrmsBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Beds</button>
+        <button id="filterBdrmsBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="additional-info">{{ FormHelper::numberPlus('minbeds') }}</span> Beds
+        </button>
         <div id="filterBdrms" class="dropdown-menu" aria-labelledby="filterBdrmsBtn">
             @for ($i=0; $i<6; $i++)
                 <a class="dropdown-item {{ FormHelper::activeClass('minbeds', $i) }}" href="javascript:void(0)" data-value="{{ $i }}">{{ $i }}+</a>
@@ -39,7 +53,7 @@
     </div>
     <div class="btn-group" role="group">
         <button id="filterBathsBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Baths
+            <span class="additional-info">{{ FormHelper::numberPlus('minbaths') }}</span> Baths
         </button>
         <div id="filterBaths" class="dropdown-menu" aria-labelledby="filterBathsBtn">
             @for ($i=0; $i<6; $i++)
@@ -49,8 +63,10 @@
     </div>
     @if ($pageType === 'buy')
         <div class="btn-group" role="group">
-            <button id="filterHomeTypeBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Home Type</button>
-            <div id="filterHomeType" class="dropdown-menu" aria-labelledby="filterHomeTypeBtn">
+            <button id="filterPropertySubTypeBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Property Type <span class="additional-info">{{ FormHelper::numberOfCheckboxesSelected('subtype') }}</span>
+            </button>
+            <div id="filterPropertySubType" class="dropdown-menu stay-open" aria-labelledby="filterPropertySubTypeBtn">
                 @foreach (ListingHelper::getSubType() as $subType => $cleanSubType)
                     <div class="custom-control custom-checkbox">
                         <input class="custom-control-input" type="checkbox" id="listingSubType{{ $loop->index }}" name="subtype[]" value="{{ $subType }}" {{ FormHelper::checked('subtype', $subType) }}>
