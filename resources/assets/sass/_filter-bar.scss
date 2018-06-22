@@ -4,6 +4,14 @@
     padding-bottom: 1rem;
     padding-top: 1rem;
 
+    .filter-header {
+        font-size: $font-size-5;
+        margin-bottom: .5rem;
+        text-align: center;
+        font-weight: 600;
+        color: gray('800');
+    }
+
     .btn {
         color: gray('800');
         max-width: 12.5rem;
@@ -24,11 +32,21 @@
         }
     }
 
+    .dropdown-menu {
+        width: 100%;
+    }
+
     .dropdown-toggle::after {
         position: absolute;
         right: 0.5rem;
         top: 50%;
         transform: translateY(-50%);
+    }
+
+    @media (min-width: $breakpoint-sm + 1) {
+        #filterBarFilters {
+            display: block !important;
+        }
     }
 
     @media (max-width: $breakpoint-md) {
@@ -38,17 +56,90 @@
     }
 
     @media (max-width: $breakpoint-sm) {
-        .btn-group,
+        display: block;
+
+        .btn-group {
+            display: flex;
+        }
+
         .btn {
+            border-radius: $btn-border-radius !important;
+            display: block;
+            margin-bottom: 1rem;
+            max-width: 100%;
+            min-width: 0;
             width: 100%;
         }
 
-        .dropdown-menu {
-            min-width: 0 !important;
+        #filterBarFilters .btn {
+            background-color: color('white');
+            color: gray('800');
+
+            &:focus {
+                box-shadow: 0 0 0 $input-btn-focus-width rgba(theme-color('secondary'), .25);
+            }
+        }
+
+        #filterPriceBtn,
+        #filterAreaBtn,
+        #filterBdrmsBtn,
+        #filterBathsBtn{
+            display: none;
+        }
+
+        #filterPriceBtn + .dropdown-menu,
+        #filterAreaBtn + .dropdown-menu {
+            background-color: transparent;
+            border: none;
+            display: block;
+            margin-bottom: 1rem;
+            max-width: 100%;
+            min-width: 0;
+            padding: 0;
+            position: static !important;
+            transform: none !important;
             width: 100%;
+        }
+
+        #filterBdrmsBtn + .dropdown-menu,
+        #filterBathsBtn + .dropdown-menu {
+            display: flex !important;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding: 0;
+            position: static !important;
+            transform: none !important;
+            width: 100%;
+
+            .dropdown-item {
+                max-width: calc(100% / 6);
+                padding: .5rem;
+                text-align: center;
+
+                &:first-child {
+                    border-radius: $btn-border-radius 0 0 $btn-border-radius;
+                }
+
+                &:last-child {
+                    border-radius: 0 $btn-border-radius $btn-border-radius 0;
+                }
+            }
+        }
+
+        #filtersBtn {
+            margin: 0 auto;
+            max-width: 10rem;
+            &:after {
+                transition: transform .3s;
+            }
+        }
+
+        #filtersBtn[aria-expanded="true"] {
+            &:after {
+                transform: translateY(-50%) rotate(180deg);
+            }
         }
     }
-
 }
 
 #filterAreaBtn + .dropdown-menu {
@@ -66,4 +157,9 @@
 #filterPropertySubTypeBtn + .dropdown-menu {
     min-width: 18.75rem;
     padding-left: 1rem;
+
+    @media (max-width: $breakpoint-sm) {
+        min-width: 0;
+        width: 100%;
+    }
 }

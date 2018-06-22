@@ -118,6 +118,19 @@
 .home-search {
     margin: 0 auto 1.25rem auto;
     max-width: 33.4375rem;
+
+    .btn {
+        width: 7.625rem;
+
+        svg {
+            height: 1em;
+            width: 1em;
+        }
+
+        @media (max-width: $breakpoint-xs) {
+            width: auto;
+        }
+    }
 }
 
 .home-checkboxes {

@@ -8,8 +8,8 @@ var $bdrmFilters = $('#filterBdrms > .dropdown-item'),
     $maxPriceFilters = $('#filterMaxPrice'),
     $minAreaFilters = $('#filterMinArea > .form-control'),
     $maxAreaFilters = $('#filterMaxArea > .form-control'),
-    $stayOpenDropdowns = $('#filter-bar .dropdown-menu.stay-open'),
-    $inputsWithMax = $('#filter-bar input[data-max]');
+    $stayOpenDropdowns = $('#filterBar .dropdown-menu.stay-open'),
+    $inputsWithMax = $('#filterBar input[data-max]');
 
 /**
  * Set additional info for respective tab button

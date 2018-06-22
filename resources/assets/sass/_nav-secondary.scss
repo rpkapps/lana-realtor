@@ -13,9 +13,15 @@
 
         .custom-checkbox {
             display: inline-block;
-            margin-right: 1rem;
-            margin-top: 1rem;
             min-height: 0;
+            margin-top: 1rem;
+            margin-right: 1rem;
+
+            @media (max-width: $breakpoint-sm) {
+                width: 50%;
+                min-width: 7.5rem;
+                margin-right: 0;
+            }
         }
 
         @media(min-width: 1110px) {
@@ -27,6 +33,12 @@
                 margin: 0;
             }
         }
+
+        @media (max-width: $breakpoint-sm) {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
     }
 }
 
@@ -37,5 +49,14 @@
 
     .btn {
         width: 7.625rem;
+
+        svg {
+            height: 1em;
+            width: 1em;
+        }
+
+        @media (max-width: $breakpoint-xs) {
+            width: auto;
+        }
     }
 }
