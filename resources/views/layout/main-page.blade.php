@@ -5,6 +5,7 @@
 <body class="bg-bluishlight home-template">
 	
 @include('includes.main-nav')
+@include('includes.home-marquee')
 
 <div class="container">
     @yield('content')

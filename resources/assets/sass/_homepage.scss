@@ -8,6 +8,12 @@
     }
 }
 
+.home-marquee {
+    @media (max-width: $breakpoint-xl) {
+        padding: 0;
+    }
+}
+
 .home-background {
     background-image: url(https://s3.amazonaws.com/lana-realtor/images/marquee-home.jpg);
     background-position: right;
