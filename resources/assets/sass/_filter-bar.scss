@@ -161,5 +161,9 @@
     @media (max-width: $breakpoint-sm) {
         min-width: 0;
         width: 100%;
+
+        .custom-control-label {
+            padding: 0 0 .75rem 0;
+        }
     }
 }
