@@ -10,3 +10,8 @@ window.gConfig = {
     progressBarSpeed: 40,
     limit: 9
 };
+
+// refresh page when back button is pressed
+$(window).on('popstate', function() {
+    window.location.reload();
+});

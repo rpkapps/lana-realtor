@@ -243,3 +243,13 @@ function updateCheckboxDropdown({$current, clear}) {
 
     updateQueryParamArray(this.key, checkedValues);
 }
+
+window.clearAll = function() {
+    filters.forEach(function(filter) {
+        filter.update({
+            clear: true
+        });
+    });
+
+    $.publish('filter.change');
+};
