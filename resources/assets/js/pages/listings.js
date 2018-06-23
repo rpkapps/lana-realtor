@@ -169,7 +169,7 @@ var rentView = {
                 }
 
                 // Handle no data and when there is data, show the pagination
-                (data.length < 1) ? handleNoData() : $pagination.show();
+                (data.data.length < 1) ? handleNoData() : $pagination.show();
 
             },
             function(xhr, textStatus, errorThrown) {
