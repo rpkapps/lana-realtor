@@ -151,19 +151,33 @@
     @media (min-width: $breakpoint-sm + 1) {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: left;
         align-items: stretch;
+
+        .card {
+            flex: 0 1 auto;
+            margin-right: $card-listings-gap;
+        }
+
     }
 
     @media (min-width: $breakpoint-sm + 1) and (max-width: $breakpoint-lg) {
         .card {
-            width: calc(#{decimal-floor(100% / ($card-listings-col-count - 1), 1)} - #{($card-listings-gap * ($card-listings-col-count - 2)) / ($card-listings-col-count - 1)});
+            &:nth-child(#{$card-listings-col-count - 1}n) {
+                margin-right: 0;
+            }
+
+            width: calc(#{(100% / ($card-listings-col-count - 1))} - #{decimal-ceil(($card-listings-gap * ($card-listings-col-count - 2)) / ($card-listings-col-count - 1), 2)});
         }
     }
 
     @media (min-width: 1200px) {
         .card {
-            width: calc(#{decimal-floor(100% / $card-listings-col-count, 1)} - #{($card-listings-gap * ($card-listings-col-count - 1)) / $card-listings-col-count});
+            &:nth-child(#{$card-listings-col-count}n) {
+                margin-right: 0;
+            }
+
+            width: calc(#{(100% / $card-listings-col-count)} - #{decimal-ceil(($card-listings-gap * ($card-listings-col-count - 1)) / $card-listings-col-count, 2)});
         }
     }
 }
