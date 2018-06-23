@@ -38,11 +38,11 @@
             <div class="dropdown-menu stay-open" aria-labelledby="btnGroupDrop1">
                 <div class="form-row align-items-center">
                     <div id="filterMinArea" class="col">
-                        <input type="number" class="form-control" data-max="5" name="minarea" value="{{ FormHelper::value('minarea') }}" placeholder="Min Area">
+                        <input type="number" class="form-control" inputmode="numeric" pattern="[0-9]*" data-max="5" name="minarea" value="{{ FormHelper::value('minarea') }}" placeholder="Min Area">
                     </div>
                     –
                     <div id="filterMaxArea" class="col">
-                        <input type="number" class="form-control" data-max="5" name="maxarea" value="{{ FormHelper::value('maxarea') }}" placeholder="Max Area">
+                        <input type="number" class="form-control" inputmode="numeric" pattern="[0-9]*" data-max="5" name="maxarea" value="{{ FormHelper::value('maxarea') }}" placeholder="Max Area">
                     </div>
                 </div>
             </div>

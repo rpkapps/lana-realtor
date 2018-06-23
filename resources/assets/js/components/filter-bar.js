@@ -1,7 +1,8 @@
 import utils from '../utils';
 
 // Cache values so that we don't query DOM more than needed
-var $bdrmFilters = $('#filterBdrms > .dropdown-item'),
+var $filterBar = $('#filterBar'),
+    $bdrmFilters = $('#filterBdrms > .dropdown-item'),
     $bathFilters = $('#filterbaths > .dropdown-item'),
     $propertySubTypeFilters = $('#filterPropertySubType .custom-control-input'),
     $minPriceFilters = $('#filterMinPrice'),
@@ -10,6 +11,77 @@ var $bdrmFilters = $('#filterBdrms > .dropdown-item'),
     $maxAreaFilters = $('#filterMaxArea > .form-control'),
     $stayOpenDropdowns = $('#filterBar .dropdown-menu.stay-open'),
     $inputsWithMax = $('#filterBar input[data-max]');
+
+var filters = [
+    {
+        key: 'minbeds',
+        $elems: $bdrmFilters,
+        eventType: 'click',
+        update: updateMinDropdown
+    },
+    {
+        key: 'minbaths',
+        $elems: $bathFilters,
+        eventType: 'click',
+        update: updateMinDropdown
+    },
+    {
+        key: 'subtype[]',
+        $elems: $propertySubTypeFilters,
+        eventType: 'change',
+        update: updateCheckboxDropdown
+    },
+    {
+        minKey: 'minprice',
+        maxKey: 'maxprice',
+        $min: $minPriceFilters,
+        $max: $maxPriceFilters,
+        $elems: $minPriceFilters.add($maxPriceFilters),
+        eventType: 'change',
+        updateTabText: updatePriceTab,
+        update: updateMinMax
+    },
+    {
+        minKey: 'minarea',
+        maxKey: 'maxarea',
+        $min: $minAreaFilters,
+        $max: $maxAreaFilters,
+        $elems: $minAreaFilters.add($maxAreaFilters),
+        eventType: 'change',
+        updateTabText: updateAreaTab,
+        update: updateMinMax
+    }
+];
+
+
+filters.forEach(function(filter) {
+    filter.$elems.on(filter.eventType, function(event) {
+        event.preventDefault();
+
+        if(filter.minKey) {
+            filter.update();
+        }
+        else {
+            filter.update($(event.currentTarget));
+        }
+        $.publish('filter.change');
+    });
+});
+
+$stayOpenDropdowns.on('click', function(event) {
+    // Keep the dropdown open when clicked inside
+    event.stopPropagation();
+});
+
+$inputsWithMax.on('keyup change', function(event) {
+    var $this = $(this),
+        value = $this.val() || '',
+        max = parseInt($this.data('max'));
+
+    if(value.length > max) {
+        $this.val(value.substring(0, max));
+    }
+});
 
 /**
  * Set additional info for respective tab button
@@ -35,16 +107,11 @@ function replaceTabText($element, value) {
  * Update url query parameter
  * @param key
  * @param value
- * @param holdOffPublish
  */
-function updateQueryParam(key, value, holdOffPublish) {
+function updateQueryParam(key, value) {
     value ? gSearchParams.set(key, value) : gSearchParams.delete(key);
 
     history.pushState(null, null, `?${gSearchParams.toString()}`);
-
-    if(!holdOffPublish) {
-        $.publish('filter.change');
-    }
 }
 
 /**
@@ -53,158 +120,124 @@ function updateQueryParam(key, value, holdOffPublish) {
  * @param values
  */
 function updateQueryParamArray(key, values = []) {
-    gSearchParams.delete(`${key}[]`);
+    gSearchParams.delete(`${key}`);
 
     values.forEach(function(value) {
-        gSearchParams.append(`${key}[]`, value);
+        gSearchParams.append(`${key}`, value);
     });
 
     history.pushState(null, null, `?${gSearchParams.toString()}`);
-
-    $.publish('filter.change');
 }
 
 /**
- * Update min max inputs/selects
- * @param $min
- * @param $max
- * @param minKey
- * @param maxKey
- * @param updateTabFunc
+ * Update min max input/select
+ * @param minVal
+ * @param maxVal
  */
-function minMaxUpdate($min, $max, minKey, maxKey, updateTabFunc) {
-    var minVal = parseInt($min.val()),
-        maxVal = parseInt($max.val());
+function updateMinMax(minVal, maxVal) {
+    var minVal = minVal || parseInt(this.$min.val()),
+        maxVal = maxVal || parseInt(this.$max.val());
 
     if(minVal && maxVal && minVal > maxVal) {
-        $min.val(maxVal);
-        $max.val(minVal);
+        this.$min.val(maxVal);
+        this.$max.val(minVal);
     }
 
-    updateTabFunc();
-    updateQueryParam(minKey, $min.val(), true);
-    updateQueryParam(maxKey, $max.val());
+    this.updateTabText();
+    updateQueryParam(this.minKey, this.$min.val(), true);
+    updateQueryParam(this.maxKey, this.$max.val());
 }
 
 /**
- * Update price tab
+ * Update price tab text
  */
 function updatePriceTab() {
-    var minVal = parseInt($minPriceFilters.val()),
-        maxVal = parseInt($maxPriceFilters.val()),
-        minText = $minPriceFilters.children('option:selected').text(),
-        maxText = $maxPriceFilters.children('option:selected').text();
-
-    if(!minVal && !maxVal) {
-        // here it doesn't matter which element we pass ($min or $max)
-        return replaceTabText($minPriceFilters);
-    }
-
-    if(!minVal) {
-        return replaceTabText($minPriceFilters, `$0 - ${maxText}`);
-    }
-
-    if(!maxVal) {
-        return replaceTabText($minPriceFilters, `${minText}+`);
-    }
-
-    replaceTabText($minPriceFilters, `${minText} - ${maxText}`);
+    updateTabForMinMax({
+        $elem: this.$min,
+        minVal: parseInt(this.$min.val()),
+        maxVal: parseInt(this.$max.val()),
+        minText: this.$min.children('option:selected').text(),
+        maxText: this.$max.children('option:selected').text(),
+        zeroValue: '$0'
+    });
 }
 
 /**
- * Update price min max select lists
- */
-function updatePrice(event) {
-    event.preventDefault();
-    minMaxUpdate($minPriceFilters, $maxPriceFilters, 'minprice', 'maxprice', updatePriceTab);
-}
-
-/**
- * Update area tab
+ * Update area tab text
  */
 function updateAreaTab() {
-    var minVal = parseInt($minAreaFilters.val()),
-        maxVal = parseInt($maxAreaFilters.val());
-
-    if(!minVal && !maxVal) {
-        // here it doesn't matter which element we pass ($min or $max)
-        return replaceTabText($minAreaFilters);
-    }
-
-    if(!minVal) {
-        return replaceTabText($minAreaFilters, `0 - ${utils.numberWithCommas(maxVal)} (sqft)`);
-    }
-
-    if(!maxVal) {
-        return replaceTabText($minAreaFilters, `${utils.numberWithCommas(minVal)}+ (sqft)`);
-    }
-
-    replaceTabText($minAreaFilters, `${utils.numberWithCommas(minVal)} - ${utils.numberWithCommas(maxVal)} (sqft)`);
+    updateTabForMinMax({
+        $elem: this.$min,
+        minVal: parseInt(this.$min.val()),
+        maxVal: parseInt(this.$max.val()),
+        minText: utils.numberWithCommas(this.$min.val()),
+        maxText: utils.numberWithCommas(this.$max.val()),
+        textAfter: ' (sqft)'
+    });
 }
 
 /**
- * Update area inputs
+ * Update tab text for min/max dropdown
+ * @param $elem: either the $min or $max element
+ * @param minVal
+ * @param maxVal
+ * @param minText
+ * @param maxText
+ * @param zeroValue: value that should show up when minVal is not set
+ * @param textAfter: will be shown after all the text
  */
-function updateArea() {
-    event.preventDefault();
-    minMaxUpdate($minAreaFilters, $maxAreaFilters, 'minarea', 'maxarea', updateAreaTab);
+function updateTabForMinMax({
+    $elem, minVal, maxVal, minText = '', maxText = '', zeroValue = '0', textAfter = ''
+}) {
+    if(!minVal && !maxVal) {
+        return replaceTabText($elem);
+    }
+
+    if(!minVal) {
+        return replaceTabText($elem, `${zeroValue} - ${maxText}${textAfter}`);
+    }
+
+    if(!maxVal) {
+        return replaceTabText($elem, `${minText}+${textAfter}`);
+    }
+
+    replaceTabText($elem, `${minText} - ${maxText}${textAfter}`);
 }
 
-$bdrmFilters.on('click', function(event) {
-    var $this = $(this),
-        value = $this.data('value');
-    event.preventDefault();
+/**
+ * Update min filters dropdown (the dropdown that container 1+, 2+, etc.)
+ * Will set $current to first element if no $current is passed.
+ * @param $current: current anchor element
+ */
+function updateMinDropdown($current) {
+    $current = $current || $anchors.first();
 
-    $bdrmFilters.removeClass('active');
+    var value = $current.data('value');
 
-    $this.addClass('active');
+    this.$elems.removeClass('active');
 
-    setTabAdditionalInfo($this, value ? `${value}+ ` : '');
+    $current.addClass('active');
 
-    updateQueryParam('minbeds', value);
-});
+    setTabAdditionalInfo($current, value ? `${value}+ ` : '');
+    updateQueryParam(this.key, value, true);
+}
 
-$bathFilters.on('click', function(event) {
-    var $this = $(this),
-        value = $this.data('value');
-    event.preventDefault();
+/**
+ * Update checkboxes dropdown
+ * Will set $current to first element and clear all checkboxes if no $current is passed.
+ * @param $current: current checkbox element
+ */
+function updateCheckboxDropdown($current) {
+    if(!$current) {
+        this.$elems.prop('checked', false);
+        $current = this.$elems.first();
+    }
 
-    $bathFilters.removeClass('active');
-
-    $this.addClass('active');
-
-    setTabAdditionalInfo($this, value ? `${value}+ ` : '');
-
-    updateQueryParam('minbaths', value);
-});
-
-$propertySubTypeFilters.on('change', function() {
-    var checkedValues = $propertySubTypeFilters.filter(':checked').toArray().map(function(checkbox) {
+    var checkedValues = this.$elems.filter(':checked').toArray().map(function(checkbox) {
         return checkbox.value;
     });
 
-    setTabAdditionalInfo($(this), checkedValues.length ? ` (${checkedValues.length})` : '');
+    setTabAdditionalInfo($current, checkedValues.length ? ` (${checkedValues.length})` : '');
 
-    updateQueryParamArray('subtype', checkedValues);
-});
-
-$minPriceFilters.on('change', updatePrice);
-$maxPriceFilters.on('change', updatePrice);
-
-$minAreaFilters.on('change', updateArea);
-$maxAreaFilters.on('change', updateArea);
-
-$stayOpenDropdowns.on('click', function(event) {
-    // Keep the dropdown open when clicked inside
-    event.stopPropagation();
-});
-
-$inputsWithMax.on('keyup change', function(event) {
-   var $this = $(this),
-       value = $this.val() || '',
-       max = parseInt($this.data('max'));
-
-   if(value.length > max) {
-       $this.val(value.substring(0, max));
-   }
-});
+    updateQueryParamArray(this.key, checkedValues);
+}
