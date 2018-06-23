@@ -26,7 +26,7 @@ $grays: (
     '600': #777777,
     '700': #444A53,
     '800': #343a40,
-    '900': #212529
+    '900': #444A53
 );
 
 $colors: (
@@ -114,3 +114,6 @@ $breakpoint-xl: 1660px;
 $card-breakpoint: 400px;
 $home-nav-breakpoint: 640px;
 
+/* BREAKPOINTS
+   ================================================== */
+$footer-bg-color: gray('900');

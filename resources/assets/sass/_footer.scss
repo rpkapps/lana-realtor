@@ -1,0 +1,7 @@
+.footer {
+    flex-shrink: 0;
+    padding: 1.25rem 0;
+    text-align: center;
+    background: $footer-bg-color;
+    color: color-yiq($footer-bg-color);
+}
