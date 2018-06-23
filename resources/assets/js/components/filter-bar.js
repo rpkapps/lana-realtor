@@ -53,17 +53,12 @@ var filters = [
     }
 ];
 
-
 filters.forEach(function(filter) {
     filter.$elems.on(filter.eventType, function(event) {
         event.preventDefault();
-
-        if(filter.minKey) {
-            filter.update();
-        }
-        else {
-            filter.update($(event.currentTarget));
-        }
+        filter.update({
+            $current: $(event.currentTarget)
+        });
         $.publish('filter.change');
     });
 });
@@ -102,7 +97,6 @@ function replaceTabText($element, value) {
     $tab.text(value || $tab.data('default'));
 }
 
-
 /**
  * Update url query parameter
  * @param key
@@ -131,12 +125,18 @@ function updateQueryParamArray(key, values = []) {
 
 /**
  * Update min max input/select
- * @param minVal
- * @param maxVal
+ * @param clear
  */
-function updateMinMax(minVal, maxVal) {
-    var minVal = minVal || parseInt(this.$min.val()),
-        maxVal = maxVal || parseInt(this.$max.val());
+function updateMinMax({clear}) {
+    if(clear) {
+        this.$min.val('');
+        this.$max.val('');
+        this.$min.children('option').prop('selected', false);
+        this.$max.children('option').prop('selected', false);
+    }
+
+    var minVal = parseInt(this.$min.val()),
+        maxVal = parseInt(this.$max.val());
 
     if(minVal && maxVal && minVal > maxVal) {
         this.$min.val(maxVal);
@@ -144,7 +144,7 @@ function updateMinMax(minVal, maxVal) {
     }
 
     this.updateTabText();
-    updateQueryParam(this.minKey, this.$min.val(), true);
+    updateQueryParam(this.minKey, this.$min.val());
     updateQueryParam(this.maxKey, this.$max.val());
 }
 
@@ -206,11 +206,13 @@ function updateTabForMinMax({
 
 /**
  * Update min filters dropdown (the dropdown that container 1+, 2+, etc.)
- * Will set $current to first element if no $current is passed.
- * @param $current: current anchor element
+ * @param $current
+ * @param clear
  */
-function updateMinDropdown($current) {
-    $current = $current || $anchors.first();
+function updateMinDropdown({$current, clear}) {
+    if(clear) {
+        $current = this.$elems.first();
+    }
 
     var value = $current.data('value');
 
@@ -224,10 +226,10 @@ function updateMinDropdown($current) {
 
 /**
  * Update checkboxes dropdown
- * Will set $current to first element and clear all checkboxes if no $current is passed.
  * @param $current: current checkbox element
+ * @param clear
  */
-function updateCheckboxDropdown($current) {
+function updateCheckboxDropdown({$current, clear}) {
     if(!$current) {
         this.$elems.prop('checked', false);
         $current = this.$elems.first();
