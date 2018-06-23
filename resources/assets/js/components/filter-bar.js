@@ -53,6 +53,7 @@ var filters = [
     }
 ];
 
+// Add event handlers to all filters
 filters.forEach(function(filter) {
     filter.$elems.on(filter.eventType, function(event) {
         event.preventDefault();
@@ -104,8 +105,6 @@ function replaceTabText($element, value) {
  */
 function updateQueryParam(key, value) {
     value ? gSearchParams.set(key, value) : gSearchParams.delete(key);
-
-    history.pushState(null, null, `?${gSearchParams.toString()}`);
 }
 
 /**
@@ -119,8 +118,6 @@ function updateQueryParamArray(key, values = []) {
     values.forEach(function(value) {
         gSearchParams.append(`${key}`, value);
     });
-
-    history.pushState(null, null, `?${gSearchParams.toString()}`);
 }
 
 /**
@@ -205,8 +202,8 @@ function updateTabForMinMax({
 }
 
 /**
- * Update min filters dropdown (the dropdown that container 1+, 2+, etc.)
- * @param $current
+ * Update min filters dropdown (the dropdown container that has values such as 1+, 2+, etc.)
+ * @param $current: current anchor element
  * @param clear
  */
 function updateMinDropdown({$current, clear}) {
@@ -230,7 +227,7 @@ function updateMinDropdown({$current, clear}) {
  * @param clear
  */
 function updateCheckboxDropdown({$current, clear}) {
-    if(!$current) {
+    if(clear) {
         this.$elems.prop('checked', false);
         $current = this.$elems.first();
     }
@@ -244,7 +241,10 @@ function updateCheckboxDropdown({$current, clear}) {
     updateQueryParamArray(this.key, checkedValues);
 }
 
-window.clearAll = function() {
+/**
+ * Clear all filters in filter bar
+ */
+function clearAll() {
     filters.forEach(function(filter) {
         filter.update({
             clear: true
@@ -252,4 +252,4 @@ window.clearAll = function() {
     });
 
     $.publish('filter.change');
-};
+}
