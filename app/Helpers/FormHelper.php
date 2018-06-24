@@ -153,12 +153,12 @@ class FormHelper
 
     /**
      * Returns list of available prices
+     * @param string $type: 'buy' or 'rent'
      * @param string $defaultLabel
      * @param string $defaultValue
-     * @return array
      */
-    static function getPrices($defaultLabel = 'Default', $defaultValue = '') {
-        return [
+    static function getPrices($type = 'buy', $defaultLabel = 'Default', $defaultValue = '') {
+        $buy = [
             $defaultValue => $defaultLabel,
             '10000' => '$10k',
             '20000' => '$20k',
@@ -205,5 +205,40 @@ class FormHelper
             '10000000' => '$10m',
             '20000000' => '$20m'
         ];
+
+        $rent = [
+            $defaultValue => $defaultLabel,
+            '200' => '$200',
+            '300' => '$300',
+            '400' => '$400',
+            '500' => '$500',
+            '600' => '$600',
+            '700' => '$700',
+            '800' => '$800',
+            '900' => '$900',
+            '1000' => '$1k',
+            '1100' => '$1.1k',
+            '1200' => '$1.2k',
+            '1300' => '$1.3k',
+            '1400' => '$1.4k',
+            '1500' => '$1.5k',
+            '1600' => '$1.6k',
+            '1700' => '$1.7k',
+            '1800' => '$1.8k',
+            '1900' => '$1.9k',
+            '2000' => '$2k',
+            '2100' => '$2.1k',
+            '2200' => '$2.2k',
+            '2300' => '$2.3k',
+            '2400' => '$2.4k',
+            '2500' => '$2.5k',
+            '2600' => '$2.6k',
+            '2700' => '$2.7k',
+            '2800' => '$2.8k',
+            '2900' => '$2.9k',
+            '3000' => '$3k'
+        ];
+
+        return $type === 'rent' ? $rent : $buy;
     }
 }

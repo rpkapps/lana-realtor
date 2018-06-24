@@ -13,7 +13,7 @@
                 <div class="form-row align-items-center">
                     <div class="col">
                         <select id="filterMinPrice" class="custom-select">
-                            @foreach(FormHelper::getPrices('No Min') as $price => $formattedPrice)
+                            @foreach(FormHelper::getPrices($pageType, 'No Min') as $price => $formattedPrice)
                                 <option {{ FormHelper::selected('minprice', $price) }} value="{{ $price }}">{{ $formattedPrice }}</option>
                             @endforeach
                         </select>
@@ -21,7 +21,7 @@
                     –
                     <div class="col">
                         <select id="filterMaxPrice" class="custom-select">
-                            @foreach(FormHelper::getPrices('No Max') as $price => $formattedPrice)
+                            @foreach(FormHelper::getPrices($pageType, 'No Max') as $price => $formattedPrice)
                                 <option {{ FormHelper::selected('maxprice', $price) }} value="{{ $price }}">{{ $formattedPrice }}</option>
                             @endforeach
                         </select>
