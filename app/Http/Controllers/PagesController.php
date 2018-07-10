@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\MLS\GFBRConnector;
 use App\Property;
 use GuzzleHttp\Client;
 
@@ -9,6 +10,15 @@ class PagesController extends Controller
 {
 
 	public function getIndex() {
+	    $mlsConnector = new GFBRConnector([
+	       'loginUrl' => env('MLS_GFBR_LOGIN_URL'),
+           'username' => env('MLS_GFBR_USERNAME'),
+           'password' => env('MLS_GFBR_PASSWORD')
+        ]);
+
+	    dd($mlsConnector->getProperties());
+
+	    // TODO: Remove above code in this function
 		return view('pages.home');
 	}
 
