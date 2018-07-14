@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ voyager_asset('css/app.css') }}">
     <style>
         body {
-            background-image:url('{{ Voyager::image( Voyager::setting("admin.bg_image"), 'https://s3.amazonaws.com/lana-realtor/images/bg-admin.jpg' ) }}');
+            background-image:url('{{ Voyager::image( Voyager::setting("admin.bg_image"), 'https://s3-us-west-2.amazonaws.com/lana-realtor/images/bg-admin.jpg' ) }}');
             background-color: {{ Voyager::setting("admin.bg_color", "#FFFFFF" ) }};
         }
         body.login .login-sidebar{
@@ -40,7 +40,7 @@
             <div class="clearfix">
                 <div class="col-sm-12 col-md-10 col-md-offset-2">
                     {{--<div class="logo-title-container">--}}
-                        {{--<?php $admin_logo_img = Voyager::setting('admin.icon_image', ''); ?>--}}
+                        <?php $admin_logo_img = Voyager::setting('admin.icon_image', ''); ?>
                         {{--@if($admin_logo_img == '')--}}
                         {{--<img class="img-responsive pull-left logo hidden-xs animated fadeIn" src="{{ voyager_asset('images/logo-icon-light.png') }}" alt="Logo Icon">--}}
                         {{--@else--}}

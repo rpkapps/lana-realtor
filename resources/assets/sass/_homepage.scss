@@ -15,7 +15,7 @@
 }
 
 .home-background {
-    background-image: url(https://s3.amazonaws.com/lana-realtor/images/marquee-home.jpg);
+    background-image: url(https://s3-us-west-2.amazonaws.com/lana-realtor/images/marquee-home.jpg);
     background-position: right;
     background-repeat: no-repeat;
     background-size: cover;
@@ -26,11 +26,11 @@
     width: 100%;
 
     @media (max-width: $breakpoint-md) {
-        background-image: url(https://s3.amazonaws.com/lana-realtor/images/marquee-home-tablet.jpg);
+        background-image: url(https://s3-us-west-2.amazonaws.com/lana-realtor/images/marquee-home-tablet.jpg);
     }
 
     @media (max-width: $home-nav-breakpoint) {
-        background-image: url(https://s3.amazonaws.com/lana-realtor/images/marquee-home-mobile.jpg);
+        background-image: url(https://s3-us-west-2.amazonaws.com/lana-realtor/images/marquee-home-mobile.jpg);
         height: 30rem;
     }
 }
