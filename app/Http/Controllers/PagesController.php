@@ -16,7 +16,7 @@ class PagesController extends Controller
            'password' => env('MLS_GFBR_PASSWORD')
         ]);
 
-	    dd($mlsConnector->getProperties());
+	    dd($mlsConnector->pullAndSync());
 
 	    // TODO: Remove above code in this function
 		return view('pages.home');
