@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['prefix' => 'v1', 'as' => 'api.'], function () {
+    Route::get('listings', ['as' => 'listing.index', 'uses' => 'ListingController@index']);
+    Route::get('listings/{listing}', ['as' => 'listing.show', 'uses' => 'ListingController@show']);
     Route::get('properties', ['as' => 'property.index', 'uses' => 'PropertyController@index']);
     Route::get('properties/{property}', ['as' => 'property.show', 'uses' => 'PropertyController@show']);
 });

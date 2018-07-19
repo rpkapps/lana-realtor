@@ -4,6 +4,7 @@ require('./components/tiny-pub-sub');
 window.Blazy = require('blazy');
 window.gSearchParams = new URLSearchParams(location.search.slice(1));
 window.gConfig = {
+    listingApiUrl: '/api/v1/listings',
     rentApiUrl: '/api/v1/properties',
     simplyRetsApiUrl: 'https://api.simplyrets.com/properties',
     simplyRetsBtoa: btoa('simplyrets:simplyrets'),
