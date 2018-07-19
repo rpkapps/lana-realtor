@@ -18,6 +18,9 @@ abstract class Connector
     protected $session;
     protected $connection;
 
+    protected $updatedListingsCounter = 0;
+    protected $createdListingsCounter = 0;
+
     /**
      * The below consts should be defined and initialized in the child class
      */
@@ -107,7 +110,7 @@ abstract class Connector
     }
 
     /**
-     * Get MLS properties
+     * Get MLS properties from the MLS database
      *
      * @param string $date (i.e. 2009-01-01T00:00:00)
      * @return array
@@ -125,7 +128,7 @@ abstract class Connector
         foreach (static::TYPES as $type) {
             $properties = array_merge(
                 $properties,
-                $this->session->Search('Property', $type, $query, ['Format' => 'COMPACT-DECODED'])->toArray()
+                $this->session->Search('Property', $type, $query, ['Limit' => 1, 'Format' => 'COMPACT-DECODED'])->toArray()
             );
         }
 
@@ -135,11 +138,11 @@ abstract class Connector
     /**
      * Delete Listing
      *
-     * @param array $listing
+     * @param array $mlsListing
      */
-    protected function deleteListing(array $listing = [])
+    protected function deleteListing(array $mlsListing = [])
     {
-        $listing = Listing::where('mls_id', $listing['mls_id'])->first();
+        $listing = Listing::where('mls_id', $mlsListing['mls_id'])->first();
 
         if ($listing) {
             $listing->delete();
@@ -147,20 +150,72 @@ abstract class Connector
     }
 
     /**
+     * Set geo coordinates from Google Maps API
+     *
+     * @param array $mlsListing
+     */
+    protected function setGeoCoordinatesFromGoogleAPI(array &$mlsListing = []) {
+        try {
+            $address = $mlsListing['full_address'] . ', ' . $mlsListing['city'] . ', ' . $mlsListing['state'];
+
+            $geo = app('geocoder')->geocode($address)->get()->first()->getCoordinates();
+
+            $mlsListing['latitude'] = $geo->getLatitude();
+            $mlsListing['longitude'] = $geo->getLongitude();
+        } catch(\Exception $e) {
+            Log::error('Geocode failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Update or create listing if it doesn't exist
+     *
+     * @param array $mlsListing
+     */
+    protected function updateOrCreate(array $mlsListing = []) {
+        $listing = Listing::where('mls_id', $mlsListing['mls_id'])->first();
+
+        if($listing) {
+            $this->updatedListingsCounter++;
+
+            // Set latitude and longitude. Only make the request to Google Maps API
+            // when the address changed
+            if($listing->full_address !== $mlsListing['full_address']) {
+                Log::info('MLS listing address was updated on the MLS.');
+
+                $this->setGeoCoordinatesFromGoogleAPI($mlsListing);
+            } else {
+                // Set Geo Coordinates from existing database listing
+                $mlsListing['longitude'] = $listing->latitude;
+                $mlsListing['latitude'] = $listing->longitude;
+            }
+        }
+        else {
+            $this->createdListingsCounter++;
+
+            // We will need to create a new listing, so grab the GeoLocation from
+            // Google Maps API
+            $this->setGeoCoordinatesFromGoogleAPI($mlsListing);
+        }
+
+        Listing::updateOrCreate(
+            ['mls_id' => $mlsListing['mls_id']],
+            $mlsListing
+        );
+    }
+
+    /**
      * Sync Listing: will either update, create, or delete Listing
      *
-     * @param array $listing
+     * @param array $mlsListing
      */
-    protected function syncListing(array $listing = [])
+    protected function syncListing(array $mlsListing = [])
     {
-        if ($listing['status'] !== static::STATUS_ACTIVE_VALUE) {
-            $this->deleteListing($listing);
+        if ($mlsListing['status'] !== static::STATUS_ACTIVE_VALUE) {
+            $this->deleteListing($mlsListing);
         } else {
             try {
-                Listing::updateOrCreate(
-                    ['mls_id' => $listing['mls_id']],
-                    $listing
-                );
+                $this->updateOrCreate($mlsListing);
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
             }
@@ -188,6 +243,8 @@ abstract class Connector
             'pull_date' => $datePulled
         ]);
 
+        Log::info('Number of listings CREATED in database: ' . $this->createdListingsCounter);
+        Log::info('Number of listings UPDATED in database: ' . $this->updatedListingsCounter);
         Log::info(sprintf('MLS pulled and synced: %s on %s', static::class, $datePulled));
     }
 }
