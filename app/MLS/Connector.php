@@ -21,6 +21,10 @@ abstract class Connector
     protected $updatedListingsCounter = 0;
     protected $createdListingsCounter = 0;
 
+    // Will sync without overriding existing listings and will ignore latest pull date
+    // pulling all active listings
+    protected $syncWithoutOverride = false;
+
     /**
      * The below consts should be defined and initialized in the child class
      */
@@ -37,6 +41,11 @@ abstract class Connector
 
     const MLS_COLUMN_STATUS = '';
     const MLS_COLUMN_UPDATED_AT = '';
+    const MLS_COLUMN_MEDIA_URL = '';
+    const MLS_COLUMN_ID = '';
+
+    const MLS_PHOTO_TYPE = '';
+    const MLS_THUMBNAIL_TYPE = '';
 
     abstract protected function mapToListingDB(array $mlsProperty): array;
 
@@ -44,9 +53,12 @@ abstract class Connector
      * Constructor for MLS Connector
      *
      * @param $config
-     * @throws \Exception
+     * @param bool $syncWithoutOverride : Will sync without overriding existing listings and
+     *                                    will ignore latest pull date pulling all active listings
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     * @throws \PHRETS\Exceptions\MissingConfiguration
      */
-    public function __construct($config)
+    public function __construct($config, $syncWithoutOverride = false)
     {
         $this->config = (new \PHRETS\Configuration)
             ->setLoginUrl($config['loginUrl'])
@@ -56,6 +68,8 @@ abstract class Connector
 
         $this->session = new \PHRETS\Session($this->config);
         $this->connection = $this->session->Login();
+
+        $this->syncWithoutOverride = $syncWithoutOverride;
     }
 
     /**
@@ -66,27 +80,24 @@ abstract class Connector
      * @param $property
      * @return mixed|null
      */
-    protected function array_number($array, $property)
+    protected function arrayNumber($array, $property)
     {
         $value = array_get($array, $property);
         return is_numeric($value) ? $value : null;
     }
 
-    protected function array_date($array, $property)
+    /**
+     * Helper function to make sure we return a date when accessing
+     * an array property
+     *
+     * @param $array
+     * @param $property
+     * @return mixed|null
+     */
+    protected function arrayDate($array, $property)
     {
         $value = array_get($array, $property);
         return strtotime($value) ? $value : null;
-    }
-
-    /**
-     * Get properties
-     *
-     * @return array|mixed
-     * @throws \PHRETS\Exceptions\CapabilityUnavailable
-     */
-    public function getMLSMedia()
-    {
-        // TODO: implement method
     }
 
     /**
@@ -94,7 +105,7 @@ abstract class Connector
      *
      * @return mixed
      */
-    public function getLatestPullDate()
+    protected function getLatestPullDate()
     {
         $date = MlsPullDate::where('connector_class', static::class)
             ->orderBy('pull_date', 'desc')
@@ -110,26 +121,104 @@ abstract class Connector
     }
 
     /**
-     * Get MLS properties from the MLS database
+     * Format MLS Media Objects into the following array
+     *      [ <mlsID> => '"<photoUrl>","<photoUrl>",...' ]
      *
-     * @param string $date (i.e. 2009-01-01T00:00:00)
+     * @param $mlsMedia
+     * @return array
+     */
+    protected function formatMlsMediaObjects($mlsMediaObjects)
+    {
+        $media = [];
+
+        foreach ($mlsMediaObjects as $mediaObject) {
+            if ($mediaObject->isError()) {
+                Log::error('Media Object Error: ' . $mediaObject->getError()->getMessage());
+                continue;
+            }
+
+            $mlsId = $mediaObject->getContentId();
+            $url = $mediaObject->getLocation();
+
+            if (array_key_exists($mlsId, $media) && $url) {
+                array_push($media[$mlsId], $url);
+            } else {
+                $media[$mlsId] = $url ? [$url] : [];
+            }
+        }
+
+        forEach ($media as $mlsId => $mediaItems) {
+            $media[$mlsId] = count($mediaItems) > 0 ? json_encode($mediaItems) : '[]';
+        }
+
+        return $media;
+    }
+
+    /**
+     * Pull MLS media from the MLS database
+     *
+     * @param array $properties
      * @return array
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function pullMLSProperties(string $date = null)
+    protected function pullMLSMedia(array $properties)
+    {
+        $media = [
+            'photos' => [],
+            'thumbnails' => [],
+        ];
+
+        // We can't pull all of the media at once because there is a limit on the number of MLS IDs we can
+        // pass to GetObject
+        $mlsIdsInChunks = collect($properties)->pluck(static::MLS_COLUMN_ID)->chunk(100);
+
+        forEach ($mlsIdsInChunks as $mlsIdsChunk) {
+            $mlsPhotoObjects = $this->session->GetObject('Property', static::MLS_PHOTO_TYPE, $mlsIdsChunk->toArray(),
+                '*', 1);
+
+            $mlsThumbnailObjects = $this->session->GetObject('Property', static::MLS_THUMBNAIL_TYPE,
+                $mlsIdsChunk->toArray(),
+                '*', 1);
+
+            $media['photos'] += $this->formatMlsMediaObjects($mlsPhotoObjects);
+            $media['thumbnails'] += $this->formatMlsMediaObjects($mlsThumbnailObjects);
+        }
+
+        return $media;
+    }
+
+    /**
+     * Get MLS properties from the MLS database
+     *
+     * @return array
+     * @throws \PHRETS\Exceptions\CapabilityUnavailable
+     */
+    public function pullMLSProperties()
     {
         $properties = [];
-        $latestPullDate = $date ? $date : $this->getLatestPullDate();
+
+        $latestPullDate = $this->syncWithoutOverride ? $this->getLatestPullDate() : null;
 
         $query = $latestPullDate ?
             sprintf('(%s=%s+)', static::MLS_COLUMN_UPDATED_AT, $latestPullDate) :
             sprintf('(%s=%s)', static::MLS_COLUMN_STATUS, static::STATUS_ACTIVE_LOOKUP);
 
         foreach (static::TYPES as $type) {
-            $properties = array_merge(
-                $properties,
-                $this->session->Search('Property', $type, $query, ['Limit' => 1, 'Format' => 'COMPACT-DECODED'])->toArray()
-            );
+            $propertiesByType = $this->session->Search('Property', $type, $query)->toArray();
+            $properties = array_merge($properties, $propertiesByType);
+
+            Log::info('Number of properties retrieved for ' . $type . ': ' . count($propertiesByType));
+        }
+
+
+        $media = $this->pullMLSMedia($properties);
+
+        // Map photos and thumbnails to each property
+        forEach ($properties as &$property) {
+            $mlsId = array_get($property, static::MLS_COLUMN_ID);
+
+            $property['photos'] = array_get($media['photos'], $mlsId, '[]');
+            $property['thumbnails'] = array_get($media['thumbnails'], $mlsId, '[]');
         }
 
         return $properties;
@@ -154,15 +243,18 @@ abstract class Connector
      *
      * @param array $mlsListing
      */
-    protected function setGeoCoordinatesFromGoogleAPI(array &$mlsListing = []) {
+    protected function setGeoCoordinatesFromGoogleAPI(array &$mlsListing = [])
+    {
         try {
             $address = $mlsListing['full_address'] . ', ' . $mlsListing['city'] . ', ' . $mlsListing['state'];
+            $geo = app('geocoder')->geocode($address)->get()->first();
 
-            $geo = app('geocoder')->geocode($address)->get()->first()->getCoordinates();
-
-            $mlsListing['latitude'] = $geo->getLatitude();
-            $mlsListing['longitude'] = $geo->getLongitude();
-        } catch(\Exception $e) {
+            if ($geo) {
+                $coordinates = $geo->getCoordinates();
+                $mlsListing['latitude'] = $coordinates->getLatitude();
+                $mlsListing['longitude'] = $coordinates->getLongitude();
+            }
+        } catch (\Exception $e) {
             Log::error('Geocode failed: ' . $e->getMessage());
         }
     }
@@ -172,15 +264,20 @@ abstract class Connector
      *
      * @param array $mlsListing
      */
-    protected function updateOrCreate(array $mlsListing = []) {
+    protected function updateOrCreate(array $mlsListing = [])
+    {
         $listing = Listing::where('mls_id', $mlsListing['mls_id'])->first();
 
-        if($listing) {
+        if($listing && $this->syncWithoutOverride) {
+            return;
+        }
+
+        if ($listing) {
             $this->updatedListingsCounter++;
 
             // Set latitude and longitude. Only make the request to Google Maps API
             // when the address changed
-            if($listing->full_address !== $mlsListing['full_address']) {
+            if ($listing->full_address !== $mlsListing['full_address']) {
                 Log::info('MLS listing address was updated on the MLS.');
 
                 $this->setGeoCoordinatesFromGoogleAPI($mlsListing);
@@ -189,8 +286,7 @@ abstract class Connector
                 $mlsListing['longitude'] = $listing->latitude;
                 $mlsListing['latitude'] = $listing->longitude;
             }
-        }
-        else {
+        } else {
             $this->createdListingsCounter++;
 
             // We will need to create a new listing, so grab the GeoLocation from
@@ -225,18 +321,17 @@ abstract class Connector
     /**
      * Pull from MLS and sync that data with our database
      *
-     * @param string $date (i.e. 2009-01-01T00:00:00)
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      */
-    public function pullAndSync(string $date = null)
+    public function pullAndSync()
     {
-        $properties = $this->pullMLSProperties($date);
+        $properties = $this->pullMLSProperties();
 
         foreach ($properties as $property) {
             $this->syncListing($this->mapToListingDB($property));
         }
 
-        $datePulled = $date ? Carbon::parse($date)->timezone('GMT') : Carbon::now('GMT');
+        $datePulled = Carbon::now('GMT');
 
         MlsPullDate::create([
             'connector_class' => static::class,

@@ -14,7 +14,8 @@ class SyncMls extends Command
      *
      * @var string
      */
-    protected $signature = 'mls:sync {date? : Sync properties from this date and up (i.e. 2009-01-01T00:00:00)}';
+    protected $signature = 'mls:sync
+                            {--swo : Sync MLS listings without overwriting existing listings}';
 
     /**
      * The console command description.
@@ -41,16 +42,16 @@ class SyncMls extends Command
     public function handle()
     {
         $startTime = microtime(true);
-        Log::info('MLS sync started');
+        Log::info('======================= MLS sync started =======================');
 
         $gfbrMlsConnector = new GFBRConnector([
             'loginUrl' => env('MLS_GFBR_LOGIN_URL'),
             'username' => env('MLS_GFBR_USERNAME'),
             'password' => env('MLS_GFBR_PASSWORD')
-        ]);
+        ], $this->options('syncWithoutOverride'));
 
-        $gfbrMlsConnector->pullAndSync($this->argument('date'));
+        $gfbrMlsConnector->pullAndSync();
 
-        Log::info('MLS sync ended (' . (microtime(true) - $startTime) . 's)' );
+        Log::info('======================= MLS sync ended (' . (microtime(true) - $startTime) . 's) =======================' );
     }
 }
