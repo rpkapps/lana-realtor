@@ -25,9 +25,7 @@ class Listing extends Model
     {
         try {
             if ($photos[0] === '[') {
-                // $photos is an array in string format
-                $photos = preg_replace('/[\[\]]/g', '', $photos);
-                $photosArr = explode(',', $photos);
+                $photosArr = json_decode($photos);
             } else {
                 // $photos is a single photo in string format
                 $photosArr = [$photos];
@@ -37,5 +35,5 @@ class Listing extends Model
         }
 
         return $photosArr;
-    }    
+    }   
 }

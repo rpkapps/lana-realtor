@@ -1,6 +1,7 @@
 @extends('layout.listing-item')
-@section('title', 'Rent Listing')
+@section('title', 'Listing')
 @section('content')
+
 <div class="container">
 	<div class="row listing-wrapper">
 		<div class="col-lg-8 left-column">
@@ -18,18 +19,18 @@
 <div class="listing-info-container">
 	<div class="row">
 		<div class="col-md-7">
-			<h2 class="listing-type"> {{ ListingHelper::determineTitle('RNT') }} </h2>
+			<h2 class="listing-type"> {{ $listing['sale_rent'] }} </h2>
 			<h1 class="listing-address">
-			<span>{{ $listing['streetNumber'] }} {{ $listing['streetName'] }},</span>
-			<span>{{ $listing['city'] }}, {{ $listing['state'] }}, {{ $listing['postalCode'] }}</span>
+			<span>{{ $listing['full_address'] }} {{ $listing['additional_street_info'] }},</span>
+			<span>{{ $listing['city'] }}, {{ $listing['state'] }}, {{ $listing['zip_code'] }}</span>
 			</h1>
 		</div>
 		<div class="col-md-5 text-md-right">
-			<h2 class="listing-price">${{ number_format($listing['listPrice']) }}/mo</h2>
+			<h2 class="listing-price">${{ number_format($listing['asking_price']) }}</h2>
 			<p class="listing-details">
-				<strong>{{ $listing['bedrooms'] }}</strong> beds
-				<strong>{{ intval($listing['bathrooms']) }}</strong> baths
-				<strong>{{ number_format($listing['area']) }}</strong> sqft
+				<strong>{{ $listing['beds'] }}</strong> beds
+				<strong>{{ intval($listing['total_baths']) }}</strong> baths
+				<strong>{{ number_format($listing['residence_sqft']) }}</strong> sqft
 			</p>
 		</div>
 	</div>
@@ -38,7 +39,7 @@
 			<div class="row">
 				<div class="col-md">
 					<div class="listing-description">
-						{{ $listing['terms'] }}
+						{{ $listing['listing_description'] }}
 					</div>
 				</div>
 				<div class="w-100"></div>
@@ -47,45 +48,45 @@
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Type</h5>
-								<p>Rental</p>
+								<p>{{ $listing['sub_type'] }}</p>
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Year Built</h5>
-								{{--<p>{{ FormHelper::fallback($listing['property']['yearBuilt']) }}</p>--}}
+								<p>{{ FormHelper::fallback($listing['year_built']) }}</p>
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="listing-feature">
-								<h5 class="listing-feature-title">Heating</h5>
-								{{--<p>{{ FormHelper::fallback(str_replace(",", ", ", $listing['property']['heating'])) }}</p>--}}
+								<h5 class="listing-feature-title">Construction</h5>
+								<p>{{ FormHelper::fallback($listing['construction']) }}</p>
 							</div>
 						</div>
 						<div class="w-100"> </div>
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Price/sqft</h5>
-								<p>${{ FormHelper::fallback(number_format(ListingHelper::determineSqFtPrice($listing['listPrice'], $listing['area']))) }}</p>
+								<p>${{ FormHelper::fallback(number_format($listing['price_per_sqft'])) }}</p>
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="listing-feature">
-								<h5 class="listing-feature-title">Parking</h5>
-								{{--<p>{{ FormHelper::fallback(str_replace(",", ", ", $listing['property']['parking']['description'])) }}</p>--}}
+								<h5 class="listing-feature-title">Garage</h5>
+								{{--<p>{{ FormHelper::fallback($listing['garage']) }}</p>--}}
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Lot Size</h5>
-								{{--<p>{{ FormHelper::fallback($listing['property']['lotSizeAreaUnits'], ' Acres') }}</p>--}}
+								<p>{{ FormHelper::fallback($listing['acres'], ' Acres') }}</p>
 							</div>
 						</div>
 						<div class="w-100"> </div>
 						<div class="col-md-4">
 							<div class="listing-feature">
-								<h5 class="listing-feature-title">Cooling</h5>
-								{{--<p>{{ FormHelper::fallback($listing['property']['cooling']) }}</p>--}}
+								<h5 class="listing-feature-title">Style</h5>
+								<p>{{ FormHelper::fallback($listing['style']) }}</p
 							</div>
 						</div>
 					</div>
@@ -114,7 +115,7 @@
 					</div>
 					<div class="form-group">
 						<label for="inputHelpQuestion">How can I help you?</label>
-						<textarea class="form-control" id="inputHelpQuestion" rows="3" required>I am interested in {{ $listing['streetNumber'] }} {{ $listing['streetName'] }}, {{ $listing['city'] }}, {{ $listing['state'] }}, {{ $listing['postalCode'] }} </textarea>
+						<textarea class="form-control" id="inputHelpQuestion" rows="3" required>I am interested in {{ $listing['street_number'] }} {{ $listing['street_name'] }}, {{ $listing['city'] }}, {{ $listing['state'] }}, {{ $listing['zip_code'] }} </textarea>
 					</div>
 					<div class="text-right">
 						<button type="submit" class="btn btn-secondary">Submit</button>
@@ -128,27 +129,11 @@
 <div class="col-lg-4 right-column d-none d-lg-block">
 <h2 class="gallery-title">Image Gallery</h2>
 <div class="gallery">
-	<figure>
-		<a href="{{ $listing['photos'][0] }}" class="gallery-thumbnail" style="background-image: url({{ $listing['photos'][0] }});"></a>
-	</figure>
-	<figure>
-		<a href="{{ $listing['photos'][0] }}" class="gallery-thumbnail" style="background-image: url({{ $listing['photos'][0] }});"></a>
-	</figure>
-	<figure>
-		<a href="{{ $listing['photos'][0] }}" class="gallery-thumbnail" style="background-image: url({{ $listing['photos'][0] }});"></a>
-	</figure>
-	<figure>
-		<a href="{{ $listing['photos'][0] }}" class="gallery-thumbnail" style="background-image: url({{ $listing['photos'][0] }});"></a>
-	</figure>
-	<figure>
-		<a href="{{ $listing['photos'][0] }}" class="gallery-thumbnail" style="background-image: url({{ $listing['photos'][0] }});"></a>
-	</figure>
-	<figure>
-		<a href="{{ $listing['photos'][0] }}" class="gallery-thumbnail" style="background-image: url({{ $listing['photos'][0] }});"></a>
-	</figure>
-	<figure>
-		<a href="{{ $listing['photos'][0] }}" class="gallery-thumbnail" style="background-image: url({{ $listing['photos'][0] }});"></a>
-	</figure>
+	@foreach($listing['photos'] as $photo)
+		<figure>
+			<a href="{{ $photo }}" class="gallery-thumbnail" style="background-image: url({{ $photo }});"></a>
+		</figure>
+	@endforeach
 </div>
 </div>
 </div>

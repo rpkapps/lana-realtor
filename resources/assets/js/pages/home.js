@@ -2,6 +2,7 @@ import '../bootstrap.js';
 import utils from '../utils.js';
 import sRets from '../simplyrets.js';
 import listingCard from '../templates/listing-card.js';
+import listingHelper from '../listing-helper.js';
 
 var $checkboxesContainer = $('#homeCheckboxes'),
     $checkboxes = $('#homeCheckboxes input'),
@@ -42,19 +43,29 @@ $tabs.on('show.bs.tab', function(event) {
  */
 function updateListingCards(listings = []) {
     currentListings = listings;
-
     var html = '';
-    listings.forEach(function(listing) {
+
+    currentListings.forEach(function(listing) {
+        var firstPhoto;
+
+        try {
+            firstPhoto = JSON.parse(listing.photos)[0];
+        }
+        catch(e){
+            // If not array - will be a string of one photo or none
+            firstPhoto = listing.photos;
+        }
+
         html += listingCard({
-            vendor: 'm',
-            id: listing.mlsId, // change this
-            photo: listing.photos[0],
-            title: sRets.determineTitle(listing.property.type),
-            price: utils.formatNumber(listing.listPrice),
-            address: `${listing.address.full}, ${listing.address.city}, ${listing.address.state}, ${listing.address.postalCode}`,
-            bedrooms: listing.property.bedrooms || '',
-            bathrooms: (listing.property.bathsFull || 0) + (listing.property.bathsHalf || 0) + (listing.property.bathsThreeQuarter || 0),
-            property: utils.formatNumber(listing.property.area)
+            vendor: 'l',
+            id: listing.id,
+            photo: firstPhoto,
+            title: listing.sale_rent,
+            price: utils.formatNumber(listing.asking_price),
+            address: `${listing.full_address}, ${listing.city}, ${listing.state}, ${listing.zip_code}`,
+            bedrooms: listing.beds || '',
+            bathrooms: (listing.full_baths || 0) + (listing.partial_baths || 0),
+            property: utils.formatNumber(listing.residence_sqft)
         });
     });
 
@@ -66,9 +77,9 @@ function updateListingCards(listings = []) {
  * Get listings
  */
 function getListings() {
-    sRets.getListings(
+    listingHelper.getListings(
         function(data, textStatus) {
-            updateListingCards(data);
+            updateListingCards(data.data);
         },
         function(textStatus, errorThrown) {
             console.error(errorThrown);

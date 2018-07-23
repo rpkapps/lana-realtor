@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\MLS\GFBRConnector;
-use App\Property;
+use App\Listing;
 use GuzzleHttp\Client;
 
 class PagesController extends Controller
@@ -60,15 +60,18 @@ class PagesController extends Controller
 	}
 
 	public function getLocalListing($id) {
-        $listing = Property::find($id);
-        $pageType = 'rent';
+        $listing = Listing::find($id);
 
-        $listing['photos'] = Property::arrayifyPhotos( $listing['photos']);
+        $pageType = 'rent';
 
         if (!$listing){
             abort(404);
         }
 
+        $listing['photos'] = Listing::arrayifyPhotos( $listing['photos']);
+        $listing['thumbnails'] = Listing::arrayifyPhotos($listing['thumbnails']);
+
+        
         return view('pages.local-listing-item', compact('listing', 'pageType' ));
     }
 }
