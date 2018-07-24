@@ -33,7 +33,7 @@ export default function(data = {}) {
     }
 
     return `
-        <a href="/listing/l/${data.id}" id="${data.id}" class="card" title="View listing">
+        <a href="/listing/${data.id}" id="${data.id}" class="card" title="View listing">
             <div class="card-background b-lazy" data-src="${data.photo}">
                 <span class="loader"></span>
             </div>
