@@ -86,7 +86,7 @@
 						<div class="col-md-4">
 							<div class="listing-feature">
 								<h5 class="listing-feature-title">Style</h5>
-								<p>{{ FormHelper::fallback($listing['style']) }}</p
+								<p>{{ FormHelper::fallback($listing['style']) }}</p>
 							</div>
 						</div>
 					</div>
