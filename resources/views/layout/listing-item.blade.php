@@ -21,21 +21,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
-
-    <script type="text/javascript">
-        $('.gallery').magnificPopup({
-            delegate: 'a',
-            type: 'image',
-            gallery: {
-                enabled: true
-            },
-        });
-
-        $('.gallery-icon').on('click', function() {
-            // open gallery at first image
-            $('.gallery a:first-child').trigger('click');
-        });
-    </script>
+    <script src="{{ asset('js/item-listing.js') }}"></script>
 
 </body>
 
