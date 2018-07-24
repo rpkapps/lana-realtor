@@ -10,7 +10,7 @@ $('.gallery').magnificPopup({
     },
 });
 
-$('.gallery-icon').on('click', function() {
+$('.gallery-icon-link').on('click', function() {
     // open gallery at first image
     $('.gallery a:first-child').trigger('click');
 });

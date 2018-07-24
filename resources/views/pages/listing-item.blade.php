@@ -8,14 +8,16 @@
 	<div class="row listing-wrapper">
 		<div class="col-lg-8 left-column">
 			<div class="listing-main-img" style="background-image: url({{ $listing['photos'][0] }})">
-				<a href="javascript:void(0);" class="gallery-icon d-flex d-lg-none" title="View image gallery.">
-					<svg class="listing-gallery-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="36" height="32" viewBox="0 0 36 32">
-						<title>View image gallery.</title>
-                                <path fill="currentColor" d="M34 4h-2v-2c0-1.1-0.9-2-2-2h-28c-1.1 0-2 0.9-2 2v24c0 1.1 0.9 2 2 2h2v2c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-24c0-1.1-0.9-2-2-2zM4 6v20h-1.996c-0.001-0.001-0.003-0.002-0.004-0.004v-23.993c0.001-0.001 0.002-0.003 0.004-0.004h27.993c0.001 0.001 0.003 0.002 0.004 0.004v1.996h-24c-1.1 0-2 0.9-2 2v0zM34 29.996c-0.001 0.001-0.002 0.003-0.004 0.004h-27.993c-0.001-0.001-0.003-0.002-0.004-0.004v-23.993c0.001-0.001 0.002-0.003 0.004-0.004h27.993c0.001 0.001 0.003 0.002 0.004 0.004v23.993z"></path>
-                            <path fill="currentColor" d="M30 11c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z"></path>
-                        <path fill="currentColor" d="M32 28h-24v-4l7-12 8 10h2l7-6z"></path>
-                    </svg>
-                    <span>View gallery</span>
+				<a href="javascript:void(0);" class="gallery-icon-link d-flex d-lg-none" title="View image gallery.">
+                    <div class="gallery-icon">
+                        <svg class="gallery-icon-svg" version="1.1" xmlns="http://www.w3.org/2000/svg" width="36" height="32" viewBox="0 0 36 32">
+                            <title>View image gallery.</title>
+                                    <path fill="currentColor" d="M34 4h-2v-2c0-1.1-0.9-2-2-2h-28c-1.1 0-2 0.9-2 2v24c0 1.1 0.9 2 2 2h2v2c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-24c0-1.1-0.9-2-2-2zM4 6v20h-1.996c-0.001-0.001-0.003-0.002-0.004-0.004v-23.993c0.001-0.001 0.002-0.003 0.004-0.004h27.993c0.001 0.001 0.003 0.002 0.004 0.004v1.996h-24c-1.1 0-2 0.9-2 2v0zM34 29.996c-0.001 0.001-0.002 0.003-0.004 0.004h-27.993c-0.001-0.001-0.003-0.002-0.004-0.004v-23.993c0.001-0.001 0.002-0.003 0.004-0.004h27.993c0.001 0.001 0.003 0.002 0.004 0.004v23.993z"></path>
+                                <path fill="currentColor" d="M30 11c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z"></path>
+                            <path fill="currentColor" d="M32 28h-24v-4l7-12 8 10h2l7-6z"></path>
+                        </svg>
+                        <span>{{ count($listing['photos']) }}</span>
+                    </div>
                 </a>
             </div>
             <div class="listing-info-container">
