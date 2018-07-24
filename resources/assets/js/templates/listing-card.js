@@ -1,6 +1,39 @@
-export default function(data = {}) {
+/**
+ * Create Html for info item
+ * @param value
+ * @param type
+ * @returns {string}
+ */
+function createInfoItemHtml(value, type) {
     return `
-        <a href="/listing/${data.vendor}/${data.id}" id="${data.id}" class="card" title="View listing. This opens a new window." target="_blank">
+        <span class="card-item-info">
+            <strong>${value}</strong> ${type}
+        </span>`;
+}
+
+
+export default function(data = {}) {
+
+    var infoItemsHtml = '';
+
+    if(data.bedrooms) {
+        infoItemsHtml += createInfoItemHtml(data.bedrooms, 'bds');
+    }
+
+    if(data.bathrooms) {
+        infoItemsHtml += createInfoItemHtml(data.bathrooms, 'ba');
+    }
+
+    if(data.residenceSqft) {
+        infoItemsHtml += createInfoItemHtml(data.residenceSqft, 'sqft');
+    }
+
+    if(data.acres) {
+        infoItemsHtml += createInfoItemHtml(data.acres, 'ac');
+    }
+
+    return `
+        <a href="/listing/l/${data.id}" id="${data.id}" class="card" title="View listing">
             <div class="card-background b-lazy" data-src="${data.photo}">
                 <span class="loader"></span>
             </div>
@@ -19,17 +52,7 @@ export default function(data = {}) {
                         <p class="card-text">${data.address}</p>
                     </div>
                     <div class="col-5 card-col-reverse">
-                        <p class="card-text">
-                            <span class="card-item-info">
-                                <strong>${data.bedrooms}</strong> bds
-                            </span>    
-                            <span class="card-item-info">
-                                <strong>${data.bathrooms}</strong> ba
-                            </span>    
-                            <span class="card-item-info">
-                                <strong>${data.property}</strong> sqft
-                            </span>    
-                        </p>
+                        <p class="card-text">${infoItemsHtml}</p>
                     </div>
                 </div>
         

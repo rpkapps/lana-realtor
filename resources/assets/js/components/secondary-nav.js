@@ -20,15 +20,11 @@ $checkboxes.on('change', function() {
 
     history.pushState(null, null, `?${gSearchParams.toString()}`);
     $.publish('snavbar.change');
+
+    $.publish(`snavbar.type`, [this]);
 });
 
-/**
- * Check if all checkboxes are unchecked with secondary nav
- */
-function allUnchecked() {
-    return $checkboxes.filter(':checked').length < 1;
-}
-
-export default {
-    allUnchecked: allUnchecked
-}
+// Sync checkboxes with filter bar
+$.subscribe('filter.type', function(event, filter) {
+    $checkboxes.filter(`[value="${filter.getAttribute('value')}"]`).prop('checked', filter.checked);
+});

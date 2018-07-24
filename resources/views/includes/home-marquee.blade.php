@@ -29,19 +29,19 @@
 
                     <div id="homeCheckboxes" class="home-checkboxes">
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="homeListingType1" name="type[]" value="residential" {{ FormHelper::checked('type', 'residential') }}>
-                            <label class="custom-control-label" for="homeListingType1">Residential</label>
+                            <input class="custom-control-input" type="checkbox" id="homeListingType1" name="type[]" value="House" {{ FormHelper::checked('type', 'House') }}>
+                            <label class="custom-control-label" for="homeListingType1">House</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="homeListingType2" name="type[]" value="multifamily" {{ FormHelper::checked('type', 'multifamily') }}>
+                            <input class="custom-control-input" type="checkbox" id="homeListingType2" name="type[]" value="Multi-Family House" {{ FormHelper::checked('type', 'Multi-Family House') }}>
                             <label class="custom-control-label" for="homeListingType2">Multi-Family</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="homeListingType3" name="type[]" value="land" {{ FormHelper::checked('type', 'land') }}>
-                            <label class="custom-control-label" for="homeListingType3">Vacant Land</label>
+                            <input class="custom-control-input" type="checkbox" id="homeListingType3" name="type[]" value="Land" {{ FormHelper::checked('type', 'Land') }}>
+                            <label class="custom-control-label" for="homeListingType3">Land</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="homeListingType4" name="type[]" value="commercial" {{ FormHelper::checked('type', 'commercial') }}>
+                            <input class="custom-control-input" type="checkbox" id="homeListingType4" name="type[]" value="Commercial" {{ FormHelper::checked('type', 'Commercial') }}>
                             <label class="custom-control-label" for="homeListingType4">Commercial</label>
                         </div>
                     </div>

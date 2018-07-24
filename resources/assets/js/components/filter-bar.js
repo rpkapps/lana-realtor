@@ -4,7 +4,7 @@ import utils from '../utils';
 var $filterBar = $('#filterBar'),
     $bdrmFilters = $('#filterBdrms > .dropdown-item'),
     $bathFilters = $('#filterbaths > .dropdown-item'),
-    $propertySubTypeFilters = $('#filterPropertySubType .custom-control-input'),
+    $propertyTypeFilters = $('#filterPropertyType .custom-control-input'),
     $minPriceFilters = $('#filterMinPrice'),
     $maxPriceFilters = $('#filterMaxPrice'),
     $minAreaFilters = $('#filterMinArea > .form-control'),
@@ -26,8 +26,8 @@ var filters = [
         update: updateMinDropdown
     },
     {
-        key: 'subtype[]',
-        $elems: $propertySubTypeFilters,
+        key: 'type[]',
+        $elems: $propertyTypeFilters,
         eventType: 'change',
         update: updateCheckboxDropdown
     },
@@ -53,6 +53,21 @@ var filters = [
     }
 ];
 
+// Sync property type filters with the secondary nav checkboxes
+$.subscribe('snavbar.type', function(event, checkbox) {
+    var $filter = $propertyTypeFilters.filter(`[value="${checkbox.getAttribute('value')}"]`);
+    $filter.prop('checked', checkbox.checked);
+
+    // Update the dropdown count that shows the number of checked checkboxes
+    filters.forEach(function(filter) {
+       if(filter.key === 'type[]') {
+           filter.update({
+               $current: $filter
+           });
+       }
+    });
+});
+
 // Add event handlers to all filters
 filters.forEach(function(filter) {
     filter.$elems.on(filter.eventType, function(event) {
@@ -61,6 +76,9 @@ filters.forEach(function(filter) {
             $current: $(event.currentTarget)
         });
         $.publish('filter.change');
+
+        // More specific publish
+        $.publish(`filter.${filter.key.replace(/[\[\]']+/g, '')}`, [this]);
     });
 });
 

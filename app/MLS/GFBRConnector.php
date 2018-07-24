@@ -94,6 +94,9 @@ class GFBRConnector extends Connector
      */
     protected function mapToListingDB(array $mlsProperty): array
     {
+        // Total baths = full baths + partial baths
+        $totalBaths = $this->arrayNumber($mlsProperty, 'LM_Int4_2') + $this->arrayNumber($mlsProperty, 'LM_Int4_3');
+
         return [
             'mls_id' => $this->arrayNumber($mlsProperty, 'L_DisplayId'),
             'type' => $this->getPropertyType($mlsProperty),
@@ -127,8 +130,8 @@ class GFBRConnector extends Connector
             'beds' => $this->arrayNumber($mlsProperty, 'LM_Int4_1'),
             'full_baths' => $this->arrayNumber($mlsProperty, 'LM_Int4_2'),
             'partial_baths' => $this->arrayNumber($mlsProperty, 'LM_Int4_3'),
+            'total_baths' => $totalBaths,
             'garage_spaces' => $this->arrayNumber($mlsProperty, 'LM_Int4_4'),
-            'total_baths' => $this->arrayNumber($mlsProperty, 'LM_Int4_5'),
             'year_built' => $this->arrayNumber($mlsProperty, 'LM_Int4_6'),
             'residence_sqft' => $this->arrayNumber($mlsProperty, 'LM_Int4_8'),
             'listing_description' => array_get($mlsProperty, 'LR_remarks11'),

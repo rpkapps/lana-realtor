@@ -8,24 +8,16 @@ NProgress.configure({
 var request = null;
 
 /**
- * Clean query string
- * @param query
- */
-function cleanQuery(query) {
-    return query.replace(/%5B%5D/g, '');
-}
-
-/**
- * Get rent listing
+ * Get listing
  * @param onDone
  * @param onFail
  * @param query
  */
 function getListings(onDone = $.noop, onFail = $.noop, query) {
-    query = query || `limit=${gConfig.limit}&${cleanQuery(gSearchParams.toString())}`;
+    query = query || gSearchParams.toString();
     request = $.ajax({
         type: 'GET',
-        url: gConfig.listingApiUrl + `?${query}`,
+        url: gConfig.listingApiBaseUrl + gConfig.listingApiCategory + `?${query}`,
         dataType: 'json',
         beforeSend: function(xhr) {
             $('body').addClass('loading');

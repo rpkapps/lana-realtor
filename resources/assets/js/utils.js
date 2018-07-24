@@ -63,10 +63,21 @@ function numberWithCommas(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+/**
+ * Convert string to title case
+ * @param string
+ */
+function titleCase(string) {
+    return string.toLowerCase().split(/ +/g).map(function(word) {
+        return word.replace(word[0], word[0].toUpperCase());
+    }).join(' ');
+}
+
 export default {
     formatNumber: formatNumber,
     debounce: debounce,
     clamp: clamp,
     getPageName: getPageName,
-    numberWithCommas: numberWithCommas
+    numberWithCommas: numberWithCommas,
+    titleCase: titleCase
 };

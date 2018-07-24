@@ -154,8 +154,7 @@
     padding-right: 1rem;
 }
 
-#filterPropertySubTypeBtn + .dropdown-menu {
-    min-width: 18.75rem;
+#filterPropertyTypeBtn + .dropdown-menu {
     padding-left: 1rem;
 
     @media (max-width: $breakpoint-sm) {

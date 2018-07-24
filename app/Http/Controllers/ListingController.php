@@ -6,43 +6,55 @@ use Illuminate\Http\Request;
 use App\Listing;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\ListingResource;
+use Illuminate\Support\Facades\DB;
 
 class ListingController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display for sale listings
      *
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function buyIndex(Request $request)
     {
-        $columnMap = [
-            'listprice' => 'listPrice',
-            'listdate' => 'created_at',
-            'beds' => 'bedrooms',
-            'baths' => 'bathrooms'
-        ];
+        // Pagination limit per page
+        $limit = $request->query('limit', 12);
 
         $query = Listing::query();
 
-        // Pagination limit per page
-        $limit = $request->query('limit', 9);
+        $query->where('sale_rent', 'For Sale');
 
+        $this->addSortAndFilters($request, $query);
+
+        return ListingResource::collection($query->paginate($limit));
+    }
+
+    /**
+     * Add sorting and filtering to query
+     *
+     * @param Request $request
+     * @param Builder $query
+     */
+    protected function addSortAndFilters(Request $request, Builder $query)
+    {
         // Search query
-        $this->search($query, Listing::QUERYABLE_COLUMNS, $request->query('q'));
+        $query->search($request->query('q'));
+
+        // Type Filter
+        $this->multiSelectFilter($query, 'type', $request->get('type'));
 
         // Min Price
-        $this->minFilter($query, 'system_price', $request->get('minprice'));
+        $this->minFilter($query, 'asking_price', $request->get('minprice'));
 
         // Max Price
-        $this->maxFilter($query, 'system_price', $request->get('maxprice'));
+        $this->maxFilter($query, 'asking_price', $request->get('maxprice'));
 
         // Min Area
-        $this->minFilter($query, 'area', $request->get('minarea'));
+        $this->minFilter($query, 'residence_sqft', $request->get('minarea'));
 
         // Max Area
-        $this->maxFilter($query, 'area', $request->get('maxarea'));
+        $this->maxFilter($query, 'residence_sqft', $request->get('maxarea'));
 
         // Min Bedrooms
         $this->minFilter($query, 'beds', $request->get('minbeds'));
@@ -57,36 +69,20 @@ class ListingController extends Controller
         $this->maxFilter($query, 'total_baths', $request->get('maxbaths'));
 
         // Sort
-        $this->sort($query, $request->get('sort'), $columnMap);
-
-        return ListingResource::collection($query->paginate($limit));
+        $this->sort($query, $request->get('sort'));
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Listing $listing
-     * @return ListingResource
-     */
-    public function show(Listing $listing)
-    {
-        return new ListingResource($listing);
-    }
-
-    /**
-     * Search filter helper
+     * Multi select filter helper
      *
      * @param Builder $query
-     * @param array $columns
-     * @param $value
+     * @param $column
+     * @param $values
      */
-    protected function search(Builder $query, $columns = [], $value)
+    protected function multiSelectFilter(Builder $query, $column, $values)
     {
-        // TODO: Fix search for full addresses
-        if ($value) {
-            foreach ($columns as $index => $column) {
-                $query->orWhere($column, 'LIKE', '%' . $value . '%');
-            }
+        if (is_array($values) && count($values) > 0) {
+            $query->whereIn($column, $values);
         }
     }
 
@@ -125,19 +121,63 @@ class ListingController extends Controller
      *
      * @param Builder $query
      * @param string $sortBy
-     * @param array $columnMap
      */
-    protected function sort(Builder $query, $sortBy = '', $columnMap = [])
+    protected function sort(Builder $query, $sortBy = '')
     {
-        // Determine sort order by checking if the sort string begins with '-'
-        $order = $sortBy[0] === '-' ? 'desc' : 'asc';
-        // Remove the '-' from string
-        $sortBy = $sortBy[0] === '-' ? substr($sortBy, 1) : $sortBy;
+        if (Listing::columnExists($sortBy)) {
+            // Determine sort order by checking if the sort string begins with '-'
+            $order = $sortBy[0] === '-' ? 'desc' : 'asc';
+            // Remove the '-' from string
+            $sortBy = $sortBy[0] === '-' ? substr($sortBy, 1) : $sortBy;
 
-        if (array_key_exists($sortBy, $columnMap)) {
-            $query->orderBy($columnMap[$sortBy], $order);
+            $query->orderBy($sortBy, $order);
         }
+    }
 
+    /**
+     * Display for rent listings
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function rentIndex(Request $request)
+    {
+        // Pagination limit per page
+        $limit = $request->query('limit', 12);
+
+        $query = Listing::query();
+
+        $query->where('sale_rent', 'For Rent');
+
+        $this->addSortAndFilters($request, $query);
+
+        return ListingResource::collection($query->paginate($limit));
+    }
+
+    /**
+     * Display featured listings
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function featuredIndex(Request $request)
+    {
+        $listings = Listing::orderBy('updated_at', 'desc')
+            ->take(12)
+            ->get();
+
+        return ListingResource::collection($listings);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Listing $listing
+     * @return ListingResource
+     */
+    public function show(Listing $listing)
+    {
+        return new ListingResource($listing);
     }
 
 }

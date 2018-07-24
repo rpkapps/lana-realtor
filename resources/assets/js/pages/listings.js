@@ -3,10 +3,8 @@ import '../components/bootpag.js';
 import '../components/filter-bar.js';
 import secondaryNav from '../components/secondary-nav.js';
 import utils from '../utils.js';
-import sRets from '../simplyrets.js';
 import listingCard from '../templates/listing-card.js';
-import simplyrets from '../simplyrets';
-import rentHelper from '../rent-helper';
+import listingHelper from '../listing-helper.js';
 
 var blazy = new Blazy(),
     debouncedResize,
@@ -28,171 +26,64 @@ var blazy = new Blazy(),
     }),
     noListingsFoundHtml = `<p class="no-listing-found">Sorry, there are no listings available using those search terms.</p>`,
     currentListings = [],
-    view,
-    currentXhr,
     $container = $('#cardListings');
 
-/* BUY View METHODS
-   ================================================== */
-var buyView = {
-    /**
-     * Update listing cards
-     * @param listings
-     */
-    updateListingCards: function(listings) {
-        currentListings = listings;
 
-        var html = '';
-        listings.forEach(function(listing) {
-            html += listingCard({
-                vendor: 'm',
-                id: listing.mlsId, // change this
-                photo: listing.photos[0],
-                title: sRets.determineTitle(listing.property.type),
-                price: utils.formatNumber(listing.listPrice),
-                address: `${listing.address.full}, ${listing.address.city}, ${listing.address.state}, ${listing.address.postalCode}`,
-                bedrooms: listing.property.bedrooms || '',
-                bathrooms: (listing.property.bathsFull || 0) + (listing.property.bathsHalf || 0) +
-                (listing.property.bathsThreeQuarter || 0),
-                property: utils.formatNumber(listing.property.area)
-            });
+/**
+ * Update listing cards
+ * @param listings
+ */
+function updateListingCards(listings) {
+    currentListings = listings;
+
+    var html = '';
+
+    listings.forEach(function(listing) {
+        html += listingCard({
+            id: listing.id,
+            photo: listing.photos[0],
+            title: listing.type === 'Other' ? listing.sale_rent : `${listing.type} ${listing.sale_rent}`,
+            price: utils.formatNumber(listing.asking_price),
+            address: `${utils.titleCase(listing.full_address)}, ${utils.titleCase(listing.city)}, ${listing.state}, ${listing.zip_code}`,
+            bedrooms: listing.beds,
+            bathrooms: listing.total_baths,
+            residenceSqft: utils.formatNumber(listing.residence_sqft),
+            acres: !listing.residence_sqft ? utils.formatNumber(listing.acres) : null
         });
+    });
 
-        updateDOM(html);
-    },
-    /**
-     * Get listings from Simply RETS
-     * @param resetPagination
-     */
-    getListings: function(resetPagination = false) {
-        var self = this;
+    updateDOM(html);
+}
 
-        if(secondaryNav.allUnchecked()) {
-            simplyrets.addAllTypesExcept(['rental', 'condominium']);
+/**
+ * Get listings
+ * @param resetPagination
+ */
+function getListings(resetPagination = false) {
+    listingHelper.getListings(function(data) {
+            updateListingCards(data.data);
+
+            if(resetPagination) {
+                // Update total number of pages for pagination
+                $pagination.bootpag({
+                    page: 1,
+                    total: data.meta.last_page,
+                    firstLastUse: true
+                });
+                resizePagination();
+            }
+
+            // Handle no data and when there is data, show the pagination
+            (data.data.length < 1) ? handleNoData() : $pagination.show();
+
+        },
+        function(xhr, textStatus, errorThrown) {
+            handleNoData();
+            console.error(errorThrown);
         }
+    );
+}
 
-        sRets.getListings(
-            function(data, textStatus, xhr) {
-                self.updateListingCards(data);
-                currentXhr = xhr;
-
-                if(resetPagination) {
-                    // Update total number of pages for pagination
-                    $pagination.bootpag({
-                        page: 1,
-                        total: sRets.getNumberOfPages(currentXhr),
-                        firstLastUse: true
-                    });
-                    resizePagination();
-                }
-
-                // Handle no data and when there is data, show the pagination
-                (data.length < 1) ? handleNoData() : $pagination.show();
-            },
-            function(xhr, textStatus, errorThrown) {
-                currentXhr = xhr;
-                handleNoData();
-                console.error(errorThrown);
-            }
-        );
-    },
-    /**
-     * Handle anything specific for buy view on paginate
-     */
-    handlePagination: function(page) {
-        // Set new offset
-        gSearchParams.set('offset', sRets.getPageOffset(page, currentXhr));
-    },
-    /**
-     * Handle nav and filter bar change for buy view
-     */
-    handleNavChange: function() {
-        // Set offset back to 0
-        gSearchParams.set('offset', sRets.getPageOffset(0, currentXhr));
-    }
-};
-
-/* RENT View METHODS
-   ================================================== */
-
-var rentView = {
-    /**
-     * Update listing cards
-     * @param listings
-     */
-    updateListingCards: function(listings) {
-        var html = '';
-
-        listings.forEach(function(listing) {
-            var firstPhoto;
-
-            try {
-                firstPhoto = JSON.parse(listing.photos)[0];
-            }
-            catch(e) {
-                // If not array - will be a string of one photo or none
-                firstPhoto = listing.photos;
-            }
-
-            html += listingCard({
-                vendor: 'l',
-                id: listing.id,
-                photo: firstPhoto,
-                title: 'House For Rent',
-                price: utils.formatNumber(listing.listPrice),
-                address: `${listing.streetNumber} ${listing.streetName}, ${listing.city}, ${listing.state}, ${listing.postalCode}`,
-                bedrooms: listing.bedrooms || '',
-                bathrooms: listing.bathrooms || 0,
-                property: utils.formatNumber(listing.area)
-            });
-        });
-
-        updateDOM(html);
-    },
-    /**
-     * Get listings from Rent API
-     * @param resetPagination
-     */
-    getListings: function(resetPagination = false) {
-        var self = this;
-        rentHelper.getListings(function(data) {
-                self.updateListingCards(data.data);
-
-                if(resetPagination) {
-                    // Update total number of pages for pagination
-                    $pagination.bootpag({
-                        page: 1,
-                        total: data.meta.last_page,
-                        firstLastUse: true
-                    });
-                    resizePagination();
-                }
-
-                // Handle no data and when there is data, show the pagination
-                (data.data.length < 1) ? handleNoData() : $pagination.show();
-
-            },
-            function(xhr, textStatus, errorThrown) {
-                handleNoData();
-                console.error(errorThrown);
-            }
-        );
-    },
-    /**
-     * Handle anything specific for rent view on paginate
-     */
-    handlePagination: function(page) {
-        // Set new page
-        gSearchParams.set('page', page);
-    },
-    /**
-     * Handle nav and filter bar change for rent view
-     */
-    handleNavChange: function() {
-        // Set page to 1
-        gSearchParams.set('page', 1);
-    }
-};
 
 /* HELPER METHODS
    ================================================== */
@@ -231,7 +122,7 @@ function handleNoData() {
     updateDOM();
 }
 
-/* MAIN
+/* MAIN / EVENT HANDLERS
    ================================================== */
 
 debouncedResize = utils.debounce(function() {
@@ -240,25 +131,25 @@ debouncedResize = utils.debounce(function() {
 
 // Pagination event handler
 $pagination.on('page', function(event, page) {
-    view.handlePagination(page);
+    gSearchParams.set('page', page);
     history.pushState(null, null, `?${gSearchParams.toString()}`);
 
     // Scroll to top on pagination change
     $('html,body').animate({scrollTop: 0}, 1);
 
-    view.getListings();
+    getListings();
 });
 
 // Event listener
 $.subscribe('snavbar.change filter.change', function() {
-    view.handleNavChange();
+    gSearchParams.set('page', 1);
     history.pushState(null, null, `?${gSearchParams.toString()}`);
 
-    view.getListings(true);
+    getListings(true);
 });
 
 $(window).on('resize', debouncedResize);
 
-view = utils.getPageName() === 'rent' ? rentView : buyView;
-view.getListings(true);
+gConfig.listingApiCategory = utils.getPageName() === 'rent' ? 'rent' : 'buy';
+getListings(true);
 resizePagination();

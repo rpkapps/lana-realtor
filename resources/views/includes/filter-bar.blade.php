@@ -70,20 +70,18 @@
             </div>
         </div>
         <p class="filter-header d-block d-md-none">Property Type</p>
-        @if ($pageType === 'buy')
-            <div class="btn-group" role="group">
-                <button id="filterPropertySubTypeBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Property Type <span class="additional-info">{{ FormHelper::numberOfCheckboxesSelected('subtype') }}</span>
-                </button>
-                <div id="filterPropertySubType" class="dropdown-menu stay-open" aria-labelledby="filterPropertySubTypeBtn">
-                    @foreach (ListingHelper::getSubType() as $subType => $cleanSubType)
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="listingSubType{{ $loop->index }}" name="subtype[]" value="{{ $subType }}" {{ FormHelper::checked('subtype', $subType) }}>
-                            <label class="custom-control-label" for="listingSubType{{ $loop->index }}">{{ $cleanSubType }}</label>
-                        </div>
-                    @endforeach
-                </div>
+        <div class="btn-group" role="group">
+            <button id="filterPropertyTypeBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Property Type <span class="additional-info">{{ FormHelper::numberOfCheckboxesSelected('type') }}</span>
+            </button>
+            <div id="filterPropertyType" class="dropdown-menu stay-open" aria-labelledby="filterPropertyTypeBtn">
+                @foreach (($pageType === 'buy' ? ListingHelper::getBuyTypes() : ListingHelper::getRentTypes()) as $type => $typeLabel)
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" id="propertyType{{ $loop->index }}" name="type[]" value="{{ $type }}" {{ FormHelper::checked('type', $type) }}>
+                        <label class="custom-control-label" for="propertyType{{ $loop->index }}">{{ $typeLabel }}</label>
+                    </div>
+                @endforeach
             </div>
-        @endif
+        </div>
     </div>
 </div>

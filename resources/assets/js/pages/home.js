@@ -1,6 +1,5 @@
 import '../bootstrap.js';
 import utils from '../utils.js';
-import sRets from '../simplyrets.js';
 import listingCard from '../templates/listing-card.js';
 import listingHelper from '../listing-helper.js';
 
@@ -46,26 +45,17 @@ function updateListingCards(listings = []) {
     var html = '';
 
     currentListings.forEach(function(listing) {
-        var firstPhoto;
-
-        try {
-            firstPhoto = JSON.parse(listing.photos)[0];
-        }
-        catch(e){
-            // If not array - will be a string of one photo or none
-            firstPhoto = listing.photos;
-        }
-
         html += listingCard({
-            vendor: 'l',
             id: listing.id,
-            photo: firstPhoto,
-            title: listing.sale_rent,
+            photo: listing.photos[0],
+            title: listing.type === 'Other' ? listing.sale_rent : `${listing.type} ${listing.sale_rent}`,
             price: utils.formatNumber(listing.asking_price),
-            address: `${listing.full_address}, ${listing.city}, ${listing.state}, ${listing.zip_code}`,
-            bedrooms: listing.beds || '',
-            bathrooms: (listing.full_baths || 0) + (listing.partial_baths || 0),
-            property: utils.formatNumber(listing.residence_sqft)
+            address: `${utils.titleCase(listing.full_address)}, ${utils.titleCase(listing.city)}, ${listing.state}, ${listing.zip_code}`,
+            bedrooms: listing.beds,
+            bathrooms: listing.total_baths,
+            residenceSqft: utils.formatNumber(listing.residence_sqft),
+            buildingSqft: !listing.residence_sqft ? utils.formatNumber(listing.building_sqft) : null,
+            acres: (!listing.residence_sqft && !listing.building_sqft) ? utils.formatNumber(listing.acres) : null
         });
     });
 
@@ -83,9 +73,9 @@ function getListings() {
         },
         function(textStatus, errorThrown) {
             console.error(errorThrown);
-        },
-        `limit=${gConfig.limit}`
+        }
     );
 }
 
+gConfig.listingApiCategory = 'featured';
 getListings();
