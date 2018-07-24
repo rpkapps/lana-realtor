@@ -4,18 +4,18 @@ namespace App\MLS;
 
 class GFBRConnector extends Connector
 {
-    const TYPE_RESIDENTIAL = 'RE_1';
-    const TYPE_LAND = 'LD_2';
-    const TYPE_COMMERCIAL = 'CI_3';
-    const TYPE_MULTI_FAMILY = 'MF_4';
-    const TYPE_RENTAL = 'RR_5';
+    const CLASS_RESIDENTIAL = 'RE_1';
+    const CLASS_LAND = 'LD_2';
+    const CLASS_COMMERCIAL = 'CI_3';
+    const CLASS_MULTI_FAMILY = 'MF_4';
+    const CLASS_RENTAL = 'RR_5';
 
-    const TYPES = [
-        self::TYPE_RESIDENTIAL,
-        self::TYPE_LAND,
-        self::TYPE_COMMERCIAL,
-        self::TYPE_MULTI_FAMILY,
-        self::TYPE_RENTAL
+    const CLASSES = [
+        self::CLASS_RESIDENTIAL,
+        self::CLASS_LAND,
+        self::CLASS_COMMERCIAL,
+        self::CLASS_MULTI_FAMILY,
+        self::CLASS_RENTAL
     ];
 
     const STATUS_ACTIVE_VALUE = 'ACTIVE';
@@ -29,13 +29,62 @@ class GFBRConnector extends Connector
     const MLS_PHOTO_TYPE = 'Photo';
     const MLS_THUMBNAIL_TYPE = 'Thumbnail';
 
-    const NORMALIZED_TYPES = [
-       'RESIDENTIAL' =>  'Residential',
-       'LAND' => 'Land',
-       'COMMERCIAL/INDUSTRIAL' => 'Commercial',
-       'MULTI-FAMILY' => 'Multi-Family',
-       'RENTAL RESIDENTIAL' => 'Rental'
-    ];
+    /**
+     * Returns either static::FOR_RENT or static::FOR_SALE
+     *
+     * @param $mlsProperty
+     * @return string
+     */
+    protected function getSaleRent($mlsProperty)
+    {
+        return array_get($mlsProperty, 'L_SaleRent') === 'For Rent' ? static::FOR_RENT : static::FOR_SALE;
+    }
+
+
+    /**
+     * Get Property Type
+     *
+     * @param $mlsProperty
+     * @return string: will return on of the TYPE_ constants
+     */
+    protected function getPropertyType($mlsProperty)
+    {
+        $class = array_get($mlsProperty, 'L_Class');
+        $subtype = array_get($mlsProperty, 'L_Type_');
+        $saleRent = $this->getSaleRent($mlsProperty);
+
+        if ($saleRent === static::FOR_RENT) {
+
+            if ($subtype === 'MF APARTMENT') {
+                return static::TYPE_APARTMENT;
+            } elseif ($subtype === 'CONDOMINIUM') {
+                return static::TYPE_CONDO;
+            } elseif ($subtype === 'TOWNHOUSE') {
+                return static::TYPE_TOWNHOME;
+            } elseif ($subtype === 'SINGLE FAMILY') {
+                return static::TYPE_SINGLE_FAMILY;
+            }
+
+        } else {
+
+            if ($class === 'MULTI-FAMILY') {
+                return static::TYPE_MULTI_FAMILY;
+            } elseif ($class === 'COMMERCIAL/INDUSTRIAL') {
+                return static::TYPE_COMMERCIAL;
+            } elseif ($class === 'LAND') {
+                return static::TYPE_LAND;
+            } elseif ($subtype === 'MOBILE' || $subtype === 'MOBILE HOME W/LAND') {
+                return static::TYPE_MOBILE;
+            } elseif ($subtype === 'CONDOMINIUM') {
+                return static::TYPE_CONDO;
+            } elseif ($subtype === 'SINGLE FAMILY' || $subtype === 'ZERO LOT LINE' || $subtype === 'DUPLEX') {
+                return static::TYPE_HOUSE;
+            }
+
+        }
+
+        return static::TYPE_OTHER;
+    }
 
     /**
      * Map an MLS property to a Listing within our database
@@ -47,7 +96,7 @@ class GFBRConnector extends Connector
     {
         return [
             'mls_id' => $this->arrayNumber($mlsProperty, 'L_DisplayId'),
-            'type' =>  array_get(static::NORMALIZED_TYPES, array_get($mlsProperty, 'L_Class', '')),
+            'type' => $this->getPropertyType($mlsProperty),
             'sub_type' => array_get($mlsProperty, 'L_Type_'),
             'area' => array_get($mlsProperty, 'L_Area'),
             'system_price' => $this->arrayNumber($mlsProperty, 'L_SystemPrice'),
@@ -57,7 +106,7 @@ class GFBRConnector extends Connector
             'city' => array_get($mlsProperty, 'L_City'),
             'state' => array_get($mlsProperty, 'L_State'),
             'zip_code' => array_get($mlsProperty, 'L_Zip'),
-            'sale_rent' => array_get($mlsProperty, 'L_SaleRent'),
+            'sale_rent' => $this->getSaleRent($mlsProperty),
             'construction' => array_get($mlsProperty, 'L_Keyword1'),
             'foundation' => array_get($mlsProperty, 'L_Keyword2'),
             'age' => array_get($mlsProperty, 'L_Keyword3'),

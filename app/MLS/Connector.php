@@ -29,13 +29,27 @@ abstract class Connector
     /**
      * The below consts should be defined and initialized in the child class
      */
-    const TYPE_RESIDENTIAL = '';
-    const TYPE_LAND = '';
-    const TYPE_COMMERCIAL = '';
-    const TYPE_MULTI_FAMILY = '';
-    const TYPE_RENTAL = '';
+    const CLASS_RESIDENTIAL = '';
+    const CLASS_LAND = '';
+    const CLASS_COMMERCIAL = '';
+    const CLASS_MULTI_FAMILY = '';
+    const CLASS_RENTAL = '';
 
-    const TYPES = [];
+    const CLASSES = [];
+
+    const TYPE_HOUSE = 'House';
+    const TYPE_CONDO = 'Condo';
+    const TYPE_TOWNHOME = 'Townhome';
+    const TYPE_MOBILE = 'Mobile Home';
+    const TYPE_LAND = 'Land';
+    const TYPE_MULTI_FAMILY = 'Multi-Family House';
+    const TYPE_COMMERCIAL = 'Commercial';
+    const TYPE_SINGLE_FAMILY = 'Single Family House';
+    const TYPE_APARTMENT = 'Apartment';
+    const TYPE_OTHER = 'Other';
+
+    const FOR_SALE = 'For Sale';
+    const FOR_RENT = 'For Rent';
 
     const STATUS_ACTIVE_VALUE = '';
     const STATUS_ACTIVE_LOOKUP = '';
@@ -204,7 +218,7 @@ abstract class Connector
             sprintf('(%s=%s+)', static::MLS_COLUMN_UPDATED_AT, $latestPullDate) :
             sprintf('(%s=%s)', static::MLS_COLUMN_STATUS, static::STATUS_ACTIVE_LOOKUP);
 
-        foreach (static::TYPES as $type) {
+        foreach (static::CLASSES as $type) {
             $propertiesByType = $this->session->Search('Property', $type, $query)->toArray();
             $properties = array_merge($properties, $propertiesByType);
 
