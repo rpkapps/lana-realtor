@@ -20,10 +20,11 @@ abstract class Connector
 
     protected $updatedListingsCounter = 0;
     protected $createdListingsCounter = 0;
+    protected $deletedListingsCounter = 0;
+    protected $geocodingCounter = 0;
 
-    // Will sync without overriding existing listings and will ignore latest pull date
-    // pulling all active listings
-    protected $syncWithoutOverride = false;
+    // If true, will pull all active properties, ignoring the latest pull date
+    protected $ignoreLatestPullDate = false;
 
     /**
      * The below consts should be defined and initialized in the child class
@@ -53,12 +54,12 @@ abstract class Connector
      * Constructor for MLS Connector
      *
      * @param $config
-     * @param bool $syncWithoutOverride : Will sync without overriding existing listings and
-     *                                    will ignore latest pull date pulling all active listings
+     * @param bool $ignoreLatestPullDate : If true, will pull all active properties,
+     *                                     ignoring the latest pull date
      * @throws \PHRETS\Exceptions\CapabilityUnavailable
      * @throws \PHRETS\Exceptions\MissingConfiguration
      */
-    public function __construct($config, $syncWithoutOverride = false)
+    public function __construct($config, $ignoreLatestPullDate = false)
     {
         $this->config = (new \PHRETS\Configuration)
             ->setLoginUrl($config['loginUrl'])
@@ -69,7 +70,7 @@ abstract class Connector
         $this->session = new \PHRETS\Session($this->config);
         $this->connection = $this->session->Login();
 
-        $this->syncWithoutOverride = $syncWithoutOverride;
+        $this->ignoreLatestPullDate = $ignoreLatestPullDate;
     }
 
     /**
@@ -197,7 +198,7 @@ abstract class Connector
     {
         $properties = [];
 
-        $latestPullDate = $this->syncWithoutOverride ? $this->getLatestPullDate() : null;
+        $latestPullDate = !$this->ignoreLatestPullDate ? $this->getLatestPullDate() : null;
 
         $query = $latestPullDate ?
             sprintf('(%s=%s+)', static::MLS_COLUMN_UPDATED_AT, $latestPullDate) :
@@ -235,6 +236,7 @@ abstract class Connector
 
         if ($listing) {
             $listing->delete();
+            $this->deletedListingsCounter++;
         }
     }
 
@@ -248,6 +250,7 @@ abstract class Connector
         try {
             $address = $mlsListing['full_address'] . ', ' . $mlsListing['city'] . ', ' . $mlsListing['state'];
             $geo = app('geocoder')->geocode($address)->get()->first();
+            $this->geocodingCounter++;
 
             if ($geo) {
                 $coordinates = $geo->getCoordinates();
@@ -268,13 +271,7 @@ abstract class Connector
     {
         $listing = Listing::where('mls_id', $mlsListing['mls_id'])->first();
 
-        if($listing && $this->syncWithoutOverride) {
-            return;
-        }
-
         if ($listing) {
-            $this->updatedListingsCounter++;
-
             // Set latitude and longitude. Only make the request to Google Maps API
             // when the address changed
             if ($listing->full_address !== $mlsListing['full_address']) {
@@ -286,18 +283,17 @@ abstract class Connector
                 $mlsListing['longitude'] = $listing->latitude;
                 $mlsListing['latitude'] = $listing->longitude;
             }
-        } else {
-            $this->createdListingsCounter++;
 
+            Listing::where('mls_id', $mlsListing['mls_id'])->update($mlsListing);
+            $this->updatedListingsCounter++;
+        } else {
             // We will need to create a new listing, so grab the GeoLocation from
             // Google Maps API
             $this->setGeoCoordinatesFromGoogleAPI($mlsListing);
-        }
 
-        Listing::updateOrCreate(
-            ['mls_id' => $mlsListing['mls_id']],
-            $mlsListing
-        );
+            Listing::create($mlsListing);
+            $this->createdListingsCounter++;
+        }
     }
 
     /**
@@ -340,6 +336,8 @@ abstract class Connector
 
         Log::info('Number of listings CREATED in database: ' . $this->createdListingsCounter);
         Log::info('Number of listings UPDATED in database: ' . $this->updatedListingsCounter);
+        Log::info('Number of listings DELETED in database: ' . $this->deletedListingsCounter);
+        Log::info('Number of geocoding requests: ' . $this->geocodingCounter);
         Log::info(sprintf('MLS pulled and synced: %s on %s', static::class, $datePulled));
     }
 }
