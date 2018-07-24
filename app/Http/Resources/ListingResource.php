@@ -14,6 +14,11 @@ class ListingResource extends Resource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $listing = parent::toArray($request);
+
+        $listing['photos'] = json_decode($listing['photos']);
+        $listing['thumbnails'] = json_decode($listing['thumbnails']);
+
+        return $listing;
     }
 }
