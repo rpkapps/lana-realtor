@@ -1,6 +1,7 @@
 import '../bootstrap.js';
 import '../components/bootpag.js';
 import '../components/filter-bar.js';
+import secondaryNav from '../components/secondary-nav.js';
 import '../components/btn-tabs.js';
 import utils from '../utils.js';
 import listingCard from '../templates/listing-card.js';
