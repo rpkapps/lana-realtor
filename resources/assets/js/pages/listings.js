@@ -27,7 +27,8 @@ var blazy = new Blazy(),
     }),
     noListingsFoundHtml = `<p class="no-listing-found">Sorry, there are no listings available using those search terms.</p>`,
     currentListings = [],
-    $container = $('#cardListings');
+    $container = $('#cardListings'),
+    map = L.map('mapView').setView([51.505, -0.09], 13);
 
 
 /**
