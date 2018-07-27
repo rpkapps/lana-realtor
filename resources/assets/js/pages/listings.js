@@ -79,8 +79,10 @@ function getListings(resetPagination = false) {
 
         },
         function(xhr, textStatus, errorThrown) {
-            handleNoData();
-            console.error(errorThrown);
+            if(textStatus !== 'abort') {
+                handleNoData();
+                console.error(errorThrown);
+            }
         }
     );
 }
