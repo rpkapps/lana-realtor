@@ -1,4 +1,4 @@
-@extends('layout.sub-page')
+@extends('layout.listing-item')
 
 @section('title', 'Contact')
 

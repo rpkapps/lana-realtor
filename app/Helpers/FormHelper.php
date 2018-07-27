@@ -49,6 +49,26 @@ class FormHelper
     }
 
     /**
+     * Returns 'active' if query parameter key returns true for given operator
+     * @param $key
+     * @param $operator ==, !=
+     * @param $value
+     * @return string
+     */
+    static function activeClassIf($key, $operator, $value)
+    {
+        if($operator === '==') {
+            return request()->input($key) == $value ? 'active' : '';
+        }
+
+        if($operator == '!=') {
+            return request()->input($key) != $value ? 'active' : '';
+        }
+
+        return '';
+    }
+
+    /**
      * Returns 'N/A' if $feature is not set
      * @param $feature
      * @param string $textIfValid

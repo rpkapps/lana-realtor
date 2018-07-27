@@ -1,7 +1,7 @@
 import '../bootstrap.js';
 import '../components/bootpag.js';
 import '../components/filter-bar.js';
-import secondaryNav from '../components/secondary-nav.js';
+import '../components/btn-tabs.js';
 import utils from '../utils.js';
 import listingCard from '../templates/listing-card.js';
 import listingHelper from '../listing-helper.js';
@@ -146,6 +146,19 @@ $.subscribe('snavbar.change filter.change', function() {
     history.pushState(null, null, `?${gSearchParams.toString()}`);
 
     getListings(true);
+});
+
+// Handle map and card view btn tabs
+$.subscribe('btn-tabs.change', function(event, btn) {
+    if(btn.id === 'cardViewBtn') {
+        blazy.revalidate();
+        gSearchParams.set('view', 'card');
+        history.pushState(null, null, `?${gSearchParams.toString()}`);
+    }
+    if(btn.id === 'mapViewBtn') {
+        gSearchParams.set('view', 'map');
+        history.pushState(null, null, `?${gSearchParams.toString()}`);
+    }
 });
 
 $(window).on('resize', debouncedResize);

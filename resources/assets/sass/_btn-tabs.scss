@@ -1,0 +1,39 @@
+.btn-tab-content {
+    display: none;
+
+    &.active {
+        display: block;
+    }
+}
+
+.btn-tabs {
+    &.thin {
+        .btn {
+            line-height: 1;
+        }
+    }
+
+    .btn.btn-outline-light {
+        color: gray('800');
+
+        &:hover, &:focus {
+            background-color: transparent;
+        }
+
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active {
+            background-color: gray('400');
+            color: color('white');
+        }
+    }
+}
+
+#listingViewTabs {
+    margin-bottom: 1rem;
+
+    @media (min-width: 1140px) {
+        position: absolute;
+        right: 15px;
+        top: 1.3rem;
+    }
+}
