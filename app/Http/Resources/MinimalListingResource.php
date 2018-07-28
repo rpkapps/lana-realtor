@@ -19,6 +19,7 @@ class MinimalListingResource extends Resource
             [
                 'id',
                 'mls_id',
+                'type',
                 'photos',
                 'sale_rent',
                 'sale_rent',
