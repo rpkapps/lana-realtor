@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MinimalListingResource;
 use Illuminate\Http\Request;
 use App\Listing;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,7 +28,27 @@ class ListingController extends Controller
 
         $this->addSortAndFilters($request, $query);
 
-        return ListingResource::collection($query->paginate($limit));
+        return MinimalListingResource::collection($query->paginate($limit));
+    }
+
+    /**
+     * Display for rent listings
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function rentIndex(Request $request)
+    {
+        // Pagination limit per page
+        $limit = $request->query('limit', 12);
+
+        $query = Listing::query();
+
+        $query->where('sale_rent', 'For Rent');
+
+        $this->addSortAndFilters($request, $query);
+
+        return MinimalListingResource::collection($query->paginate($limit));
     }
 
     /**
@@ -132,26 +153,6 @@ class ListingController extends Controller
 
             $query->orderBy($sortBy, $order);
         }
-    }
-
-    /**
-     * Display for rent listings
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function rentIndex(Request $request)
-    {
-        // Pagination limit per page
-        $limit = $request->query('limit', 12);
-
-        $query = Listing::query();
-
-        $query->where('sale_rent', 'For Rent');
-
-        $this->addSortAndFilters($request, $query);
-
-        return ListingResource::collection($query->paginate($limit));
     }
 
     /**
