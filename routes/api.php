@@ -19,6 +19,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.'], function () {
     Route::get('listings/buy', ['as' => 'listings.buy.index', 'uses' => 'ListingController@buyIndex']);
     Route::get('listings/rent', ['as' => 'listings.rent.index', 'uses' => 'ListingController@rentIndex']);
     Route::get('listings/featured', ['as' => 'listings.featured.index', 'uses' => 'ListingController@featuredIndex']);
+    Route::get('listings/near', ['as' => 'listings.near', 'uses' => 'ListingController@near']);
     Route::get('listings/{listing}', ['as' => 'listings.show', 'uses' => 'ListingController@show']);
 });
 

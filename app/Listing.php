@@ -20,7 +20,7 @@ class Listing extends Model
      */
     public function scopeSearch($query, $search)
     {
-        if($search) {
+        if ($search) {
             $search = str_replace(',', '', $search);
             $search = preg_replace('/\s+/', ' ', $search);
 
@@ -29,6 +29,26 @@ class Listing extends Model
             $query->orWhere('mls_id', 'LIKE', '%' . $search . '%');
         }
         return $query;
+    }
+
+    /**
+     * Find listings that are within a certain distance of a lat/long point
+     *
+     * @param $query
+     * @param $lat: latitude
+     * @param $lng: longitude
+     * @param $distance
+     */
+    public function scopeDistance($query, $lat, $lng, $distance = 30)
+    {
+        return $query
+            ->select(DB::raw("*,
+                     (3959 * acos(cos(radians($lat))
+                           * cos(radians(latitude))
+                           * cos(radians($lng) - radians(longitude))
+                           + sin(radians($lat))
+                           * sin(radians(latitude)))) AS distance")
+            )->having('distance', '<', $distance);
     }
 
     /**

@@ -52,6 +52,50 @@ class ListingController extends Controller
     }
 
     /**
+     * Display featured listings
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function featuredIndex(Request $request)
+    {
+        $listings = Listing::orderBy('updated_at', 'desc')
+            ->take(12)
+            ->get();
+
+        return MinimalListingResource::collection($listings);
+    }
+
+    /**
+     * Find listings that are within a certain distance of a lat/long point
+     *
+     * @param Request $request
+     */
+    public function near(Request $request)
+    {
+        $lat = $request->query('lat', 64.034530);
+        $lng = $request->query('lon', -145.731544);
+        $distance = $request->query('distance', 1);
+
+        $query = Listing::distance($lat, $lng, $distance);
+
+        $this->addSortAndFilters($request, $query);
+
+        return MinimalListingResource::collection($query->get());
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Listing $listing
+     * @return ListingResource
+     */
+    public function show(Listing $listing)
+    {
+        return new ListingResource($listing);
+    }
+
+    /**
      * Add sorting and filtering to query
      *
      * @param Request $request
@@ -154,31 +198,4 @@ class ListingController extends Controller
             $query->orderBy($sortBy, $order);
         }
     }
-
-    /**
-     * Display featured listings
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function featuredIndex(Request $request)
-    {
-        $listings = Listing::orderBy('updated_at', 'desc')
-            ->take(12)
-            ->get();
-
-        return ListingResource::collection($listings);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Listing $listing
-     * @return ListingResource
-     */
-    public function show(Listing $listing)
-    {
-        return new ListingResource($listing);
-    }
-
 }
