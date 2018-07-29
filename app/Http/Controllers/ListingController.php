@@ -69,7 +69,7 @@ class ListingController extends Controller
      *
      * @param Request $request
      */
-    public function sellMap(Request $request)
+    public function rentMap(Request $request)
     {
         $query = Listing::where('sale_rent', 'For Sale');
         $this->addSortAndFilters($request, $query);
