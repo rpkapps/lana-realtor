@@ -288,14 +288,14 @@ abstract class Connector
         if ($listing) {
             // Set latitude and longitude. Only make the request to Google Maps API
             // when the address changed
-            if ($listing->full_address !== $mlsListing['full_address']) {
+            if ($listing->full_address !== $mlsListing['full_address'] || !$listing->latitude) {
                 Log::info('MLS listing address was updated on the MLS.');
 
                 $this->setGeoCoordinatesFromGoogleAPI($mlsListing);
             } else {
                 // Set Geo Coordinates from existing database listing
-                $mlsListing['longitude'] = $listing->latitude;
-                $mlsListing['latitude'] = $listing->longitude;
+                $mlsListing['latitude'] = $listing->latitude;
+                $mlsListing['longitude'] = $listing->longitude;
             }
 
             Listing::where('mls_id', $mlsListing['mls_id'])->update($mlsListing);
