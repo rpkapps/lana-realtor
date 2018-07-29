@@ -34,7 +34,9 @@ class MinimalListingResource extends Resource
                 'residence_sqft',
                 'acres',
                 'photos',
-                'thumbnails'
+                'thumbnails',
+                'latitude',
+                'longitude'
             ]
         );
 
@@ -44,8 +46,8 @@ class MinimalListingResource extends Resource
 
         // Only get the first photo and thumbnail we don't need all of them for
         // the minimal listing
-        $listing['photos'] = $photos[0] ? [$photos[0]] : [];
-        $listing['thumbnails'] = $thumbnails[0] ? [$thumbnails[0]] : [];
+        $listing['photos'] = count($photos) ? [$photos[0]] : [];
+        $listing['thumbnails'] = count($thumbnails) ? [$thumbnails[0]] : [];
 
         return $listing;
     }

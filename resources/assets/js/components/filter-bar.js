@@ -78,7 +78,9 @@ filters.forEach(function(filter) {
         $.publish('filter.change');
 
         // More specific publish
-        $.publish(`filter.${filter.key.replace(/[\[\]']+/g, '')}`, [this]);
+        if(filter.key) {
+            $.publish(`filter.${filter.key.replace(/[\[\]']+/g, '')}`, [this]);
+        }
     });
 });
 

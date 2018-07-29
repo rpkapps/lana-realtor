@@ -60,7 +60,7 @@ function getPageName() {
  * @returns {string}
  */
 function numberWithCommas(number) {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 /**
@@ -73,11 +73,43 @@ function titleCase(string) {
     }).join(' ');
 }
 
+/**
+ * Abbreviate number (i.e. 1000 to 1k, 1000000 to 1m, etc.)
+ * taken from: https://stackoverflow.com/questions/12900332/how-do-i-round-millions-and-thousands-in-javascript
+ * @param value
+ * @returns {string}
+ */
+function abbreviateNumber(value) {
+    if(isNaN(value)) return value;
+
+    if(value < 9999) {
+        return value;
+    }
+
+    if(value < 1000000) {
+        return Math.round(value/1000) + "k";
+    }
+    if( value < 10000000) {
+        return (value/1000000).toFixed(2) + "m";
+    }
+
+    if(value < 1000000000) {
+        return Math.round((value/1000000)) + "m";
+    }
+
+    if(value < 1000000000000) {
+        return Math.round((value/1000000000)) + "b";
+    }
+
+    return "1T+";
+}
+
 export default {
     formatNumber: formatNumber,
     debounce: debounce,
     clamp: clamp,
     getPageName: getPageName,
     numberWithCommas: numberWithCommas,
-    titleCase: titleCase
+    titleCase: titleCase,
+    abbreviateNumber: abbreviateNumber
 };

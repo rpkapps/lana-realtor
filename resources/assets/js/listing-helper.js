@@ -9,15 +9,14 @@ var request = null;
 
 /**
  * Get listing
+ * @param url
  * @param onDone
  * @param onFail
- * @param query
  */
-function getListings(onDone = $.noop, onFail = $.noop, query) {
-    query = query || gSearchParams.toString();
+function getListings({url, onSuccess = $.noop, onFail = $.noop}) {
     request = $.ajax({
         type: 'GET',
-        url: gConfig.listingApiBaseUrl + gConfig.listingApiCategory + `?${query}`,
+        url: url,
         dataType: 'json',
         beforeSend: function(xhr) {
             $('body').addClass('loading');
@@ -30,7 +29,7 @@ function getListings(onDone = $.noop, onFail = $.noop, query) {
             }
         }
     }).done(function() {
-        onDone(...arguments);
+        onSuccess(...arguments);
 
         $('body').removeClass('loading');
         NProgress.done();

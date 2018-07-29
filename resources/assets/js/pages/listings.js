@@ -1,11 +1,12 @@
 import '../bootstrap.js';
 import '../components/bootpag.js';
 import '../components/filter-bar.js';
-import secondaryNav from '../components/secondary-nav.js';
+import '../components/secondary-nav.js';
 import '../components/btn-tabs.js';
 import utils from '../utils.js';
 import listingCard from '../templates/listing-card.js';
 import listingHelper from '../listing-helper.js';
+import map from '../components/map.js';
 
 var blazy = new Blazy(),
     debouncedResize,
@@ -28,8 +29,64 @@ var blazy = new Blazy(),
     noListingsFoundHtml = `<p class="no-listing-found">Sorry, there are no listings available using those search terms.</p>`,
     currentListings = [],
     $container = $('#cardListings'),
-    map = L.map('mapView').setView([51.505, -0.09], 13);
+    view;
 
+var cardView = {
+    /**
+     * Get listings for card view
+     * @param resetPagination
+     */
+    getListings: function(resetPagination = false) {
+        var url = gConfig.listingApiBaseUrl + gConfig.listingApiCategory + `?${gSearchParams.toString()}`;
+
+        listingHelper.getListings({
+            url: url,
+            onSuccess: function(response) {
+                updateListingCards(response.data);
+
+                if(resetPagination) {
+                    // Update total number of pages for pagination
+                    $pagination.bootpag({
+                        page: 1,
+                        total: response.meta.last_page,
+                        firstLastUse: true
+                    });
+                    resizePagination();
+                }
+
+                // Handle no data and when there is data, show the pagination
+                (response.data.length < 1) ? handleNoData() : $pagination.show();
+
+            },
+            onFail: function(xhr, textStatus, errorThrown) {
+                if(textStatus !== 'abort') {
+                    handleNoData();
+                    console.error(errorThrown);
+                }
+            }
+        });
+    }
+};
+
+var mapView = {
+    /**
+     * Get listings for map view
+     */
+    getListings: function() {
+        var url = gConfig.listingApiBaseUrl + gConfig.listingApiCategory + `/map?${gSearchParams.toString()}`;
+        listingHelper.getListings({
+            url: url,
+            onSuccess: function(response) {
+                map.updateListings(response.data);
+            },
+            onFail: function(xhr, textStatus, errorThrown) {
+                if(textStatus !== 'abort') {
+
+                }
+            }
+        });
+    }
+};
 
 /**
  * Update listing cards
@@ -57,47 +114,25 @@ function updateListingCards(listings) {
     updateDOM(html);
 }
 
-/**
- * Get listings
- * @param resetPagination
- */
-function getListings(resetPagination = false) {
-    listingHelper.getListings(function(data) {
-            updateListingCards(data.data);
-
-            if(resetPagination) {
-                // Update total number of pages for pagination
-                $pagination.bootpag({
-                    page: 1,
-                    total: data.meta.last_page,
-                    firstLastUse: true
-                });
-                resizePagination();
-            }
-
-            // Handle no data and when there is data, show the pagination
-            (data.data.length < 1) ? handleNoData() : $pagination.show();
-
-        },
-        function(xhr, textStatus, errorThrown) {
-            if(textStatus !== 'abort') {
-                handleNoData();
-                console.error(errorThrown);
-            }
-        }
-    );
-}
-
-
 /* HELPER METHODS
    ================================================== */
 
-function displayGridView() {
-
+function setCardView() {
+    view = cardView;
+    view.getListings(true);
+    blazy.revalidate();
+    gSearchParams.set('view', 'card');
+    history.pushState(null, null, `?${gSearchParams.toString()}`);
 }
 
-function displayMapView() {
-
+function setMapView() {
+    view = mapView;
+    view.getListings();
+    gSearchParams.set('view', 'map');
+    history.pushState(null, null, `?${gSearchParams.toString()}`);
+    map.init();
+    map.refresh();
+    map.updateListings(currentListings);
 }
 
 /**
@@ -141,7 +176,7 @@ $pagination.on('page', function(event, page) {
     // Scroll to top on pagination change
     $('html,body').animate({scrollTop: 0}, 1);
 
-    getListings();
+    view.getListings();
 });
 
 // Event listener
@@ -149,24 +184,27 @@ $.subscribe('snavbar.change filter.change', function() {
     gSearchParams.set('page', 1);
     history.pushState(null, null, `?${gSearchParams.toString()}`);
 
-    getListings(true);
+    view.getListings(true);
 });
 
 // Handle map and card view btn tabs
 $.subscribe('btn-tabs.change', function(event, btn) {
     if(btn.id === 'cardViewBtn') {
-        blazy.revalidate();
-        gSearchParams.set('view', 'card');
-        history.pushState(null, null, `?${gSearchParams.toString()}`);
+        setCardView();
     }
     if(btn.id === 'mapViewBtn') {
-        gSearchParams.set('view', 'map');
-        history.pushState(null, null, `?${gSearchParams.toString()}`);
+        setMapView();
     }
 });
 
 $(window).on('resize', debouncedResize);
 
 gConfig.listingApiCategory = utils.getPageName() === 'rent' ? 'rent' : 'buy';
-getListings(true);
+view = gSearchParams.get('view') === 'map' ? mapView : cardView;
+
+view.getListings(true);
 resizePagination();
+
+if(gSearchParams.get('view') === 'map') {
+    map.init();
+}

@@ -52,6 +52,32 @@ class ListingController extends Controller
     }
 
     /**
+     * Find for sale listings for map
+     *
+     * @param Request $request
+     */
+    public function buyMap(Request $request)
+    {
+        $query = Listing::where('sale_rent', 'For Sale');
+        $this->addSortAndFilters($request, $query);
+
+        return MinimalListingResource::collection($query->get());
+    }
+
+    /**
+     * Find for rent listings for map
+     *
+     * @param Request $request
+     */
+    public function sellMap(Request $request)
+    {
+        $query = Listing::where('sale_rent', 'For Sale');
+        $this->addSortAndFilters($request, $query);
+
+        return MinimalListingResource::collection($query->get());
+    }
+
+    /**
      * Display featured listings
      *
      * @param Request $request
@@ -64,24 +90,6 @@ class ListingController extends Controller
             ->get();
 
         return MinimalListingResource::collection($listings);
-    }
-
-    /**
-     * Find listings that are within a certain distance of a lat/long point
-     *
-     * @param Request $request
-     */
-    public function near(Request $request)
-    {
-        $lat = $request->query('lat', 64.034530);
-        $lng = $request->query('lon', -145.731544);
-        $distance = $request->query('distance', 1);
-
-        $query = Listing::distance($lat, $lng, $distance);
-
-        $this->addSortAndFilters($request, $query);
-
-        return MinimalListingResource::collection($query->get());
     }
 
     /**
