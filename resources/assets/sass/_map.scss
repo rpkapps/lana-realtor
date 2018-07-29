@@ -12,6 +12,20 @@
     }
 }
 
+/* Controls
+   ============================================================================ */
+
+.leaflet-control-zoom.leaflet-bar {
+    border: 1px solid gray('300') !important;
+}
+
+a.leaflet-control-zoom-in,
+a.leaflet-control-zoom-out {
+    background-color: theme-color('bluishlight') !important;
+    color: gray('800') !important;
+    font-weight: 100;
+}
+
 /* Tooltip
    ============================================================================ */
 
