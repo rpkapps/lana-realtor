@@ -1,21 +1,23 @@
 import utils from '../utils.js';
-import listingMapTooltip from '../templates/listing-map-tooltip.js'
+import listingMapTooltip from '../templates/listing-map-tooltip.js';
 
-var mapCenter = [65.339248, -150.885501];
-
-window.map = null;
-window.markers = L.markerClusterGroup();
+var mapCenter = [65.339248, -150.885501],
+    maxBounds = L.latLngBounds([
+        [72, -173],
+        [52, -139]
+    ]),
+    zoomPadding = [50, 50],
+    map = null,
+    markers = L.markerClusterGroup();
 
 function init() {
     if(!map) {
         map = L.map('mapView', {
-            maxBounds: [
-                [72, -173],
-                [52, -139]
-            ],
+            maxBounds: maxBounds,
             maxZoom: 18,
-            minZoom: 5
-        }).setView(mapCenter, 3);
+            minZoom: 3,
+            zoomSnap: 0.1
+        }).setView(mapCenter, 5);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -24,6 +26,10 @@ function init() {
         }).addTo(map);
 
         map.addLayer(markers);
+
+        markers.on('clusterclick', function(event) {
+            event.layer.zoomToBounds({padding: zoomPadding});
+        });
     }
 }
 
@@ -43,6 +49,11 @@ function updateListings(listings = []) {
 
     listings.forEach(function(listing) {
         if(listing.latitude && listing.longitude) {
+            if(!maxBounds.contains([listing.latitude, listing.longitude])) {
+                console.log('Listing outside of bounds:', listing);
+                return;
+            }
+
             var price = '$' + utils.abbreviateNumber(listing.asking_price),
                 marker = L.marker([listing.latitude, listing.longitude], {
                     icon: new L.DivIcon({
@@ -64,8 +75,7 @@ function updateListings(listings = []) {
             });
 
             marker.bindTooltip(tooltipHtml, {
-                className: 'map-tooltip',
-                direction: 'top',
+                className: 'map-tooltip'
             });
 
             marker.on('click', function() {
@@ -77,7 +87,9 @@ function updateListings(listings = []) {
 
     });
 
-    map.fitBounds(markers.getBounds());
+    var markerBounds = markers.getBounds();
+    var bounds = markerBounds._southWest ? markerBounds : maxBounds;
+    map.fitBounds(bounds, {padding: zoomPadding});
 }
 
 export default {

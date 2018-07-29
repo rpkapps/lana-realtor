@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MapListingResource;
 use App\Http\Resources\MinimalListingResource;
 use Illuminate\Http\Request;
 use App\Listing;
@@ -61,7 +62,7 @@ class ListingController extends Controller
         $query = Listing::where('sale_rent', 'For Sale');
         $this->addSortAndFilters($request, $query);
 
-        return MinimalListingResource::collection($query->get());
+        return MapListingResource::collection($query->get());
     }
 
     /**
@@ -74,7 +75,7 @@ class ListingController extends Controller
         $query = Listing::where('sale_rent', 'For Sale');
         $this->addSortAndFilters($request, $query);
 
-        return MinimalListingResource::collection($query->get());
+        return MapListingResource::collection($query->get());
     }
 
     /**
