@@ -33,7 +33,10 @@ function getListings({url, onSuccess = $.noop, onFail = $.noop}) {
 
         $('body').removeClass('loading');
         NProgress.done();
-    }).fail(onFail);
+    }).fail(function() {
+        onFail(...arguments);
+        NProgress.done();
+    });
 }
 
 export default {
