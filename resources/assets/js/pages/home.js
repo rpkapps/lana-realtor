@@ -67,14 +67,17 @@ function updateListingCards(listings = []) {
  * Get listings
  */
 function getListings() {
-    listingHelper.getListings(
-        function(data, textStatus) {
+    var url = gConfig.listingApiBaseUrl + `featured?${gSearchParams.toString()}`;
+
+    listingHelper.getListings({
+        url: url,
+        onSuccess: function(data, textStatus) {
             updateListingCards(data.data);
         },
-        function(textStatus, errorThrown) {
+        onFail: function(textStatus, errorThrown) {
             console.error(errorThrown);
         }
-    );
+    });
 }
 
 gConfig.listingApiCategory = 'featured';
