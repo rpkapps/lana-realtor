@@ -98,7 +98,7 @@
                         </div>
                     </div>
                     <div class="col-md-5 d-flex">
-                        <div class="listing-contact-container">
+                        <div class="listing-contact-container"> <!-- TODO: Rename class -->
                             <p class="text-center"> Contact Realtor </p>
                             <form>
                                 <div class="form-group">
@@ -125,6 +125,33 @@
                                     <button type="submit" class="btn btn-secondary">Submit</button>
                                 </div>
                             </form>
+
+                            <hr>
+
+                            <div class="mortgage-calculator" id="mortgageCalculator">
+                                <p class="text-center"> Mortgage Calculator </p>
+                                <div class="form-group">
+                                    <label for="mortgageAmount">Price ($)</label>
+                                    <input class="form-control" id="mortgageAmount" type="number" value="{{ $listing['asking_price'] }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="mortgageDownPayment">Down Payment (%)</label>
+                                    <input class="form-control" id="mortgageDownPayment" type="number" value="10" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="mortgageLoanTerm">Loan Term (years)</label>
+                                    <input class="form-control" id="mortgageLoanTerm" type="number" value="30" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="mortgageInterestRate">Interest Rate (%)</label>
+                                    <input class="form-control" id="mortgageInterestRate" type="number" value="5" required>
+                                </div>
+
+                                <p id="mortgagePayment"> </p>
+                            </div>
                         </div>
                     </div>
                 </div>
