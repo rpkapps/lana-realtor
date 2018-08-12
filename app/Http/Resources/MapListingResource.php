@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Listing;
 use Illuminate\Http\Resources\Json\Resource;
 
 class MapListingResource extends Resource
@@ -34,7 +35,7 @@ class MapListingResource extends Resource
         );
 
 
-        $thumbnails = json_decode($listing['thumbnails']);
+        $thumbnails = Listing::decodePhotos($listing['thumbnails']);
 
         // Only get the first photo and thumbnail we don't need all of them for
         // the minimal listing

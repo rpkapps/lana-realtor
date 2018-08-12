@@ -41,8 +41,8 @@ class PagesController extends Controller
             abort(404);
         }
 
-        $listing['photos'] = Listing::arrayifyPhotos( $listing['photos']);
-        $listing['thumbnails'] = Listing::arrayifyPhotos($listing['thumbnails']);
+        $listing['photos'] = Listing::decodePhotos($listing['photos']);
+        $listing['thumbnails'] = Listing::decodePhotos($listing['thumbnails']);
 
         
         return view('pages.listing-item', compact('listing', 'pageType' ));

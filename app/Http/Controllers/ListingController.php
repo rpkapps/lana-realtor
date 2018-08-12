@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Listing;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\ListingResource;
-use Illuminate\Support\Facades\DB;
 
 class ListingController extends Controller
 {
@@ -43,10 +42,7 @@ class ListingController extends Controller
         // Pagination limit per page
         $limit = $request->query('limit', 12);
 
-        $query = Listing::query();
-
-        $query->where('sale_rent', 'For Rent');
-
+        $query = Listing::whereNull('mls_id');
         $this->addSortAndFilters($request, $query);
 
         return MinimalListingResource::collection($query->paginate($limit));
@@ -72,7 +68,7 @@ class ListingController extends Controller
      */
     public function rentMap(Request $request)
     {
-        $query = Listing::where('sale_rent', 'For Sale');
+        $query = Listing::whereNull('mls_id');
         $this->addSortAndFilters($request, $query);
 
         return MapListingResource::collection($query->get());
@@ -86,7 +82,10 @@ class ListingController extends Controller
      */
     public function featuredIndex(Request $request)
     {
-        $listings = Listing::orderBy('updated_at', 'desc')
+        $listings = Listing::whereNull('mls_id')
+            ->orWhere('sale_rent', 'For Sale')
+            ->orderBy('sale_rent', 'asc')
+            ->orderBy('updated_at', 'desc')
             ->take(12)
             ->get();
 
