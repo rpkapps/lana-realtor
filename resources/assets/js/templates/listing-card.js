@@ -14,7 +14,8 @@ function createInfoItemHtml(value, type) {
 
 export default function(data = {}) {
 
-    var infoItemsHtml = '';
+    var loaderHtml = data.photo ? '<span class="loader"></span>' : '',
+        infoItemsHtml = '';
 
     if(data.bedrooms) {
         infoItemsHtml += createInfoItemHtml(data.bedrooms, 'bds');
@@ -35,7 +36,7 @@ export default function(data = {}) {
     return `
         <a href="/listing/${data.id}" id="${data.id}" class="card" title="View listing">
             <div class="card-background b-lazy" data-src="${data.photo}">
-                <span class="loader"></span>
+                ${loaderHtml}
             </div>
             <div class="card-body">
                 <div class="row card-body-row">

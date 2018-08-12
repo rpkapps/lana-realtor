@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Listing;
 use Illuminate\Http\Resources\Json\Resource;
 
 class ListingResource extends Resource
@@ -16,8 +17,8 @@ class ListingResource extends Resource
     {
         $listing = parent::toArray($request);
 
-        $listing['photos'] = json_decode($listing['photos']);
-        $listing['thumbnails'] = json_decode($listing['thumbnails']);
+        $listing['photos'] = Listing::decodePhotos($listing['photos']);
+        $listing['thumbnails'] = Listing::decodePhotos($listing['thumbnails']);
 
         return $listing;
     }

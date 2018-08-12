@@ -168,24 +168,21 @@ class Listing extends Model
     }
 
     /**
-     * This function ensures that the photos is an array
+     * Decode photos
      *
      * @param $photos
-     * @return array
      */
-    static function arrayifyPhotos($photos)
-    {
-        try {
-            if ($photos[0] === '[') {
-                $photosArr = json_decode($photos);
-            } else {
-                // $photos is a single photo in string format
-                $photosArr = [$photos];
-            }
-        } catch (\Exception $e) {
-            $photosArr = [];
-        }
+    static function decodePhotos($photos) {
+        $jsonDecoded = json_decode($photos);
+        $photos = is_array($jsonDecoded) ? $jsonDecoded : [];
 
-        return $photosArr;
+        return array_map(function($url) {
+            if(substr($url, 0, 7) === 'listing') {
+                // For photos uploaded through voyager
+                return '/storage/' . $url;
+            }
+
+            return $url;
+        }, $photos);
     }
 }
