@@ -85,7 +85,7 @@ class ListingController extends Controller
         $listings = Listing::whereNull('mls_id')
             ->orWhere('sale_rent', 'For Sale')
             ->orderBy('sale_rent', 'asc')
-            ->orderBy('updated_at', 'desc')
+            ->orderBy('mls_updated_at', 'desc')
             ->take(12)
             ->get();
 
@@ -197,13 +197,15 @@ class ListingController extends Controller
      */
     protected function sort(Builder $query, $sortBy = '')
     {
-        if (Listing::columnExists($sortBy)) {
+        $column = ($sortBy[0] === '-' || $sortBy[0] === '+') ? substr($sortBy, 1) : $sortBy;
+
+        if (Listing::columnExists($column)) {
             // Determine sort order by checking if the sort string begins with '-'
             $order = $sortBy[0] === '-' ? 'desc' : 'asc';
-            // Remove the '-' from string
-            $sortBy = $sortBy[0] === '-' ? substr($sortBy, 1) : $sortBy;
 
-            $query->orderBy($sortBy, $order);
+            $query->orderBy($column, $order);
+        } else {
+            $query->orderBy('mls_updated_at', 'desc');
         }
     }
 }

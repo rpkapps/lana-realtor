@@ -162,6 +162,7 @@ class VoyagerListingController extends BaseVoyagerBreadController
                 }, json_decode($data->photos));
 
                 $data->thumbnails = json_encode($thumbnails);
+                $data->mls_updated_at = $data->updated_at;
                 $data->save();
             }
 
@@ -228,6 +229,7 @@ class VoyagerListingController extends BaseVoyagerBreadController
                 }, json_decode($data->photos));
 
                 $data->thumbnails = json_encode($thumbnails);
+                $data->mls_updated_at = $data->updated_at;
                 $data->save();
             }
 

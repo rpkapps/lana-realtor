@@ -29,6 +29,7 @@ var blazy = new Blazy(),
     noListingsFoundHtml = `<p class="no-listing-found">Sorry, there are no listings available using those search terms.</p>`,
     currentListings = [],
     $container = $('#cardListings'),
+    $sortSelect = $('#sort'),
     view;
 
 var cardView = {
@@ -123,6 +124,8 @@ function setCardView() {
     blazy.revalidate();
     gSearchParams.set('view', 'card');
     history.pushState(null, null, `?${gSearchParams.toString()}`);
+
+    $sortSelect.parent().css('display', '');
 }
 
 function setMapView() {
@@ -133,6 +136,8 @@ function setMapView() {
     map.init();
     map.refresh();
     map.updateListings(currentListings);
+
+    $sortSelect.parent().css('display', 'none');
 }
 
 /**
@@ -195,6 +200,15 @@ $.subscribe('btn-tabs.change', function(event, btn) {
     if(btn.id === 'mapViewBtn') {
         setMapView();
     }
+});
+
+// On sort change
+$sortSelect.on('change', function() {
+    $(this).next().text($(this).find('option:selected').text());
+
+    this.value ? gSearchParams.set('sort', this.value) : gSearchParams.delete('sort');
+
+    $.publish('filter.change');
 });
 
 $(window).on('resize', debouncedResize);

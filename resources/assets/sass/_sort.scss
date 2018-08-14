@@ -1,0 +1,41 @@
+.sort-wrapper {
+    margin-bottom: 0.35rem;
+
+    label {
+        margin: 0;
+    }
+
+    select {
+        position: absolute;
+        width: 8rem;
+        opacity: 0;
+        z-index: 1;
+        cursor: pointer;
+
+        option {
+            color: gray('800');
+        }
+    }
+}
+
+.sort-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 8rem;
+    color: theme-color('secondary');
+    margin-left: 0.5rem;
+
+    &:after {
+        content: '';
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: 0.4em;
+        vertical-align: middle;
+        border-top: 0.3em solid gray('800');
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
+    }
+}
+

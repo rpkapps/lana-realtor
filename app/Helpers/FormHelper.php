@@ -261,4 +261,35 @@ class FormHelper
 
         return $type === 'rent' ? $rent : $buy;
     }
+
+    /**
+     * Get sort options
+     *
+     * @return array
+     */
+    static function getSortOptions()
+    {
+        return [
+            '-mls_updated_at' => 'Newest',
+            '+asking_price' => 'Price (Lo - Hi)',
+            '-asking_price' => 'Price (Hi - Lo)',
+            '-beds' => 'Bedrooms',
+            '-total_baths' => 'Bathrooms',
+            '-residence_sqft' => 'Square Feet'
+        ];
+    }
+
+    /**
+     * Get selected sort option label
+     *
+     * @return array|string
+     */
+    static function getSelectedSortOptionLabel()
+    {
+        try {
+            return self::getSortOptions()[request()->input('sort')];
+        } catch(\Exception $e) {
+            return 'Newest';
+        }
+    }
 }
