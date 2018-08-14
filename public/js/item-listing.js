@@ -887,7 +887,7 @@ $('#secondarySearchForm').on('submit', function (event) {
     window.location.href = '/' + gSearchPage + query;
 });
 
-$('#mortgageCalculator input').on('change', updateMortgageValue);
+$('#mortgageCalculator input').on('keyup', updateMortgageValue);
 
 updateMortgageValue();
 
@@ -903,9 +903,13 @@ function updateMortgageValue() {
         monthlyPayment = amount * (interest * Math.pow(1 + interest, term)) / (Math.pow(1 + interest, term) - 1);
     }
 
-    monthlyPayment = monthlyPayment.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (isNaN(monthlyPayment) || monthlyPayment === Infinity || monthlyPayment < 0) {
+        monthlyPayment = 'Invalid';
+    } else {
+        monthlyPayment = '$' + monthlyPayment.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
-    $mortgagePayment.html('Monthly Payment: <strong>$' + monthlyPayment + '</strong>');
+    $mortgagePayment.html('Monthly Payment: <strong>' + monthlyPayment + '</strong>');
 }
 
 /***/ })
