@@ -54,7 +54,7 @@
                             <div class="col-md">
                                 <div class="row">
                                     @if($listing['sub_type'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Type</h5>
                                                 <p>{{ ucwords(strtolower($listing['sub_type'])) }}</p>
@@ -62,7 +62,7 @@
                                         </div>
                                     @endif
                                     @if($listing['area'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Area</h5>
                                                 <p>{{ $listing['area'] }}</p>
@@ -70,7 +70,7 @@
                                         </div>
                                     @endif
                                     @if($listing['foundation'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Foundation</h5>
                                                 <p>{{ $listing['foundation'] }}</p>
@@ -78,7 +78,7 @@
                                         </div>
                                     @endif
                                     @if($listing['year_built'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Year Built</h5>
                                                 <p>{{ FormHelper::fallback($listing['year_built']) }}</p>
@@ -86,7 +86,7 @@
                                         </div>
                                     @endif
                                     @if($listing['construction'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Construction</h5>
                                                 <p>{{ FormHelper::fallback($listing['construction']) }}</p>
@@ -95,7 +95,7 @@
                                     @endif
 
                                     @if($listing['residence_sqft'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Residence Sqft</h5>
                                                 <p>{{ $listing['residence_sqft'] }}</p>
@@ -104,7 +104,7 @@
                                     @endif
 
                                     @if($listing['building_sqft'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Building Sqft </h5>
                                                 <p>{{ $listing['building_sqft'] }}</p>
@@ -113,7 +113,7 @@
                                     @endif
 
                                     @if($listing['price_per_sqft'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Price/sqft</h5>
                                                 <p>${{ FormHelper::fallback(number_format($listing['price_per_sqft'])) }}</p>
@@ -121,7 +121,7 @@
                                         </div>
                                     @endif
                                     @if($listing['garage'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Garage</h5>
                                                 <p>{{ FormHelper::fallback($listing['garage']) }}</p>
@@ -129,7 +129,7 @@
                                         </div>
                                     @endif
                                     @if($listing['acres'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Lot Size</h5>
                                                 <p>{{ FormHelper::fallback($listing['acres'], ' Acres') }}</p>
@@ -137,7 +137,7 @@
                                         </div>
                                     @endif
                                     @if($listing['style'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Style</h5>
                                                 <p>{{ FormHelper::fallback($listing['style']) }}</p>
@@ -145,7 +145,7 @@
                                         </div>
                                     @endif
                                     @if($listing['elementary_school'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Elementary School</h5>
                                                 <p>{{ $listing['elementary_school'] }}</p>
@@ -153,7 +153,7 @@
                                         </div>
                                     @endif
                                     @if($listing['middle_school'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Middle School</h5>
                                                 <p>{{ $listing['middle_school'] }}</p>
@@ -161,7 +161,7 @@
                                         </div>
                                     @endif
                                     @if($listing['high_school'])
-                                        <div class="col-md-4">
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">High School</h5>
                                                 <p>{{ $listing['high_school'] }}</p>
@@ -174,7 +174,7 @@
                     </div>
                     <div class="col-md-5 d-flex">
                         <div class="listing-contact-container"> <!-- TODO: Rename class -->
-                            <p class="text-center"> Contact Realtor </p>
+                            <h5 class="listing-feature-title text-center">Contact Realtor</h5>
                             <form>
                                 <div class="form-group">
                                     <label for="inputFirstName">First Name</label>
@@ -205,7 +205,7 @@
                                 <hr>
 
                                 <div class="mortgage-calculator" id="mortgageCalculator">
-                                    <p class="text-center"> Mortgage Calculator </p>
+                                    <h5 class="listing-feature-title text-center"> Mortgage Calculator </h5>
                                     <div class="form-group">
                                         <label for="mortgageAmount">Price ($)</label>
                                         <input class="form-control" id="mortgageAmount" type="number" value="{{ $listing['asking_price'] }}" required>

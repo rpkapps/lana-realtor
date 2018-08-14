@@ -905,7 +905,7 @@ function updateMortgageValue() {
 
     monthlyPayment = monthlyPayment.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    $mortgagePayment.text('Monthly Payment $' + monthlyPayment);
+    $mortgagePayment.html('Monthly Payment: <strong>$' + monthlyPayment + '</strong>');
 }
 
 /***/ })

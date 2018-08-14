@@ -98,7 +98,7 @@
 
 .listing-feature-title {
     color: gray('700');
-    font-size: $font-size-4;
+    font-size: $font-size-5;
     margin-bottom: 0.25rem;
 }
 
@@ -107,6 +107,14 @@
     flex-grow: 1;
     margin-right: -$listing-info-padding-h;
     padding: 2rem;
+
+    hr {
+        margin: 2rem 0;
+    }
+
+    strong {
+        color: gray('700');
+    }
 
     @media (max-width: $breakpoint-lg) {
         margin-right: -$listing-info-padding-h-sm;
