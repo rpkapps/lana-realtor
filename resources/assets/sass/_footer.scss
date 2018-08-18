@@ -5,3 +5,36 @@
     background: $footer-bg-color;
     color: color-yiq($footer-bg-color);
 }
+
+.footer-icons {
+    margin-bottom: 1rem;
+
+    a {
+        display: inline-block;
+        margin: .5rem;
+        font-size: 2em;
+        outline: none;
+
+        &:hover,
+        &:focus {
+            opacity: 0.7;
+        }
+    }
+
+    svg {
+        vertical-align: middle;
+        width: 1em;
+        height: 1em;
+    }
+}
+
+.footer-phone-text {
+    display: inline-block;
+    margin: .5rem 0;
+    white-space: nowrap;
+}
+
+.footer-title {
+    font-size: $font-size-4;
+    margin-bottom: 0;
+}

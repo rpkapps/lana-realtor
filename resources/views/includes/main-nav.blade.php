@@ -39,7 +39,7 @@
                             <div class="contact-profile">
                                 <img class="contact-photo" src="https://s3-us-west-2.amazonaws.com/lana-realtor/images/lana-kulikovskiy.jpg" alt="Lana Kulikovskiy">
                                 <h3 class="contact-name">Lana Kulikovskiy</h3>
-                                <a class="contact-phone" href="tel:1-408-555-5555" title="Call Lana Kulikovskiy">907-322-9997</a>
+                                <a class="contact-phone" href="tel:1-907-322-9997" title="Call Lana Kulikovskiy">907-322-9997</a>
                             </div>
                             <div class="contact-profile">
                                 <img class="contact-photo" src="https://s3-us-west-2.amazonaws.com/lana-realtor/images/leah.jpg" alt="Leah">
