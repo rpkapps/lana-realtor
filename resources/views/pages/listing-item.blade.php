@@ -170,6 +170,12 @@
                                     @endif
                                 </div>
                             </div>
+                            <div class="w-100"></div>
+                            @if($listing['sale_rent'] == 'For Sale')
+                                <div class="col-md">
+                                    <p class="disclaimer mb-7"><i>Listing information provided courtesy of the Greater Fairbanks. IDX information is provided exclusively for consumers' personal, non-commercial use, and it may not be used for any purpose other than to identify prospective properties consumers may be interested in purchasing. The data is deemed reliable, but is not guaranteed accurate by the MLS.</i></p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="col-md-5 d-flex">
@@ -204,7 +210,7 @@
                                 Thank you for contacting us, we will be in touch soon.
                             </div>
 
-                            @if(strtolower($listing['sale_rent']) == 'for sale')
+                            @if($listing['sale_rent'] == 'For Sale')
                                 <hr>
 
                                 <div class="mortgage-calculator" id="mortgageCalculator">
