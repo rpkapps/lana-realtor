@@ -1,20 +1,62 @@
-
-
-.modal-header {
-	border: none;
-}
-
-.modal-footer {
-	border: none;
-}
-
-.modal-title {
-	font-size: 48px;
-	color: gray('600');
-}
-
-.nav-item {
-	.nav-link {
-		cursor: pointer;
+.contact-modal {
+	.modal-dialog {
+		@media (min-width: $breakpoint-xs + 1) {
+			max-width: 650px;
+		}
 	}
+
+	.modal-content {
+		@media (min-width: $breakpoint-sm + 1) {
+			padding: 15px;
+		}
+	}
+
+	.modal-header {
+		border: none;
+	}
+
+	.modal-footer {
+		border: none;
+	}
+
+	.modal-title {
+		font-size: $font-size-1;
+		font-weight: 100;
+		color: gray('600');
+		line-height: 1.2;
+	}
+}
+
+.contact-profiles {
+	@media (max-width: $breakpoint-xs) {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+
+		> div {
+			width: calc(50% - 7.5px);
+		}
+	}
+
+	@media (max-width: 400px) {
+		> div {
+			width: 100%;
+		}
+	}
+}
+
+.contact-profile {
+	margin-bottom: 1.5rem;
+}
+
+.contact-photo {
+	max-width: 100%;
+	border-radius: 0.4rem;
+}
+
+.contact-name {
+	font-size: $font-size-3;
+	font-weight: 100;
+	line-height: 1.2;
+	margin: 0.5rem 0 0.25rem 0;
 }

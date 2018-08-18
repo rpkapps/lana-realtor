@@ -1,12 +1,8 @@
-html {
-    overflow-y: scroll;
-    height: 100%;
-}
-
 body {
     height: 100%;
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
 }
 
 .wrapper {
