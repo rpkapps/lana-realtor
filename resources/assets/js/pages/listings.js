@@ -1,4 +1,5 @@
 import '../bootstrap.js';
+import '../components/contact-form.js';
 import '../components/bootpag.js';
 import '../components/filter-bar.js';
 import '../components/secondary-nav.js';

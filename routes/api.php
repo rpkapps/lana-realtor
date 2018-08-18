@@ -22,5 +22,6 @@ Route::group(['prefix' => 'v1', 'as' => 'api.'], function () {
     Route::get('listings/rent/map', ['as' => 'listings.rent.map', 'uses' => 'ListingController@rentMap']);
     Route::get('listings/featured', ['as' => 'listings.featured.index', 'uses' => 'ListingController@featuredIndex']);
     Route::get('listings/{listing}', ['as' => 'listings.show', 'uses' => 'ListingController@show']);
+    Route::post('mail', ['as' => 'mail', 'uses' => 'MailController@sendEmail']);
 });
 

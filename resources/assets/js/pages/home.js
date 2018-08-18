@@ -1,4 +1,5 @@
 import '../bootstrap.js';
+import '../components/contact-form.js';
 import utils from '../utils.js';
 import listingCard from '../templates/listing-card.js';
 import listingHelper from '../listing-helper.js';

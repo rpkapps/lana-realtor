@@ -1,4 +1,5 @@
 import '../bootstrap.js';
+import '../components/contact-form.js';
 
 var $search = $('#secondarySearch'),
     $mortgageAmount = $('#mortgageAmount'),

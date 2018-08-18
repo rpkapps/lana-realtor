@@ -175,31 +175,34 @@
                     <div class="col-md-5 d-flex">
                         <div class="listing-contact-container"> <!-- TODO: Rename class -->
                             <h5 class="listing-feature-title text-center">Contact Realtor</h5>
-                            <form>
+                            <form class="contact-form">
                                 <div class="form-group">
                                     <label for="inputFirstName">First Name</label>
-                                    <input class="form-control" id="inputFirstName" type="text" placeholder="First Name" required>
+                                    <input class="form-control" id="inputFirstName" type="text" placeholder="First Name" name="firstName" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputLastName">Last Name</label>
-                                    <input class="form-control" id="inputLastName" type="text" placeholder="Last Name" required>
+                                    <input class="form-control" id="inputLastName" type="text" placeholder="Last Name" name="lastName" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputPhoneNumber">Phone Number</label>
-                                    <input class="form-control input-medium masked" id="inputPhoneNumber" name="phone_number" type="tel" title="xxx-xxx-xxxx" placeholder="xxx-xxx-xxxx" data-mask="000-000-0000" pattern="\d{3}[\-]\d{3}[\-]\d{4}" maxlength="14" required>
+                                    <input class="form-control input-medium masked" id="inputPhoneNumber" name="phoneNumber" type="tel" title="xxx-xxx-xxxx" placeholder="xxx-xxx-xxxx" data-mask="000-000-0000" pattern="\d{3}[\-]\d{3}[\-]\d{4}" maxlength="14" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputEmail">Email address</label>
-                                    <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Email" required>
+                                    <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Email" name="email" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputHelpQuestion">How can I help you?</label>
-                                    <textarea class="form-control" id="inputHelpQuestion" rows="3" required>I am interested in {{ $listing['street_number'] }} {{ $listing['street_name'] }}, {{ $listing['city'] }}, {{ $listing['state'] }}, {{ $listing['zip_code'] }} </textarea>
+                                    <textarea class="form-control" id="inputHelpQuestion" rows="3" name="body" required>I am interested in {{ $listing['street_number'] }} {{ $listing['street_name'] }}, {{ $listing['city'] }}, {{ $listing['state'] }}, {{ $listing['zip_code'] }} </textarea>
                                 </div>
                                 <div class="text-right">
                                     <button type="submit" class="btn btn-secondary">Submit</button>
                                 </div>
                             </form>
+                            <div class="contact-form-success mt-4 alert alert-success" style="display: none">
+                                Thank you for contacting us, we will be in touch soon.
+                            </div>
 
                             @if(strtolower($listing['sale_rent']) == 'for sale')
                                 <hr>
