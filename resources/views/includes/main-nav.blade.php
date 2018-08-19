@@ -6,7 +6,10 @@
               </span>
     </button>
     <div class="container">
-        <a class="navbar-brand" href="/"><img src="https://s3-us-west-2.amazonaws.com/lana-realtor/images/logo.svg" alt="Lana Sells Delta" title="Lana Sells Delta"></a>
+        <div class="navbar-brand">
+            <a href="/"><img src="https://s3-us-west-2.amazonaws.com/lana-realtor/images/logo.svg" alt="Lana Sells Delta"></a>
+            <img src="https://s3-us-west-2.amazonaws.com/lana-realtor/images/somers-logo.png" alt="Somers">
+        </div>
         <div class="collapse navbar-collapse justify-content-end" id="mainNavToggle">
             <ul class="navbar-nav mt-2 mt-md-0">
                 <li class="nav-item">
@@ -25,7 +28,7 @@
 
 <div class="modal fade contact-modal" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLongTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
-        <form class="contact-form modal-content" id="mainContactForm">
+        <form class="contact-form modal-content d-block" id="mainContactForm">
             <div class="modal-header">
                 <h2 class="modal-title" id="contactModalLongTitle">Contact</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -43,8 +46,8 @@
                             </div>
                             <div class="contact-profile">
                                 <img class="contact-photo" src="https://s3-us-west-2.amazonaws.com/lana-realtor/images/leah.jpg" alt="Leah">
-                                <h3 class="contact-name">Leah</h3>
-                                <span class="contact-phone"></span>
+                                <h3 class="contact-name">Leah Taranov</h3>
+                                <a class="contact-phone" href="tel:1-907-987-6842" title="Call Lana Kulikovskiy">907-987-6842</a>
                             </div>
                         </div>
                     </div>
