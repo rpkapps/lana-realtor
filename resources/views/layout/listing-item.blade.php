@@ -6,6 +6,7 @@
 
     <div class="wrapper">
         @include('includes.main-nav')
+        <div class="p-5 mb-1"></div>
         @include('includes.secondary-nav')
 
         <div class="container main-container">

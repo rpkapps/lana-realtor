@@ -25,7 +25,7 @@
             <span class="footer-phone-text">907-322-9997</span>
         </div>
         <h2 class="footer-title">Office</h2>
-        <p>220 Park Way North Pole, AK 99705</p>
+        <p>Somers and Associates Realtors, INC 907-385-3747<br> 220 Park Way North Pole, AK 99705</p>
         <p>Copyright 2018</p>
     </div>
 </footer>
