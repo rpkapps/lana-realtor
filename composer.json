@@ -14,7 +14,7 @@
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
-        "tcg/voyager": "^1.0",
+        "tcg/voyager": "1.0.16",
         "toin0u/geocoder-laravel": "^4.0",
         "troydavisson/phrets": "^2.6"
     },

@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.5.42 on 2018-08-25 17:32:24.
+ * Generated for Laravel 5.5.42 on 2018-08-25 18:33:14.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -13976,47 +13976,6 @@ namespace TCG\Voyager\Facades {
          *
          * @static 
          */ 
-        public static function addAction($action)
-        {
-            return \TCG\Voyager\Voyager::addAction($action);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function replaceAction($actionToReplace, $action)
-        {
-            return \TCG\Voyager\Voyager::replaceAction($actionToReplace, $action);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function actions()
-        {
-            return \TCG\Voyager\Voyager::actions();
-        }
-        
-        /**
-         * Get a collection of the dashboard widgets.
-         *
-         * @return \Arrilot\Widgets\WidgetGroup 
-         * @static 
-         */ 
-        public static function dimmers()
-        {
-            return \TCG\Voyager\Voyager::dimmers();
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
         public static function setting($key, $default = null)
         {
             return \TCG\Voyager\Voyager::setting($key, $default);
@@ -14115,16 +14074,6 @@ namespace TCG\Voyager\Facades {
         public static function translatable($model)
         {
             return \TCG\Voyager\Voyager::translatable($model);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function getLocales()
-        {
-            return \TCG\Voyager\Voyager::getLocales();
         }
          
     }

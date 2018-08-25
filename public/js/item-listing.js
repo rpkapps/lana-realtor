@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -830,8 +830,63 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 5 */,
-/* 6 */,
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__button__ = __webpack_require__(6);
+
+
+$('.contact-form').on('submit', function (event) {
+    event.preventDefault();
+
+    var $form = $(this),
+        $submitBtn = $form.find('.btn[type="submit"]');
+
+    __WEBPACK_IMPORTED_MODULE_0__button__["a" /* default */].addLoader($submitBtn);
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/v1/mail',
+        data: $form.serialize()
+    }).done(function () {
+        __WEBPACK_IMPORTED_MODULE_0__button__["a" /* default */].removeLoader($submitBtn);
+        $form.closest('.modal').modal('hide');
+
+        if ($form.next().hasClass('contact-form-success')) {
+            $form.hide();
+            $form.next().show();
+        }
+    }).fail(function () {
+        __WEBPACK_IMPORTED_MODULE_0__button__["a" /* default */].removeLoader($submitBtn);
+        $form.closest('.modal').modal('hide');
+        alert('Failed to send email. Please try again later.');
+    });
+});
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export addLoader */
+/* unused harmony export removeLoader */
+function addLoader($btn) {
+    $btn.prop('disabled', true);
+    $btn.prepend('<span class="btn-loader"></span>');
+}
+
+function removeLoader($btn) {
+    $btn.prop('disabled', false);
+    $btn.children('.btn-loader').remove();
+}
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    addLoader: addLoader,
+    removeLoader: removeLoader
+});
+
+/***/ }),
 /* 7 */,
 /* 8 */,
 /* 9 */,
@@ -845,21 +900,23 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 /* 17 */,
 /* 18 */,
 /* 19 */,
-/* 20 */
+/* 20 */,
+/* 21 */,
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(21);
+module.exports = __webpack_require__(23);
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__bootstrap_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_contact_form_js__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_contact_form_js__ = __webpack_require__(5);
 
 
 
@@ -913,67 +970,6 @@ function updateMortgageValue() {
 
     $mortgagePayment.html('Monthly Payment: <strong>' + monthlyPayment + '</strong>');
 }
-
-/***/ }),
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__button__ = __webpack_require__(27);
-
-
-$('.contact-form').on('submit', function (event) {
-    event.preventDefault();
-
-    var $form = $(this),
-        $submitBtn = $form.find('.btn[type="submit"]');
-
-    __WEBPACK_IMPORTED_MODULE_0__button__["a" /* default */].addLoader($submitBtn);
-
-    $.ajax({
-        type: 'POST',
-        url: '/api/v1/mail',
-        data: $form.serialize()
-    }).done(function () {
-        __WEBPACK_IMPORTED_MODULE_0__button__["a" /* default */].removeLoader($submitBtn);
-        $form.closest('.modal').modal('hide');
-
-        if ($form.next().hasClass('contact-form-success')) {
-            $form.hide();
-            $form.next().show();
-        }
-    }).fail(function () {
-        __WEBPACK_IMPORTED_MODULE_0__button__["a" /* default */].removeLoader($submitBtn);
-        $form.closest('.modal').modal('hide');
-        alert('Failed to send email. Please try again later.');
-    });
-});
-
-/***/ }),
-/* 27 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export addLoader */
-/* unused harmony export removeLoader */
-function addLoader($btn) {
-    $btn.prop('disabled', true);
-    $btn.prepend('<span class="btn-loader"></span>');
-}
-
-function removeLoader($btn) {
-    $btn.prop('disabled', false);
-    $btn.children('.btn-loader').remove();
-}
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-    addLoader: addLoader,
-    removeLoader: removeLoader
-});
 
 /***/ })
 /******/ ]);
