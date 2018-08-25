@@ -1,5 +1,4 @@
 @extends('layout.listing-item')
-@section('title', $listing['sale_rent'] . ': ' . $listing['full_address'] . ', ' . $listing['city'] . ', ' . $listing['state'] . ', ' . $listing['zip_code'])
 @section('content')
 <script>
     window.gSearchPage = '{{ $listing['sale_rent'] === 'For Rent' ? 'rent' : 'buy' }}';
