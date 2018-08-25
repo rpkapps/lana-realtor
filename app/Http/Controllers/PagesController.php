@@ -63,11 +63,15 @@ class PagesController extends Controller
 
         OpenGraph::setTitle($title);
         OpenGraph::setDescription($listing['listing_description']);
-        OpenGraph::addImage($listing['photos'][0]);
+        if(array_key_exists(0, $listing['photos'])) {
+            OpenGraph::addImage($listing['photos'][0]);
+        }
 
         Twitter::setTitle($title);
         Twitter::setDescription($listing['listing_description']);
-        Twitter::setImage($listing['photos'][0]);
+        if(array_key_exists(0, $listing['photos'])) {
+            Twitter::setImage($listing['photos'][0]);
+        }
 
         return view('pages.listing-item', compact('listing', 'pageType' ));
     }
