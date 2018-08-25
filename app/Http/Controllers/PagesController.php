@@ -14,11 +14,6 @@ class PagesController extends Controller
 {
 	public function getIndex() {
         SEOMeta::setTitle('Home');
-        SEOMeta::setCanonical('http://www.lanasellsdelta.com');
-
-        OpenGraph::setTitle('Home - Lana Kulikovskiy Somers & Associates Realtors');
-
-        Twitter::setTitle('Homepage');
 
 		return view('pages.home');
 	}
@@ -66,8 +61,14 @@ class PagesController extends Controller
         SEOMeta::setTitle($title);
         SEOMeta::setDescription($listing['listing_description']);
 
+        OpenGraph::setTitle($title);
+        OpenGraph::setDescription($listing['listing_description']);
         OpenGraph::addImage($listing['photos'][0]);
-        
+
+        Twitter::setTitle($title);
+        Twitter::setDescription($listing['listing_description']);
+        Twitter::setImage($listing['photos'][0]);
+
         return view('pages.listing-item', compact('listing', 'pageType' ));
     }
 }

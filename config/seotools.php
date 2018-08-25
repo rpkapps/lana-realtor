@@ -13,7 +13,7 @@ return [
                                 'Delta Junction house', 'Fairbanks house', 'North Pole house', 
                                 'Real estate listings MLS', 'Real estate agent listings', 'Real estate listing',
                                 'Delta Junction realtor', 'Fairbanks realtor', 'North Pole realtor',
-                                'Somers & Associates Realtors', 'House for sale in Alaska', 'House for rent in Alaska',
+                                'Somers & Associates Realtors', 'Somers', 'House for sale in Alaska', 'House for rent in Alaska',
                                 'Greater Fairbanks Board of Realtors', 'GFBR'],
             'canonical'    => 'http://www.lanasellsdelta.com', // Set null for using Url::current(), set false to total remove
         ],
@@ -47,6 +47,10 @@ return [
          * The default values to be used by the twitter cards generator.
          */
         'defaults' => [
+            'card'        => 'summary',
+            'title'       => 'Lana Kulikovskiy Somers & Associates Realtors', // set false to total remove
+            'description' => 'Residential & Commercial Houses and Land for sale/rent in Delta Junction, North Pole, and Fairbanks Alaska', // set false to total remove
+            'image'       => 'https://s3-us-west-2.amazonaws.com/lana-realtor/images/logo.svg'
         ],
     ],
 ];

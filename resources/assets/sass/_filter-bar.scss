@@ -1,8 +1,10 @@
 .filter-bar {
+    position: relative;
     flex-wrap: wrap;
     justify-content: flex-start;
     padding-bottom: 1rem;
     padding-top: 1rem;
+    z-index: 1001;
 
     .filter-header {
         font-size: $font-size-5;
