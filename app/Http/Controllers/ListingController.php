@@ -129,6 +129,12 @@ class ListingController extends Controller
         // Max Area
         $this->maxFilter($query, 'residence_sqft', $request->get('maxarea'));
 
+        // Min Acres
+        $this->minFilter($query, 'acres', $request->get('minacres'));
+
+        //Max Acres
+        $this->maxFilter($query, 'acres', $request->get('maxacres'));
+
         // Min Bedrooms
         $this->minFilter($query, 'beds', $request->get('minbeds'));
 

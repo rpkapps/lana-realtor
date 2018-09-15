@@ -172,6 +172,36 @@ class FormHelper
     }
 
     /**
+     * Format min max acres from query
+     * @param $minKey
+     * @param $maxKey
+     * @param $defaultText
+     */
+    static function formatAcresFromQuery($minKey, $maxKey, $defaultText) {
+        $minVal = request()->input($minKey);
+        $maxVal = request()->input($maxKey);
+        try {
+            if(!$minVal && !$maxVal) {
+                // here it doesn't matter which element we pass ($min or $max)
+                return $defaultText;
+            }
+
+            if(!$minVal) {
+                return '0 - ' . number_format($maxVal) . ' (ac)';
+            }
+
+            if(!$maxVal) {
+                return number_format($minVal) . '+ (ac)';
+            }
+
+            return number_format($minVal) . ' - ' . number_format($maxVal) . ' (ac)';
+
+        } catch(\Exception $e) {
+            return $defaultText;
+        }
+    }
+
+    /**
      * Returns list of available prices
      * @param string $type: 'buy' or 'rent'
      * @param string $defaultLabel
