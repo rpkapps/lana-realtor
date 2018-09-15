@@ -47,6 +47,30 @@
                 </div>
             </div>
         </div>
+
+
+        <p class="filter-header d-block d-md-none">Lot (ac)</p>
+        <div class="btn-group" role="group">
+            <button id="filterAcresBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false" data-default="Lot">
+                {{ FormHelper::formatAcresFromQuery('minacres', 'maxacres', 'Lot') }}
+            </button>
+            <div class="dropdown-menu stay-open" aria-labelledby="btnGroupDrop1">
+                <div class="form-row align-items-center">
+                    <div id="filterMinAcres" class="col">
+                        <input type="number" class="form-control" inputmode="numeric" pattern="[0-9]*" data-max="5" name="minacres" value="{{ FormHelper::value('minacres') }}" placeholder="Min Acres">
+                    </div>
+                    –
+                    <div id="filterMaxAcres" class="col">
+                        <input type="number" class="form-control" inputmode="numeric" pattern="[0-9]*" data-max="5" name="maxacres" value="{{ FormHelper::value('maxacres') }}" placeholder="Max Acres">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
         <p class="filter-header d-block d-md-none">Beds</p>
         <div class="btn-group" role="group">
             <button id="filterBdrmsBtn" type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
