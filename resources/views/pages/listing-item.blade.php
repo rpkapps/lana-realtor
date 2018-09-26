@@ -52,6 +52,14 @@
                             <div class="w-100"></div>
                             <div class="col-md">
                                 <div class="row">
+                                    @if($listing['rent_date_available'])
+                                        <div class="col-xl-4 col-lg-6 col-sm-6">
+                                            <div class="listing-feature">
+                                                <h5 class="listing-feature-title">Date Available</h5>
+                                                <p>{{ date('d-m-Y', strtotime($listing['rent_date_available'])) }}</p>
+                                            </div>
+                                        </div>
+                                    @endif
                                     @if($listing['sub_type'])
                                         <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
