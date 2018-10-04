@@ -32,13 +32,17 @@
                     </div>
                     <div class="col-md-5 text-md-right">
                         <h2 class="listing-price">${{ number_format($listing['asking_price']) }}</h2>
-                        @if(strtolower($listing['type']) != 'land' && strtolower($listing['type']) != 'commercial')
-                            <p class="listing-details">
+                        <p class="listing-details">
+                            @if($listing['beds'])
                                 <strong>{{ $listing['beds'] }}</strong> beds
+                            @endif
+                            @if($listing['total_baths'])
                                 <strong>{{ intval($listing['total_baths']) }}</strong> baths
+                            @endif
+                            @if($listing['residence_sqft'])
                                 <strong>{{ number_format($listing['residence_sqft']) }}</strong> sqft
-                            </p>
-                        @endif
+                            @endif
+                        </p>
                     </div>
                 </div>
                 <div class="row">
@@ -56,7 +60,7 @@
                                         <div class="col-xl-4 col-lg-6 col-sm-6">
                                             <div class="listing-feature">
                                                 <h5 class="listing-feature-title">Date Available</h5>
-                                                <p>{{ date('d-m-Y', strtotime($listing['rent_date_available'])) }}</p>
+                                                <p>{{ date('m-d-Y', strtotime($listing['rent_date_available'])) }}</p>
                                             </div>
                                         </div>
                                     @endif

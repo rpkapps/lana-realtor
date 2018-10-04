@@ -23,7 +23,7 @@
             </ul>
         </div>
     </div>
-    <img class="somers-logo" src="https://s3-us-west-2.amazonaws.com/lana-realtor/images/somers-logo.png" alt="Somers & Associates Realtors Inc.">
+    <a href="/"><img class="somers-logo" src="https://s3-us-west-2.amazonaws.com/lana-realtor/images/somers-logo.png" alt="Somers & Associates Realtors Inc."></a>
 </nav>
 
 <div class="modal fade contact-modal" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLongTitle" aria-hidden="true">
